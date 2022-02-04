@@ -10,6 +10,12 @@
 
 - Include screenshots and any comments about anything that might be difficult to understand
 
+### Expo quick start
+
+- Install Node
+- ```npm install --global expo-cli```
+- ```npm run web``` - to run the expo app on web
+
 
 <!-- Banner Image -->
 
