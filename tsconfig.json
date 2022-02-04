@@ -12,17 +12,17 @@
     "lib": ["dom", "esnext"],
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["components/*"],
-      "@env/*": ["environments/*"],
-      "@assets/*": ["assets/*"],
-      "@constants/*": ["constants/*"],
-      "@hooks/*": ["hooks/*"],
-      "@navigation/*": ["navigation/*"],
-      "@context/*": ["context/*"],
-      "@providers/*": ["providers/*"],
-      "@screens/*": ["screens/*"],
-      "@App": ["App.tsx"],
-      "@types": ["types.tsx"]
+      "components/*": ["components/*"],
+      "env/*": ["environments/*"],
+      "assets/*": ["assets/*"],
+      "constants/*": ["constants/*"],
+      "hooks/*": ["hooks/*"],
+      "navigation/*": ["navigation/*"],
+      "context/*": ["context/*"],
+      "providers/*": ["providers/*"],
+      "screens/*": ["screens/*"],
+      "App": ["App.tsx"],
+      "types": ["types.tsx"]
     }
   }
 }

@@ -8,16 +8,16 @@ module.exports = function (api) {
         {
           "root": ["./"],
           alias: {
-            "@components": "./components",
-            "@assets": "./assets",
-            "@constants": "./constants",
-            "@hooks": "./hooks",
-            "@navigation": "./navigation",
-            "@context": "./context",
-            "@providers": "./providers",
-            "@screens": "./screens",
-            "@App": "./App.tsx",
-            "@types": "./types.tsx"
+            "components": "./components",
+            "assets": "./assets",
+            "constants": "./constants",
+            "hooks": "./hooks",
+            "navigation": "./navigation",
+            "context": "./context",
+            "providers": "./providers",
+            "screens": "./screens",
+            "App": "./App.tsx",
+            "types": "./types.tsx"
           },
         },
       ],
