@@ -62,7 +62,6 @@ function index({}: Props) {
           <Icon
             name={i === page ? "circle" : "circle-o"}
             size={14}
-            color="black"
           />
         ))}
       </View>
