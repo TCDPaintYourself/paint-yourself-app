@@ -12,6 +12,7 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import LoginRegisterScreen from '../screens/LoginRegisterScreen';
 import NewProjectScreen from '../screens/NewProjectScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -37,7 +38,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator>
+  <Stack.Navigator initialRouteName="LoginRegister">
+      <Stack.Screen name="LoginRegister" component={LoginRegisterScreen}/>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
