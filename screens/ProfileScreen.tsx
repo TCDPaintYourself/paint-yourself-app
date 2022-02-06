@@ -5,7 +5,7 @@ import { RootTabScreenProps } from '../types';
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
   function newProject() {
-    navigation.navigate('Modal')
+    navigation.navigate('NotFound')
   }
 
   return (
