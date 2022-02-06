@@ -1,11 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  StyleSheet,
-  Button,
-  Image,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, Image, ImageBackground } from "react-native";
 import { Text, View } from "../components/Themed";
 import { FontAwesome } from "@expo/vector-icons";
 import { RootTabScreenProps } from "../types";
@@ -29,7 +22,7 @@ export default function LoginRegisterScreen({
 
   // Front-end oauth here
   const googleAuth = () => {
-    navigation.navigate("Modal");
+    navigation.navigate("Root"); // bypass oauth for now
   };
 
   return (
