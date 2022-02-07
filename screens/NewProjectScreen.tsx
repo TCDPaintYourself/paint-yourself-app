@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, Button } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View } from "../components/Themed";
-import ThemePicker from "../components/ThemePicker";
+import { Platform, StyleSheet, Button, SafeAreaView } from "react-native";
+import { Text, View } from "components/Themed";
+import ThemePicker from "components/ThemePicker";
+
 export default function NewProjectScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: "center" }}>
         <Text style={styles.title}>Select photo to style</Text>
         <View
           style={styles.separator}

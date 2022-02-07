@@ -10,14 +10,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import NewProjectScreen from '../screens/NewProjectScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
-import LinkingConfiguration from './LinkingConfiguration';
+import Colors from 'constants/Colors';
+import useColorScheme from 'hooks/useColorScheme';
+import NewProjectScreen from 'screens/NewProjectScreen';
+import NotFoundScreen from 'screens/NotFoundScreen';
+import ProfileScreen from 'screens/ProfileScreen';
+import SettingsScreen from 'screens/SettingsScreen';
+import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types';
+import LinkingConfiguration from 'navigation/LinkingConfiguration';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
