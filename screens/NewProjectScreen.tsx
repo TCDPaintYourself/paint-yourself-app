@@ -1,19 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
-import { Text, View } from 'components/Themed';
-import ThemePicker from 'components/ThemePicker';
-import Button from 'components/Button';
+import { StatusBar } from 'expo-status-bar'
+import { Platform, StyleSheet } from 'react-native'
+import { Text, View } from 'components/Themed'
+import ThemePicker from 'components/ThemePicker'
+import Button from 'components/Button'
 
 export default function NewProjectScreen() {
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.title}>Select photo to style</Text>
-        <View
-          style={styles.separator}
-          lightColor="#eee"
-          darkColor="rgba(255,255,255,0.1)"
-        />
+        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         <View style={styles.buttonDiv}>
           <Button onPress={upload} title="Upload" />
           <Button onPress={openCamera} title="Take Photo" />
@@ -25,15 +21,15 @@ export default function NewProjectScreen() {
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
-  );
+  )
 }
 
 function upload() {
-  console.log('upload');
+  console.log('upload')
 }
 
 function openCamera() {
-  console.log('openCamera');
+  console.log('openCamera')
 }
 
 const styles = StyleSheet.create({
@@ -58,4 +54,4 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-});
+})
