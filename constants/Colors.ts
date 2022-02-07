@@ -16,4 +16,19 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
   },
+  primary: {
+    background: '#ab47bc',
+  },
+  secondary: {
+    background: '#ec407a',
+  },
+  success: {
+    background: '#fff176',
+  },
+  error: {
+    background: '#b71c1c',
+  },
+  info: {
+    background: '#00838f',
+  },
 };
