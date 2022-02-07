@@ -1,10 +1,10 @@
-import { StyleSheet, Button } from "react-native";
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
 
-export default function ProfileScreen({
-  navigation,
-}: RootTabScreenProps<"TabOne">) {
+import { StyleSheet, Button } from 'react-native';
+import { Text, View } from 'components/Themed';
+import { RootTabScreenProps } from 'types';
+
+export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+
   function newProject() {
     navigation.navigate("Modal");
   }
