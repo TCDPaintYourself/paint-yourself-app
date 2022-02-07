@@ -12,13 +12,12 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from 'constants/Colors';
 import useColorScheme from 'hooks/useColorScheme';
-import ModalScreen from 'screens/ModalScreen';
+import NewProjectScreen from 'screens/NewProjectScreen';
 import NotFoundScreen from 'screens/NotFoundScreen';
-import TabOneScreen from 'screens/TabOneScreen';
-import TabTwoScreen from 'screens/TabTwoScreen';
+import ProfileScreen from 'screens/ProfileScreen';
+import SettingsScreen from 'screens/SettingsScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types';
 import LinkingConfiguration from 'navigation/LinkingConfiguration';
-
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -42,7 +41,7 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="Modal" component={NewProjectScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -65,32 +64,18 @@ function BottomTabNavigator() {
       }}>
       <BottomTab.Screen
         name="TabOne"
-        component={TabOneScreen}
+        component={ProfileScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         })}
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={SettingsScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -104,5 +89,5 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={30} style={{ marginBottom: 2 }} {...props} />;
 }
