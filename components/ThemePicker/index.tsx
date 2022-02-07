@@ -1,5 +1,10 @@
 import React, { useState, useRef } from "react";
-import { FlatList, Image, Dimensions, StyleSheet } from "react-native";
+import {
+  FlatList,
+  ImageBackground,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import { Text, View, Icon } from "../../components/Themed";
 const { width, height } = Dimensions.get("screen");
 type Props = {};
@@ -15,7 +20,7 @@ const data = [
 ];
 
 const imageW = width * 0.8;
-const imageH = imageW * 0.8;
+const imageH = imageW * 1.54;
 
 function index({}: Props) {
   const [page, setPage] = useState<number>(0);
@@ -40,19 +45,13 @@ function index({}: Props) {
         horizontal
         pagingEnabled
         onScroll={onScrollEnd}
+        scrollEventThrottle={32}
         renderItem={({ item }: any) => {
           return (
-            <View style={{ width, alignItems: "center" }}>
-              <Image
-                source={{ uri: item }}
-                style={{
-                  width: imageW,
-                  height: imageH,
-                  borderRadius: 16,
-                  resizeMode: "cover",
-                }}
-              />
-              <Text style={styles.subtitle}>Van Gough</Text>
+            <View style={{ width, alignItems: "center"}}>
+              <ImageBackground source={{ uri: item }} style={styles.cardImage} imageStyle={{ borderRadius: 16, opacity: 0.7}}>
+                <Text style={styles.subtitle}>Van Gough</Text>
+              </ImageBackground>
             </View>
           );
         }}
@@ -60,8 +59,10 @@ function index({}: Props) {
       <View style={styles.circleSelector}>
         {[...Array(data.length)].map((_, i) => (
           <Icon
+            key={`circle-selector-${i}`}
             name={i === page ? "circle" : "circle-o"}
-            size={14}
+            size={i === page ? 9 : 8}
+            style={{margin: 12}}
           />
         ))}
       </View>
@@ -73,12 +74,21 @@ const styles = StyleSheet.create({
   subtitle: {
     marginTop: 5,
     fontWeight: "bold",
+    position: 'relative',
+    top: imageH-48,
+    left: 12,
+    fontSize: 24
   },
   circleSelector: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    margin: 20,
+    justifyContent: "center",
+    margin: 10,
+  },
+  cardImage: {
+    width: imageW,
+    height: imageH,
+    resizeMode: "cover",
   },
 });
 
