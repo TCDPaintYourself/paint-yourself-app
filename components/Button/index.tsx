@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { TouchableOpacity, TouchableOpacityProps, Text, StyleSheet } from 'react-native'
 
 import Colors from 'constants/Colors'
@@ -10,7 +10,7 @@ export interface ButtonProps extends TouchableOpacityProps {
 }
 
 export default function Button({ title, fullWidth, variant = 'primary', ...props }: ButtonProps) {
-  const backgroundColor = useMemo(() => Colors[variant].background, [variant])
+  const backgroundColor = Colors[variant].background
 
   return (
     <TouchableOpacity

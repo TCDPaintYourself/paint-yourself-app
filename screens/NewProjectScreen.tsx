@@ -1,12 +1,14 @@
-import {useState} from "react"
+import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { Platform, StyleSheet } from 'react-native'
 import { Text, View } from 'components/Themed'
 import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
+import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 
 export default function NewProjectScreen() {
-  const [projectTheme, setProjectTheme] = useState()
+  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
+
   return (
     <View style={styles.container}>
       <View style={{ alignItems: 'center' }}>
@@ -22,7 +24,7 @@ export default function NewProjectScreen() {
         </View>
         <Text style={styles.themeText}>Select Theme</Text>
       </View>
-      <ThemePicker />
+      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
