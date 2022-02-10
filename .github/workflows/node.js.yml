@@ -27,5 +27,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install
-    - run: npm install expo-cli
+    - run: npm install eas-cli
     - run: npm run build 
