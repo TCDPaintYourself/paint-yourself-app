@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "build": "expo build:android --no-publish"
+    "build": "eas build -p android --local --skip-project-configuration"
   },
   "jest": {
     "preset": "jest-expo"
