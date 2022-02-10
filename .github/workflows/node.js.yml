@@ -27,5 +27,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install
-    - run: npm install eas-cli
-    - run: eas build -p android local
+    - run: expo build:android -t app-bundle
