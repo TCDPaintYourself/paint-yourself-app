@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "build": "expo build:android -t app-bundle",
+    "build": "expo build:android",
   },
   "jest": {
     "preset": "jest-expo"
