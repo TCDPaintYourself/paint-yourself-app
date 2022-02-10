@@ -9,10 +9,10 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-} from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
+import { ColorSchemeName, Pressable } from "react-native";
 
 import Colors from 'constants/Colors';
 import useColorScheme from 'hooks/useColorScheme';
@@ -20,6 +20,7 @@ import NewProjectScreen from 'screens/NewProjectScreen';
 import NotFoundScreen from 'screens/NotFoundScreen';
 import ProfileScreen from 'screens/ProfileScreen';
 import SettingsScreen from 'screens/SettingsScreen';
+import LoginRegisterScreen from "screens/LoginRegisterScreen"
 import {
   RootStackParamList,
   RootTabParamList,
@@ -50,7 +51,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="LoginRegister">
+      <Stack.Screen
+        name="LoginRegister"
+        component={LoginRegisterScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
@@ -87,8 +93,8 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="TabOne"
         component={ProfileScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Profile',
+        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
+          title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         })}
       />
@@ -96,7 +102,7 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={SettingsScreen}
         options={{
-          title: 'Settings',
+          title: "Settings",
           tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
         }}
       />
@@ -108,7 +114,7 @@ function BottomTabNavigator() {
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
   return <FontAwesome size={30} style={{ marginBottom: 2 }} {...props} />;
