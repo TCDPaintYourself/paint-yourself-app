@@ -28,4 +28,4 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm install expo-cli
-    - run: npm build
+    - run: npm run build 
