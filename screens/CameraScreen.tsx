@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import { Camera } from 'expo-camera'
-import { RootStackScreenProps } from 'types'
+import Button from "components/Button"
+import { RootStackScreenProps, CameraImage } from 'types'
+
+
 
 // https://docs.expo.dev/versions/latest/sdk/camera/
 export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null)
   const [type, setType] = useState(Camera.Constants.Type.back)
+  const [image, setImage] = useState<CameraImage>()
+  const cameraRef = useRef(null)
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
       setHasPermission(status === 'granted')
     })()
   }, [])
+
+  const handleSwitchCameraType = () => {
+    setType(
+      type === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back
+    );
+  }
 
   if (hasPermission === null) {
     return <View />
@@ -23,18 +36,18 @@ export default function CameraScreen() {
   }
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back)
-            }}
-          >
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+      {image ? <Image style={{ width: "100%", height: "100%" }} source={{ uri: image.uri }} /> :
+        <Camera style={styles.camera} type={type} ref={cameraRef}>
+          <View style={styles.buttonContainer}>
+            <Button title="Take" onPress={async () => {
+              if (cameraRef.current) {
+                let photo = await cameraRef.current.takePictureAsync();
+                setImage(photo)
+              }
+            }} />
+            <Button title="Flip" onPress={handleSwitchCameraType} />
+          </View>
+        </Camera>}
     </View>
   )
 }
@@ -47,15 +60,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    margin: 20,
+    position: "relative",
+    top: 600,
+    display: 'flex',
+    flexDirection: 'row'
   },
   button: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
+    margin: 10
   },
   text: {
     fontSize: 18,

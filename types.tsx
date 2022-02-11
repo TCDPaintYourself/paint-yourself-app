@@ -35,3 +35,9 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >
+
+export type CameraImage = {
+  height: number
+  width: number
+  uri: string
+}
