@@ -1,10 +1,10 @@
 ## Clone the Repo
 
-```git clone https://github.com/TCDPaintYourself/paint-yourself-app.git```
+`git clone https://github.com/TCDPaintYourself/paint-yourself-app.git`
 
 ## Creating and checking out to branch
 
-```git checkout -b my-branch```
+`git checkout -b my-branch`
 
 ## Make a commit and create a pull request for review
 
@@ -13,9 +13,8 @@
 ### Expo quick start
 
 - Install Node
-- ```npm install --global expo-cli```
-- ```npm run web``` - to run the expo app on web
-
+- `npm install --global expo-cli`
+- `npm run web` - to run the expo app on web
 
 <!-- Banner Image -->
 
