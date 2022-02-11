@@ -20,8 +20,10 @@ import NewProjectScreen from 'screens/NewProjectScreen';
 import NotFoundScreen from 'screens/NotFoundScreen';
 import ProfileScreen from 'screens/ProfileScreen';
 import SettingsScreen from 'screens/SettingsScreen';
+import CameraScreen from "screens/CameraScreen";
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types';
 import LinkingConfiguration from 'navigation/LinkingConfiguration';
+import LoginRegisterScreen from "screens/LoginRegisterScreen";
 
 export default function Navigation({
   colorScheme,
@@ -99,6 +101,14 @@ function BottomTabNavigator() {
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabThree"
+        component={CameraScreen}
+        options={{
+          title: "Camera",
+          tabBarIcon: ({ color }) => <TabBarIcon name="camera" color={color} />,
         }}
       />
     </BottomTab.Navigator>
