@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
 
 const imageW = width * 0.8
-const imageH = imageW * 1.54
+const imageH = imageW * 1.2
 
 interface Props {
   data: IProjectTheme[]

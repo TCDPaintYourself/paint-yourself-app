@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as React from 'react'
-import { ColorSchemeName, Pressable } from 'react-native'
+import { ColorSchemeName } from 'react-native'
 
 import Colors from 'constants/Colors'
 import useColorScheme from 'hooks/useColorScheme'
@@ -16,7 +16,6 @@ import NewProjectScreen from 'screens/NewProjectScreen'
 import NotFoundScreen from 'screens/NotFoundScreen'
 import ProfileScreen from 'screens/ProfileScreen'
 import SettingsScreen from 'screens/SettingsScreen'
-import CameraScreen from 'screens/CameraScreen'
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types'
 import LinkingConfiguration from 'navigation/LinkingConfiguration'
 import LoginRegisterScreen from 'screens/LoginRegisterScreen'
@@ -78,14 +77,6 @@ function BottomTabNavigator() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="TabThree"
-        component={CameraScreen}
-        options={{
-          title: 'Camera',
-          tabBarIcon: ({ color }) => <TabBarIcon name="camera" color={color} />,
         }}
       />
     </BottomTab.Navigator>

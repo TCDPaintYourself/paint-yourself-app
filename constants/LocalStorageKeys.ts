@@ -1,0 +1,1 @@
+export const CAMERA_ACCESS = 'CAMERA_ACCESS'
