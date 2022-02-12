@@ -22,11 +22,9 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
 
   useEffect(() => {
     const requestPermissions = async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(status === 'granted')
       try {
-        const hasPermission = Boolean(await AsyncStorage.getItem(CAMERA_ACCESS))
-        if (!hasPermission) {
+        const perms = Boolean(await AsyncStorage.getItem(CAMERA_ACCESS))
+        if (!perms) {
           const { status } = await Camera.requestCameraPermissionsAsync()
           setHasPermission(status === 'granted')
           await AsyncStorage.setItem(CAMERA_ACCESS, String(status === 'granted'))
