@@ -1,19 +1,66 @@
-import { StyleSheet, Button, ImageBackground, Image } from "react-native";
+import {
+  StyleSheet,
+  ImageBackground,
+  Image,
+  Dimensions,
+  FlatList,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "components/Themed";
 import { RootTabScreenProps } from "types";
-import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function ProfileScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
-  function newProject() {
-    navigation.navigate("Modal");
-  }
+  const [dataSource, setDataSource] = useState<
+    Array<{ id: number; src: string }>
+  >([]);
+
+  useEffect(() => {
+    let items = Array.apply(null, Array(60)).map((v, i) => {
+      return {
+        id: i,
+        src: "http://placehold.it/200x200?text=" + (i + 1),
+      };
+    });
+    setDataSource(items);
+  }, []);
+
+  console.log(dataSource);
 
   const updateCoverPhoto = () => {
     console.log("Update Cover Photo");
   };
+
+  const IMGS_PER_ROW = 3;
+  const GRID_IMG_WIDTH = Dimensions.get("window").width / IMGS_PER_ROW;
+  console.log(GRID_IMG_WIDTH);
+  const GRID_IMG_HEIGHT = GRID_IMG_WIDTH; // square images
+
+  const DATA = [
+    {
+      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+      title: "First Item",
+    },
+    {
+      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+      title: "Second Item",
+    },
+    {
+      id: "58694a0f-3da1-471f-bd96-145571e29d72",
+      title: "Third Item",
+    },
+  ];
+
+  const Item = ({ title }) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+
+  const renderItem = ({ item }) => <Item title={item.title} />;
+
   return (
     <View style={styles.container}>
       <View style={styles.coverRegion}>
@@ -50,23 +97,31 @@ export default function ProfileScreen({
             <Text> StyleGans </Text>
           </Text>
         </View>
-        {/* <Text>Hello</Text> */}
+        <View style={styles.creationsContainer}>
+          <FlatList
+            numColumns={IMGS_PER_ROW}
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.grid}
+            // horizontal={true}
+            initialNumToRender={12}
+          ></FlatList>
+          {/* <Image
+            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
+            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
+          />
+          <Image
+            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
+            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
+          />
+          <Image
+            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
+            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
+          /> */}
+        </View>
       </View>
     </View>
-    // <View style={styles.container}>
-    //   <Text style={styles.title}>Profile</Text>
-    //   <View
-    //     style={styles.separator}
-    //     lightColor="#eee"
-    //     darkColor="rgba(255,255,255,0.1)"
-    //   />
-    //   <Button
-    //     onPress={newProject}
-    //     title="NEW PROJECT"
-    //     color="#841584"
-    //     accessibilityLabel="Learn more about this purple button"
-    //   />
-    // </View>
   );
 }
 
@@ -99,6 +154,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // justifyContent: "center",
   },
+  creationsContainer: {
+    flex: 1,
+    borderColor: "purple",
+    borderWidth: 1,
+    padding: 10,
+  },
   googleName: {
     flex: 37.5,
     fontSize: 14,
@@ -107,6 +168,12 @@ const styles = StyleSheet.create({
     // paddingRight: 5,
     // borderColor: "cyan",
     borderWidth: 1,
+  },
+  grid: {
+    borderColor: "cyan",
+    borderWidth: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   numStylegans: {
     flex: 37.5,
