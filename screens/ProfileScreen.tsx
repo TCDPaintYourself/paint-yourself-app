@@ -21,7 +21,7 @@ export default function ProfileScreen({
     let items = Array.apply(null, Array(60)).map((v, i) => {
       return {
         id: i,
-        src: "http://placehold.it/200x200?text=" + (i + 1),
+        src: "http://placehold.it/60x60?text=" + (i + 1),
       };
     });
     setDataSource(items);
@@ -53,13 +53,23 @@ export default function ProfileScreen({
     },
   ];
 
-  const Item = ({ title }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
+  // const Item = ({ title }) => (
+  //   <View style={styles.item}>
+  //     <Text style={styles.title}>{title}</Text>
+  //   </View>
+  // );
 
-  const renderItem = ({ item }) => <Item title={item.title} />;
+  // const renderItem = ({ item }) => (
+  //   <View
+  //     style={{
+  //       flex: 1,
+  //       flexDirection: "column",
+  //       margin: 1,
+  //     }}
+  //   >
+  //     <Image style={styles.imageThumbnail} source={{ uri: item.src }} />
+  //   </View>
+  // );
 
   return (
     <View style={styles.container}>
@@ -100,9 +110,27 @@ export default function ProfileScreen({
         <View style={styles.creationsContainer}>
           <FlatList
             numColumns={IMGS_PER_ROW}
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            data={dataSource}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    margin: 1,
+                  }}
+                >
+                  <Image
+                    style={[
+                      styles.imageThumbnail,
+                      { width: GRID_IMG_WIDTH, height: GRID_IMG_HEIGHT },
+                    ]}
+                    source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
+                  />
+                </View>
+              );
+            }}
+            keyExtractor={(item, index) => "" + item.id}
             contentContainerStyle={styles.grid}
             // horizontal={true}
             initialNumToRender={12}
@@ -172,8 +200,14 @@ const styles = StyleSheet.create({
   grid: {
     borderColor: "cyan",
     borderWidth: 1,
-    justifyContent: "space-between",
+    justifyContent: "center",
+    // alignItems: "center",
+  },
+  imageThumbnail: {
+    justifyContent: "center",
     alignItems: "center",
+    // height: 128,
+    // width: 128,
   },
   numStylegans: {
     flex: 37.5,
