@@ -1,12 +1,24 @@
+import React, { useEffect } from 'react'
 import { StyleSheet, Image, ImageBackground } from 'react-native'
-import { Text, View } from '../components/Themed'
 import { FontAwesome } from '@expo/vector-icons'
-import { RootTabScreenProps } from '../types'
+import { maybeCompleteAuthSession } from 'expo-web-browser'
+import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google'
+import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from 'firebase/auth'
+
+import { Text, View } from 'components/Themed'
+import { RootTabScreenProps } from 'types'
+
+// Allow user login on web browsers and expo go.
+maybeCompleteAuthSession()
 
 export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  // select random background image
-  const NUM_BG_IMAGES = 8
-  const images = [
+  const auth = getAuth()
+  const [_request, response, promptAsync] = useIdTokenAuthRequest({
+    clientId: '486967078951-4q4olam5pvh8p8do8goonmh1udglh6gg.apps.googleusercontent.com',
+  })
+
+  // Select random background image.
+  const BG_IMAGES = [
     require('../assets/images/auth_bgs/auth_background_1.jpg'),
     require('../assets/images/auth_bgs/auth_background_2.jpg'),
     require('../assets/images/auth_bgs/auth_background_3.jpg'),
@@ -16,23 +28,47 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
     require('../assets/images/auth_bgs/auth_background_7.jpg'),
     require('../assets/images/auth_bgs/auth_background_8.jpg'),
   ]
-  const bg_image_index = Math.floor(Math.random() * (NUM_BG_IMAGES - 1)) + 1
+  const bgImageIndex = Math.floor(Math.random() * (BG_IMAGES.length - 1)) + 1
 
-  // Front-end oauth here
-  const googleAuth = () => {
-    navigation.navigate('Root') // bypass oauth for now
-  }
+  /**
+   * Google auth event handler.
+   */
+  const onPressGoogleLogin = () => promptAsync()
+
+  /**
+   * Sign into firebase using Google OAuth.
+   */
+  useEffect(() => {
+    if (response?.type !== 'success') {
+      return
+    }
+
+    const { id_token } = response.params
+    const credential = GoogleAuthProvider.credential(id_token)
+    signInWithCredential(auth, credential)
+  }, [response])
+
+  /**
+   * Navigate to the root page on user login.
+   */
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      return
+    }
+
+    navigation.navigate('Root')
+  })
 
   return (
     <View style={styles.container}>
-      <ImageBackground resizeMode="cover" source={images[bg_image_index]} style={styles.bgImage}>
+      <ImageBackground resizeMode="cover" source={BG_IMAGES[bgImageIndex]} style={styles.bgImage}>
         <Image source={require('../assets/images/logo_dark_sh.png')} resizeMode="contain" style={styles.logo} />
         <Text style={styles.title}>Continue with Google:</Text>
         <FontAwesome.Button
           name="google"
           backgroundColor="#FFFFFF"
           color="#757575"
-          onPress={googleAuth}
+          onPress={onPressGoogleLogin}
           iconStyle={{ marginRight: '15%' }}
           size={25}
           style={styles.google}
@@ -42,14 +78,6 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
       </ImageBackground>
     </View>
   )
-}
-
-function upload() {
-  console.log('upload')
-}
-
-function openCamera() {
-  console.log('openCamera')
 }
 
 const styles = StyleSheet.create({
