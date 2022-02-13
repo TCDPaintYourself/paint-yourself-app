@@ -32,6 +32,15 @@ export default function NewProjectScreen() {
     setUploadPhotoMode(false)
   }
 
+  const resetPhoto = () => {
+    setImage(null)
+  }
+
+  const openCameraResetPhoto = () => {
+    openCamera()
+    resetPhoto()
+  }
+
   return (
     <View style={styles.container}>
       {takePhotoMode ? (
@@ -45,7 +54,11 @@ export default function NewProjectScreen() {
                 <Button onPress={openGallery} title="Upload" variant="primary" />
               </View>
               <View style={styles.buttonMargin}>
-                <Button onPress={openCamera} title={image ? 'Retake Photo' : 'Take Photo'} variant="primary" />
+                <Button
+                  onPress={openCameraResetPhoto}
+                  title={image ? 'Retake Photo' : 'Take Photo'}
+                  variant="primary"
+                />
               </View>
             </View>
             <Text style={styles.themeText}>Select Theme</Text>
@@ -73,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   separator: {
-    marginTop: 20,
+    marginTop: 10,
     height: 1,
     width: '80%',
   },
@@ -84,6 +97,7 @@ const styles = StyleSheet.create({
   buttonMargin: {
     marginRight: 8,
     marginLeft: 8,
+    marginTop: 16,
   },
   photoTaken: {
     width: '100%',
