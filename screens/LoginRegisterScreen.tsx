@@ -12,7 +12,7 @@ import { useUserContext } from 'hooks/useUserRef'
 // Allow user login on web browsers and expo go.
 maybeCompleteAuthSession()
 
-export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'LoginRegister'>) {
   const auth = getAuth()
   const [_request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: '486967078951-4q4olam5pvh8p8do8goonmh1udglh6gg.apps.googleusercontent.com',
@@ -54,11 +54,11 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
    * Navigate to the root page on user login.
    */
   onAuthStateChanged(auth, (user) => {
+    setUser(user)
+
     if (!user) {
       return
     }
-
-    setUser(user)
 
     navigation.navigate('Root')
   })

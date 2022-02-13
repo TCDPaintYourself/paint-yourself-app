@@ -1,4 +1,5 @@
 import { StyleSheet, Image } from 'react-native'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
@@ -6,11 +7,29 @@ import Button from 'components/Button'
 import { useUserContext } from 'hooks/useUserRef'
 
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+  const auth = getAuth()
   const [user] = useUserContext()
 
-  function newProject() {
-    navigation.navigate('Modal')
-  }
+  /**
+   * Opens the new project modal.
+   */
+  const onPressNewProject = () => navigation.navigate('Modal')
+
+  /**
+   * Logs the user out.
+   */
+  const onPressLogout = () => auth.signOut()
+
+  /**
+   * Return to the login screen.
+   */
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      return
+    }
+
+    navigation.navigate('LoginRegister')
+  })
 
   return (
     <View style={styles.container}>
@@ -26,7 +45,19 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
         </View>
       )}
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Button onPress={newProject} title="NEW PROJECT" accessibilityLabel="Learn more about this purple button" />
+      <View style={styles.buttonsContainer}>
+        <Button
+          onPress={onPressNewProject}
+          title="New Project"
+          accessibilityLabel="Learn more about this purple button"
+        />
+        <Button
+          style={styles.logoutButton}
+          onPress={onPressLogout}
+          title="Logout"
+          accessibilityLabel="Logs the user out"
+        />
+      </View>
     </View>
   )
 }
@@ -67,5 +98,12 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  logoutButton: {
+    marginLeft: 10,
   },
 })
