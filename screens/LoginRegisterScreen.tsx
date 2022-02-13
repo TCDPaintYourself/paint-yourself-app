@@ -7,6 +7,7 @@ import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged }
 
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
+import { useUserContext } from 'hooks/useUserRef'
 
 // Allow user login on web browsers and expo go.
 maybeCompleteAuthSession()
@@ -16,6 +17,7 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
   const [_request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: '486967078951-4q4olam5pvh8p8do8goonmh1udglh6gg.apps.googleusercontent.com',
   })
+  const [_user, setUser] = useUserContext()
 
   // Select random background image.
   const BG_IMAGES = [
@@ -55,6 +57,8 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
     if (!user) {
       return
     }
+
+    setUser(user)
 
     navigation.navigate('Root')
   })
