@@ -1,13 +1,13 @@
 import { StyleSheet, Image } from 'react-native'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'
 
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
 import Button from 'components/Button'
 import { useUserContext } from 'hooks/useUserRef'
+import { auth } from 'utils/firebase'
 
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const auth = getAuth()
   const [user] = useUserContext()
 
   /**

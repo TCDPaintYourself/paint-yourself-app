@@ -3,17 +3,17 @@ import { StyleSheet, Image, ImageBackground } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { maybeCompleteAuthSession } from 'expo-web-browser'
 import { useIdTokenAuthRequest } from 'expo-auth-session/providers/google'
-import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from 'firebase/auth'
 
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
 import { useUserContext } from 'hooks/useUserRef'
+import { auth } from 'utils/firebase'
 
 // Allow user login on web browsers and expo go.
 maybeCompleteAuthSession()
 
 export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'LoginRegister'>) {
-  const auth = getAuth()
   const [_request, response, promptAsync] = useIdTokenAuthRequest({
     clientId: '486967078951-4q4olam5pvh8p8do8goonmh1udglh6gg.apps.googleusercontent.com',
   })
