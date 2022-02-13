@@ -2,11 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus } from 'react-native'
 import { Camera } from 'expo-camera'
 import { CameraImage } from 'types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { CAMERA_ACCESS } from 'constants/LocalStorageKeys'
-import { AntDesign } from '@expo/vector-icons'
-import { Ionicons } from '@expo/vector-icons'
-import { FontAwesome } from '@expo/vector-icons'
+import { AntDesign, FontAwesome, Ionicons, Feather } from '@expo/vector-icons'
 
 interface Props {
   image: CameraImage | null
@@ -22,16 +18,8 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
 
   useEffect(() => {
     const requestPermissions = async () => {
-      try {
-        const perms = Boolean(await AsyncStorage.getItem(CAMERA_ACCESS))
-        if (!perms) {
-          const { status } = await Camera.requestCameraPermissionsAsync()
-          setHasPermission(status === 'granted')
-          await AsyncStorage.setItem(CAMERA_ACCESS, String(status === 'granted'))
-        } else setHasPermission(true)
-      } catch (e) {
-        // saving error
-      }
+      const { status } = await Camera.requestCameraPermissionsAsync()
+      setHasPermission(status === 'granted')
     }
     requestPermissions()
   }, [])
@@ -65,7 +53,7 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
         <ImageBackground source={{ uri: image.uri }} style={styles.takenPhoto}>
           <View style={styles.buttonContainer}>
             <FontAwesome name="rotate-left" size={40} color="white" onPress={() => setImage(null)} />
-            <AntDesign name="checkcircle" size={40} color="white" onPress={closeCamera} />
+            <Feather name="check-circle" size={40} color="white" onPress={closeCamera} />
           </View>
         </ImageBackground>
       ) : (
@@ -78,13 +66,13 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
                   if (cameraRef.current) {
                     // @ts-ignore
                     let photo = await cameraRef.current.takePictureAsync()
-                    setImage(photo)
+                    setImage({ ...photo, camera: true })
                   }
                 }}
                 name="camera"
                 size={40}
                 color="white"
-                style={{ marginBottom: 8 }}
+                style={{ marginBottom: 3 }}
               />
               <Ionicons name="camera-reverse-sharp" size={40} color="white" onPress={handleSwitchCameraType} />
             </View>
@@ -104,12 +92,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    position: 'relative',
-    top: 630,
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    flexGrow: 1,
+    marginBottom: 25,
   },
   button: {
     margin: 10,

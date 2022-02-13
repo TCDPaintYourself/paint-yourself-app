@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
+import * as ImgPicker from 'expo-image-picker'
 import { Platform, StyleSheet, Image } from 'react-native'
 import { Text, View } from 'components/Themed'
 import { RootStackScreenProps, CameraImage } from 'types'
@@ -12,24 +13,31 @@ export default function NewProjectScreen() {
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [image, setImage] = useState<CameraImage | null>(null)
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
-  const [uploadPhotoMode, setUploadPhotoMode] = useState<boolean>(false)
 
   console.log(image)
 
   const openCamera = () => {
     setTakePhotoMode(true)
+    setImage(null)
   }
 
   const closeCamera = () => {
     setTakePhotoMode(false)
   }
 
-  const openGallery = () => {
-    setUploadPhotoMode(true)
-  }
+  const openGallery = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImgPicker.launchImageLibraryAsync({
+      mediaTypes: ImgPicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+    setImage(null)
 
-  const closeGallery = () => {
-    setUploadPhotoMode(false)
+    if (!result.cancelled) {
+      setImage({ uri: result.uri, width: result.width, height: result.height, camera: false })
+    }
   }
 
   const resetPhoto = () => {
@@ -47,16 +55,19 @@ export default function NewProjectScreen() {
         <Camera image={image} setImage={setImage} closeCamera={closeCamera} />
       ) : (
         <>
-          <View style={{ alignItems: 'center' }}>
-            {image && <Image style={styles.photoTaken} source={{ uri: image.uri }} />}
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
             <View style={styles.buttonDiv}>
               <View style={styles.buttonMargin}>
-                <Button onPress={openGallery} title="Upload" variant="primary" />
+                <Button
+                  onPress={openGallery}
+                  title={image && !image.camera ? 'Upload different' : 'Upload'}
+                  variant="primary"
+                />
               </View>
               <View style={styles.buttonMargin}>
                 <Button
                   onPress={openCameraResetPhoto}
-                  title={image ? 'Retake Photo' : 'Take Photo'}
+                  title={image && image.camera ? 'Retake Photo' : 'Take Photo'}
                   variant="primary"
                 />
               </View>

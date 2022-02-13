@@ -40,4 +40,5 @@ export type CameraImage = {
   height: number
   width: number
   uri: string
+  camera: boolean
 }
