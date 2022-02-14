@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import * as ImgPicker from 'expo-image-picker'
-import { Platform, StyleSheet, Image } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { Text, View } from 'components/Themed'
 import { RootStackScreenProps, CameraImage } from 'types'
 import ThemePicker from 'components/ThemePicker'

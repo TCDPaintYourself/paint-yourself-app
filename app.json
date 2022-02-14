@@ -2,6 +2,7 @@
   "expo": {
     "name": "paint-yourself-app",
     "slug": "paint-yourself-app",
+    "owner": "tcd-paint-yourself",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

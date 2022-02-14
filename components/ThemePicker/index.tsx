@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
-import { FlatList, ImageBackground, Dimensions, StyleSheet, Text } from 'react-native'
-import { View, Icon } from 'components/Themed'
+import { FlatList, ImageBackground, Dimensions, StyleSheet } from 'react-native'
+
+import { Text, View, Icon } from 'components/Themed'
 import { IProjectTheme } from 'constants/ProjectThemes'
 import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
