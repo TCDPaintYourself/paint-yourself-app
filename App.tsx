@@ -1,11 +1,15 @@
+import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { User } from 'firebase/auth'
 
+import Navigation from 'navigation'
 import useCachedResources from 'hooks/useCachedResources'
 import useColorScheme from 'hooks/useColorScheme'
-import Navigation from 'navigation'
+import { UserProvider } from 'providers/UserProvider'
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null)
   const isLoadingComplete = useCachedResources()
   const colorScheme = useColorScheme()
 
@@ -14,8 +18,10 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
+        <UserProvider value={[user, setUser]}>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </UserProvider>
       </SafeAreaProvider>
     )
   }

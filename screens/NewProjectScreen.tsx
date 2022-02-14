@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { Platform, StyleSheet } from 'react-native'
+
 import { Text, View } from 'components/Themed'
 import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
