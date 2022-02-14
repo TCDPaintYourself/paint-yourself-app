@@ -13,70 +13,58 @@ import { FontAwesome5 } from "@expo/vector-icons";
 export default function ProfileScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
+  const IMGS_PER_ROW = 3;
+  const GRID_IMG_WIDTH = Dimensions.get("window").width / IMGS_PER_ROW;
+  const GRID_IMG_HEIGHT = GRID_IMG_WIDTH; // square images
+
+  const [googleUsername, setGoogleUsername] = useState("");
+  const [profilePicSrc, setProfilePicSrc] = useState("");
+  const [coverPicSrc, setCoverPicSrc] = useState("");
+  const [numCreations, setNumCreations] = useState(0);
+
+  // Array holding user's created images information
   const [dataSource, setDataSource] = useState<
     Array<{ id: number; src: string }>
   >([]);
 
   useEffect(() => {
+    // init temp images
     let items = Array.apply(null, Array(60)).map((v, i) => {
       return {
         id: i,
-        src: "http://placehold.it/60x60?text=" + (i + 1),
+        src:
+          `http://placehold.it/${GRID_IMG_WIDTH}x${GRID_IMG_HEIGHT}?text=` +
+          (i + 1),
+        // src: `https://picsum.photos/${GRID_IMG_WIDTH}/${GRID_IMG_HEIGHT}`,   // an actual image placeholder
       };
     });
     setDataSource(items);
-  }, []);
 
-  console.log(dataSource);
+    // TODO: set from API data
+    setGoogleUsername("[Google Name]");
+
+    // TODO: set from API data
+    setProfilePicSrc(
+      require("../assets/images/temp/google_profile_pic_temp.jpg")
+    );
+
+    // TODO: set from persistent storage
+    setCoverPicSrc(require("../assets/images/temp/cover_photo_temp.jpg"));
+
+    // TODO: set from persistent storage
+    setNumCreations(60);
+  }, []);
 
   const updateCoverPhoto = () => {
     console.log("Update Cover Photo");
   };
-
-  const IMGS_PER_ROW = 3;
-  const GRID_IMG_WIDTH = Dimensions.get("window").width / IMGS_PER_ROW;
-  console.log(GRID_IMG_WIDTH);
-  const GRID_IMG_HEIGHT = GRID_IMG_WIDTH; // square images
-
-  const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-  ];
-
-  // const Item = ({ title }) => (
-  //   <View style={styles.item}>
-  //     <Text style={styles.title}>{title}</Text>
-  //   </View>
-  // );
-
-  // const renderItem = ({ item }) => (
-  //   <View
-  //     style={{
-  //       flex: 1,
-  //       flexDirection: "column",
-  //       margin: 1,
-  //     }}
-  //   >
-  //     <Image style={styles.imageThumbnail} source={{ uri: item.src }} />
-  //   </View>
-  // );
 
   return (
     <View style={styles.container}>
       <View style={styles.coverRegion}>
         <ImageBackground
           resizeMode="cover"
-          source={require("../assets/images/temp/cover_photo_temp.jpg")}
+          source={coverPicSrc as any}
           style={styles.coverImage}
         >
           <View style={styles.updateCoverPhotoButtonContainer}>
@@ -93,18 +81,18 @@ export default function ProfileScreen({
       <View style={styles.content}>
         <View style={styles.profileHeader}>
           <Text style={styles.googleName} numberOfLines={1}>
-            [Google Name]
+            {googleUsername}
           </Text>
           <View style={styles.profileImgContainer}>
             <Image
-              source={require("../assets/images/temp/google_profile_pic_temp.jpg")}
+              source={profilePicSrc as any}
               resizeMode="cover"
               style={styles.profileImg}
             />
           </View>
           <Text style={styles.numStylegans} numberOfLines={1}>
-            <Text style={{ fontWeight: "bold" }}> N </Text>
-            <Text> StyleGans </Text>
+            <Text style={{ fontWeight: "bold" }}> {numCreations} </Text>
+            <Text> Creations </Text>
           </Text>
         </View>
         <View style={styles.creationsContainer}>
@@ -129,7 +117,7 @@ export default function ProfileScreen({
                       },
                     ]}
                     source={{
-                      uri: `https://picsum.photos/${GRID_IMG_WIDTH}/${GRID_IMG_HEIGHT}`,
+                      uri: item.src,
                     }}
                   />
                 </View>
@@ -139,25 +127,13 @@ export default function ProfileScreen({
             contentContainerStyle={styles.grid}
             initialNumToRender={12}
           ></FlatList>
-          {/* <Image
-            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
-            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
-          />
-          <Image
-            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
-            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
-          />
-          <Image
-            source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
-            style={{ width: GRID_IMG_WIDTH, height: GRID_IMG_WIDTH }}
-          /> */}
         </View>
       </View>
     </View>
   );
 }
 
-// palette: https://colorhunt.co/palette/151515301b3f3c415cb4a5a5
+// palette: https://colorhunt.co/palette/222831393e46b55400eeeeee
 const styles = StyleSheet.create({
   container: {
     flex: 1,
