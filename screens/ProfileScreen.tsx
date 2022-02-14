@@ -4,6 +4,7 @@ import {
   Image,
   Dimensions,
   FlatList,
+  TouchableHighlight,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "components/Themed";
@@ -29,6 +30,7 @@ export default function ProfileScreen({
 
   useEffect(() => {
     // init temp images
+    //  TODO: init this array using saved images
     let items = Array.apply(null, Array(60)).map((v, i) => {
       return {
         id: i,
@@ -57,6 +59,11 @@ export default function ProfileScreen({
 
   const updateCoverPhoto = () => {
     console.log("Update Cover Photo");
+  };
+
+  // expand image selected from grid
+  const expandImageView = (id: number) => {
+    console.log(`Expand grid image ${id}`);
   };
 
   return (
@@ -108,18 +115,20 @@ export default function ProfileScreen({
                     margin: 1,
                   }}
                 >
-                  <Image
-                    style={[
-                      styles.imageThumbnail,
-                      {
-                        width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
-                        height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
-                      },
-                    ]}
-                    source={{
-                      uri: item.src,
-                    }}
-                  />
+                  <TouchableHighlight onPress={() => expandImageView(item.id)}>
+                    <Image
+                      style={[
+                        styles.imageThumbnail,
+                        {
+                          width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
+                          height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                        },
+                      ]}
+                      source={{
+                        uri: item.src,
+                      }}
+                    />
+                  </TouchableHighlight>
                 </View>
               );
             }}
