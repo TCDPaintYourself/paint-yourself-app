@@ -123,16 +123,20 @@ export default function ProfileScreen({
                   <Image
                     style={[
                       styles.imageThumbnail,
-                      { width: GRID_IMG_WIDTH, height: GRID_IMG_HEIGHT },
+                      {
+                        width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
+                        height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                      },
                     ]}
-                    source={{ uri: `https://picsum.photos/${GRID_IMG_WIDTH}` }}
+                    source={{
+                      uri: `https://picsum.photos/${GRID_IMG_WIDTH}/${GRID_IMG_HEIGHT}`,
+                    }}
                   />
                 </View>
               );
             }}
             keyExtractor={(item, index) => "" + item.id}
             contentContainerStyle={styles.grid}
-            // horizontal={true}
             initialNumToRender={12}
           ></FlatList>
           {/* <Image
@@ -153,21 +157,20 @@ export default function ProfileScreen({
   );
 }
 
+// palette: https://colorhunt.co/palette/151515301b3f3c415cb4a5a5
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // paddingBottom: 15,
-    borderColor: "red",
-    borderWidth: 1,
+    // borderColor: "red",
+    // borderWidth: 1,
   },
   content: {
     flex: 4,
-    // flexDirection: "row",
     width: "100%",
-    borderColor: "yellow",
-    borderWidth: 1,
+    // borderColor: "yellow",
+    // borderWidth: 1,
   },
   coverImage: {
     flex: 1,
@@ -178,30 +181,33 @@ const styles = StyleSheet.create({
   coverRegion: {
     flex: 1,
     width: "100%",
-    borderColor: "green",
-    borderWidth: 1,
+    borderBottomWidth: 2,
+    borderBottomColor: "white",
+    // borderColor: "green",
+    // borderWidth: 1,
     // justifyContent: "center",
   },
   creationsContainer: {
     flex: 1,
-    borderColor: "purple",
-    borderWidth: 1,
+    // borderColor: "purple",
+    backgroundColor: "#222831",
+    // borderWidth: 1,
     padding: 10,
   },
   googleName: {
     flex: 37.5,
     fontSize: 14,
     textAlign: "center",
-    // paddingLeft: 5,
-    // paddingRight: 5,
+    paddingTop: 8,
+
     // borderColor: "cyan",
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   grid: {
-    borderColor: "cyan",
+    // borderColor: "cyan",
+    backgroundColor: "#393E46",
     borderWidth: 1,
-    justifyContent: "center",
-    // alignItems: "center",
+    padding: 5,
   },
   imageThumbnail: {
     justifyContent: "center",
@@ -213,17 +219,21 @@ const styles = StyleSheet.create({
     flex: 37.5,
     fontSize: 14,
     textAlign: "center",
+    paddingTop: 8,
+
     // borderColor: "cyan",
-    borderWidth: 1,
-    // paddingLeft: 20,
-    // paddingRight: 20,
+    // borderWidth: 1,
   },
   profileHeader: {
     flexDirection: "row",
-    borderColor: "green",
-    borderWidth: 1,
+    // borderColor: "green",
+    backgroundColor: "#222831",
+    // borderWidth: 1,
     alignItems: "center",
     justifyContent: "space-around",
+    paddingBottom: 8,
+    borderBottomColor: "#393E46",
+    borderBottomWidth: 1,
   },
   profileImg: {
     width: 80,
@@ -235,23 +245,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   profileImgContainer: {
+    backgroundColor: "#222831",
     flex: 25,
     alignItems: "center",
     // borderColor: "red",
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   updateCoverPhotoButton: {
-    // width: "25%",
     justifyContent: "center",
     alignItems: "center",
     height: 24,
     width: 24,
     color: "rgba(0, 0, 0, 0.75)",
-    // backgroundColor: "rgba(52, 52, 52, 0.2)",
-    // shadowOpacity: 0.2,
-    // shadowRadius: 10,
-    // elevation: 0.4,
-    borderColor: "orange",
+    // borderColor: "orange",
     // borderWidth: 1,
     marginTop: 1,
   },
@@ -268,6 +274,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     shadowOpacity: 0.8,
     shadowRadius: 10,
-    // elevation: 0.4,
   },
 });
