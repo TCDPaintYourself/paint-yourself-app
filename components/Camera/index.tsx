@@ -18,7 +18,7 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   const [appStateVisible, setAppStateVisible] = useState(appState.current === 'active')
   const [type, setType] = useState(Camera.Constants.Type.back)
   const [available, setAvailable] = useState<boolean>(true)
-  const cameraRef = useRef(null)
+  const cameraRef = useRef<Camera>(null)
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -82,7 +82,6 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
                 <AntDesign
                   onPress={async () => {
                     if (cameraRef.current) {
-                      // @ts-ignore
                       let photo = await cameraRef.current.takePictureAsync()
                       setImage({ ...photo, camera: true })
                     }
