@@ -1,45 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Button } from 'react-native';
-import { Text, View } from 'components/Themed';
+import { useState } from 'react'
+import { StatusBar } from 'expo-status-bar'
+import { Platform, StyleSheet } from 'react-native'
+
+import { Text, View } from 'components/Themed'
+import ThemePicker from 'components/ThemePicker'
+import Button from 'components/Button'
+import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 
 export default function NewProjectScreen() {
+  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select photo to style</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <View style={styles.buttonDiv}>
-        <Button
-          onPress={upload}
-          title="Upload"
-          color="#841584"
-        />
-        <Button
-          onPress={openCamera}
-          title="Take Photo"
-          color="#841584"
-        />
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.title}>Select photo to style</Text>
+        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+        <View style={styles.buttonDiv}>
+          <View style={styles.buttonMargin}>
+            <Button onPress={upload} title="Upload" variant="primary" />
+          </View>
+          <View style={styles.buttonMargin}>
+            <Button onPress={openCamera} title="Take Photo" variant="primary" />
+          </View>
+        </View>
+        <Text style={styles.themeText}>Select Theme</Text>
       </View>
+      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
+
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
-  );
+  )
 }
 
 function upload() {
-  console.log("upload")
+  console.log('upload')
 }
 
 function openCamera() {
-  console.log("openCamera")
+  console.log('openCamera')
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  themeText: {
+    margin: 20,
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -52,4 +63,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-});
+  buttonMargin: {
+    marginRight: 8,
+    marginLeft: 8,
+  },
+})
