@@ -1,20 +1,22 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import * as ImgPicker from 'expo-image-picker'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
 import { Text, View } from 'components/Themed'
-import { RootStackScreenProps, CameraImage } from 'types'
+import { CameraImage } from 'types'
 import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
 
+const { width } = Dimensions.get('screen')
+const containerWidth = width * 0.8
+const placeholderImageHeight = width * 1 //make the image a 8x10 portrait
+
 export default function NewProjectScreen() {
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [image, setImage] = useState<CameraImage | null>(null)
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
-
-  console.log(image)
 
   const openCamera = () => {
     setTakePhotoMode(true)
@@ -30,10 +32,9 @@ export default function NewProjectScreen() {
     let result = await ImgPicker.launchImageLibraryAsync({
       mediaTypes: ImgPicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 5], // 8x10 portrait
       quality: 1,
     })
-    setImage(null)
 
     if (!result.cancelled) {
       setImage({ uri: result.uri, width: result.width, height: result.height, camera: false })
@@ -49,38 +50,46 @@ export default function NewProjectScreen() {
     resetPhoto()
   }
 
-  return (
-    <View style={styles.container}>
-      {takePhotoMode ? (
+  if (takePhotoMode) {
+    return (
+      <View style={styles.container}>
         <Camera image={image} setImage={setImage} closeCamera={closeCamera} />
-      ) : (
-        <>
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
-            <View style={styles.buttonDiv}>
-              <View style={styles.buttonMargin}>
-                <Button
-                  onPress={openGallery}
-                  title={image && !image.camera ? 'Upload different' : 'Upload'}
-                  variant="primary"
-                />
-              </View>
-              <View style={styles.buttonMargin}>
-                <Button
-                  onPress={openCameraResetPhoto}
-                  title={image && image.camera ? 'Retake Photo' : 'Take Photo'}
-                  variant="primary"
-                />
-              </View>
-            </View>
-            <Text style={styles.themeText}>Select Theme</Text>
-          </View>
-          <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
-        </>
-      )}
+      </View>
+    )
+  }
 
+  return (
+    <ScrollView style={styles.container}>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.themeText}>Select Image</Text>
+        <ImageBackground
+          source={{ uri: image ? image.uri : 'https://via.placeholder.com/200x250' }}
+          style={styles.placeholderImage}
+          imageStyle={{ borderRadius: 16 }}
+        >
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={openGallery}
+              title={image && !image.camera ? 'Upload different' : 'Upload'}
+              variant="primary"
+            />
+
+            <Button
+              onPress={openCameraResetPhoto}
+              title={image && image.camera ? 'Retake Photo' : 'Take Photo'}
+              variant="primary"
+            />
+          </View>
+        </ImageBackground>
+
+        <Text style={styles.themeText}>Select Theme</Text>
+      </View>
+
+      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
+      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="continue" />
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({
@@ -92,27 +101,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   themeText: {
-    margin: 20,
+    margin: 15,
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   separator: {
     marginTop: 10,
     height: 1,
     width: '80%',
   },
-  buttonDiv: {
-    display: 'flex',
+  buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    position: 'relative',
+    top: placeholderImageHeight - 50,
+    marginBottom: 25,
+    backgroundColor: 'transparent',
   },
   buttonMargin: {
     marginRight: 8,
     marginLeft: 8,
-    marginTop: 16,
   },
-  photoTaken: {
-    width: '100%',
-    height: 200,
-    marginBottom: 10,
+  placeholderImage: {
+    width: containerWidth,
+    height: placeholderImageHeight,
   },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginBottom: 15 },
 })

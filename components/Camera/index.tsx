@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus, Platform } from 'react-native'
 import { Camera } from 'expo-camera'
 import { CameraImage } from 'types'
 import { AntDesign, FontAwesome, Ionicons, Feather } from '@expo/vector-icons'
@@ -9,17 +9,28 @@ interface Props {
   setImage: (newImage: CameraImage | null) => void
   closeCamera: () => void
 }
+
+const ICON_SIZE = 40
+
 export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null)
   const appState = useRef(AppState.currentState)
   const [appStateVisible, setAppStateVisible] = useState(appState.current === 'active')
   const [type, setType] = useState(Camera.Constants.Type.back)
+  const [available, setAvailable] = useState<boolean>(true)
   const cameraRef = useRef(null)
 
   useEffect(() => {
     const requestPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync()
       setHasPermission(status === 'granted')
+    }
+    const cameraIsAvailable = async () => {
+      let available = await Camera.isAvailableAsync()
+      setAvailable(available)
+    }
+    if (Platform.OS === 'web') {
+      cameraIsAvailable()
     }
     requestPermissions()
   }, [])
@@ -44,37 +55,45 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   if (hasPermission === null) {
     return <View />
   }
+
   if (hasPermission === false) {
     return <Text>No access to camera</Text>
   }
+
+  if (!available) {
+    return <Text>Device has no camera</Text>
+  }
+
   return (
     <View style={styles.container}>
       {image ? (
         <ImageBackground source={{ uri: image.uri }} style={styles.takenPhoto}>
           <View style={styles.buttonContainer}>
-            <FontAwesome name="rotate-left" size={40} color="white" onPress={() => setImage(null)} />
-            <Feather name="check-circle" size={40} color="white" onPress={closeCamera} />
+            <FontAwesome name="rotate-left" size={ICON_SIZE} color="white" onPress={() => setImage(null)} />
+            <Feather name="check-circle" size={ICON_SIZE} color="white" onPress={closeCamera} />
           </View>
         </ImageBackground>
       ) : (
         appStateVisible && (
-          <Camera style={styles.camera} type={type} ref={cameraRef}>
-            <AntDesign name="close" size={40} color="white" onPress={closeCamera} style={{ margin: 5 }} />
-            <View style={styles.buttonContainer}>
-              <AntDesign
-                onPress={async () => {
-                  if (cameraRef.current) {
-                    // @ts-ignore
-                    let photo = await cameraRef.current.takePictureAsync()
-                    setImage({ ...photo, camera: true })
-                  }
-                }}
-                name="camera"
-                size={40}
-                color="white"
-                style={{ marginBottom: 3 }}
-              />
-              <Ionicons name="camera-reverse-sharp" size={40} color="white" onPress={handleSwitchCameraType} />
+          <Camera style={styles.camera} type={type} ratio="8:10" ref={cameraRef}>
+            <View style={styles.cameraContainer}>
+              <AntDesign name="close" size={ICON_SIZE} color="white" onPress={closeCamera} style={styles.closeButton} />
+              <View style={styles.buttonContainer}>
+                <AntDesign
+                  onPress={async () => {
+                    if (cameraRef.current) {
+                      // @ts-ignore
+                      let photo = await cameraRef.current.takePictureAsync()
+                      setImage({ ...photo, camera: true })
+                    }
+                  }}
+                  name="camera"
+                  size={ICON_SIZE}
+                  color="white"
+                  style={styles.takePhotoButton}
+                />
+                <Ionicons name="camera-reverse-sharp" size={ICON_SIZE} color="white" onPress={handleSwitchCameraType} />
+              </View>
             </View>
           </Camera>
         )
@@ -90,6 +109,10 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  cameraContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -108,5 +131,11 @@ const styles = StyleSheet.create({
   takenPhoto: {
     resizeMode: 'cover',
     flex: 1,
+  },
+  closeButton: {
+    margin: 5,
+  },
+  takePhotoButton: {
+    margin: 3, // place icon in correct position due to spacing
   },
 })

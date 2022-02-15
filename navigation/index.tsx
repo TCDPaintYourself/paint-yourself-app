@@ -16,9 +16,9 @@ import NewProjectScreen from 'screens/NewProjectScreen'
 import NotFoundScreen from 'screens/NotFoundScreen'
 import ProfileScreen from 'screens/ProfileScreen'
 import SettingsScreen from 'screens/SettingsScreen'
+import LoginRegisterScreen from 'screens/LoginRegisterScreen'
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types'
 import LinkingConfiguration from 'navigation/LinkingConfiguration'
-import LoginRegisterScreen from 'screens/LoginRegisterScreen'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (

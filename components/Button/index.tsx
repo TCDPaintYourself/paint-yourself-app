@@ -24,7 +24,7 @@ export default function Button({ title, fullWidth, variant = 'primary', style, .
         },
         style,
       ]}
-      activeOpacity={0.7}
+      activeOpacity={props.disabled ? 1 : 0.7}
       {...props}
     >
       <Text style={styles.text}>{title}</Text>
