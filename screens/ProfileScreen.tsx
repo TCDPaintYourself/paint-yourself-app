@@ -4,7 +4,7 @@ import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
 import Button from 'components/Button'
 import { FontAwesome5 } from '@expo/vector-icons'
-
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
@@ -16,8 +16,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
 
   const [user] = useUserContext()
 
-  const [googleUsername, setGoogleUsername] = useState('')
-  const [profilePicSrc, setProfilePicSrc] = useState('')
   const [coverPicSrc, setCoverPicSrc] = useState('')
   const [numCreations, setNumCreations] = useState(0)
 
@@ -52,12 +50,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
     })
     setDataSource(items)
 
-    // TODO: set from API data
-    setGoogleUsername('[Google Name]')
-
-    // TODO: set from API data
-    setProfilePicSrc(require('../assets/images/temp/google_profile_pic_temp.jpg'))
-
     // TODO: set from persistent storage
     setCoverPicSrc(require('../assets/images/temp/cover_photo_temp.jpg'))
 
@@ -78,14 +70,27 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
     <View style={styles.container}>
       {/* {user && (  // TODO: this */}
       <View style={styles.coverRegion}>
-        <ImageBackground resizeMode="cover" source={{ uri: user.photoURL! }} style={styles.coverImage}>
-          <View style={styles.updateCoverPhotoButtonContainer}>
+        <ImageBackground resizeMode="cover" source={coverPicSrc as any} style={styles.coverImage}>
+          <View style={styles.IconButtonContainer}>
+            <MaterialCommunityIcons
+              name="logout-variant"
+              size={22}
+              color="black"
+              onPress={onPressLogout}
+              style={styles.logoutButton}
+              title="Logout"
+              accessibilityLabel="Logs the user out"
+            />
+          </View>
+          <View style={styles.IconButtonContainer}>
             <FontAwesome5
               name="images"
               size={20}
               color="black"
               onPress={updateCoverPhoto}
               style={styles.updateCoverPhotoButton}
+              title="Update Cover Photo"
+              accessibilityLabel="Updates the user's cover photo"
             />
           </View>
         </ImageBackground>
@@ -97,7 +102,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
             {user.displayName}
           </Text>
           <View style={styles.profileImgContainer}>
-            <Image source={profilePicSrc as any} resizeMode="cover" style={styles.profileImg} />
+            <Image source={{ uri: user.photoURL! }} resizeMode="cover" style={styles.profileImg} />
           </View>
           <Text style={styles.numStylegans} numberOfLines={1}>
             <Text style={{ fontWeight: 'bold' }}> {numCreations} </Text>
@@ -139,12 +144,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
             initialNumToRender={12}
           ></FlatList>
         </View>
-        <Button
-          style={styles.logoutButton}
-          onPress={onPressLogout}
-          title="Logout"
-          accessibilityLabel="Logs the user out"
-        />
       </View>
     </View>
   )
@@ -168,8 +167,9 @@ const styles = StyleSheet.create({
   coverImage: {
     flex: 1,
     width: '100%',
+    // flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   coverRegion: {
     flex: 1,
@@ -255,14 +255,15 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     marginTop: 1,
   },
-  updateCoverPhotoButtonContainer: {
+  IconButtonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
     // borderColor: "orange",
     // borderWidth: 1,
-    marginBottom: '2%',
-    marginRight: '2%',
+    // marginBottom: '2%',
+    // marginRight: '2%',
+    margin: '2%',
     paddingTop: 5,
     padding: 4,
     borderRadius: 5,
