@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus, Platform } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus, Platform, Dimensions } from 'react-native'
 import { Camera } from 'expo-camera'
 import { CameraImage } from 'types'
 import { AntDesign, FontAwesome, Ionicons, Feather } from '@expo/vector-icons'
@@ -11,6 +11,9 @@ interface Props {
 }
 
 const ICON_SIZE = 40
+
+const { width } = Dimensions.get('screen')
+const height = width * (16 / 9)
 
 export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null)
@@ -75,7 +78,7 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
         </ImageBackground>
       ) : (
         appStateVisible && (
-          <Camera style={styles.camera} type={type} ratio="8:10" ref={cameraRef}>
+          <Camera style={styles.camera} type={type} ratio="16:9" ref={cameraRef}>
             <View style={styles.cameraContainer}>
               <AntDesign name="close" size={ICON_SIZE} color="white" onPress={closeCamera} style={styles.closeButton} />
               <View style={styles.buttonContainer}>
@@ -103,8 +106,9 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     margin: 5,
+    width,
+    height,
   },
   camera: {
     flex: 1,

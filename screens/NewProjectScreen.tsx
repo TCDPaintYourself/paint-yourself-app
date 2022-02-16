@@ -11,7 +11,8 @@ import Camera from 'components/Camera'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
-const placeholderImageHeight = width * 1 //make the image a 8x10 portrait
+const placeholderImageWidth = width * 0.95
+const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
 
 export default function NewProjectScreen() {
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   placeholderImage: {
-    width: containerWidth,
+    width: placeholderImageWidth,
     height: placeholderImageHeight,
   },
   continueButton: { alignSelf: 'center', width: containerWidth, marginBottom: 15 },
