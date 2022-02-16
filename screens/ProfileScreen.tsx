@@ -2,7 +2,6 @@ import { StyleSheet, ImageBackground, Image, Dimensions, FlatList, TouchableHigh
 import React, { useEffect, useState } from 'react'
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
-import Button from 'components/Button'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { onAuthStateChanged } from 'firebase/auth'
@@ -66,87 +65,97 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
     console.log(`Expand grid image ${id}`)
   }
 
-  return (
-    <View style={styles.container}>
-      {/* {user && (  // TODO: this */}
-      <View style={styles.coverRegion}>
-        <ImageBackground resizeMode="cover" source={coverPicSrc as any} style={styles.coverImage}>
-          <View style={styles.IconButtonContainer}>
-            <MaterialCommunityIcons
-              name="logout-variant"
-              size={22}
-              color="black"
-              onPress={onPressLogout}
-              style={styles.logoutButton}
-              title="Logout"
-              accessibilityLabel="Logs the user out"
-            />
-          </View>
-          <View style={styles.IconButtonContainer}>
-            <FontAwesome5
-              name="images"
-              size={20}
-              color="black"
-              onPress={updateCoverPhoto}
-              style={styles.updateCoverPhotoButton}
-              title="Update Cover Photo"
-              accessibilityLabel="Updates the user's cover photo"
-            />
-          </View>
-        </ImageBackground>
-      </View>
-      {/* )} */}
-      <View style={styles.content}>
-        <View style={styles.profileHeader}>
-          <Text style={styles.googleName} numberOfLines={1}>
-            {user.displayName}
-          </Text>
-          <View style={styles.profileImgContainer}>
-            <Image source={{ uri: user.photoURL! }} resizeMode="cover" style={styles.profileImg} />
-          </View>
-          <Text style={styles.numStylegans} numberOfLines={1}>
-            <Text style={{ fontWeight: 'bold' }}> {numCreations} </Text>
-            <Text> Creations </Text>
-          </Text>
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.coverRegion}>
+          <ImageBackground resizeMode="cover" source={coverPicSrc as any} style={styles.coverImage}>
+            <View style={styles.IconButtonContainer}>
+              <MaterialCommunityIcons
+                name="logout-variant"
+                size={22}
+                color="black"
+                onPress={onPressLogout}
+                style={styles.logoutButton}
+                title="Logout"
+                accessibilityLabel="Logs the user out"
+              />
+            </View>
+            <View style={styles.IconButtonContainer}>
+              <FontAwesome5
+                name="images"
+                size={20}
+                color="black"
+                onPress={updateCoverPhoto}
+                style={styles.updateCoverPhotoButton}
+                title="Update Cover Photo"
+                accessibilityLabel="Updates the user's cover photo"
+              />
+            </View>
+          </ImageBackground>
         </View>
-        <View style={styles.creationsContainer}>
-          <FlatList
-            numColumns={IMGS_PER_ROW}
-            data={dataSource}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    margin: 1,
-                  }}
-                >
-                  <TouchableHighlight onPress={() => expandImageView(item.id)}>
-                    <Image
-                      style={[
-                        styles.imageThumbnail,
-                        {
-                          width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
-                          height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
-                        },
-                      ]}
-                      source={{
-                        uri: item.src,
-                      }}
-                    />
-                  </TouchableHighlight>
-                </View>
-              )
-            }}
-            keyExtractor={(item, index) => '' + item.id}
-            contentContainerStyle={styles.grid}
-            initialNumToRender={12}
-          ></FlatList>
+        <View style={styles.content}>
+          <View style={styles.profileHeader}>
+            {user && (
+              <Text style={styles.googleName} numberOfLines={1}>
+                {user.displayName}
+              </Text>
+            )}
+            {user && (
+              <View style={styles.profileImgContainer}>
+                <Image source={{ uri: user.photoURL! }} resizeMode="cover" style={styles.profileImg} />
+              </View>
+            )}
+            <Text style={styles.numStylegans} numberOfLines={1}>
+              <Text style={{ fontWeight: 'bold' }}> {numCreations} </Text>
+              <Text> Creations </Text>
+            </Text>
+          </View>
+          <View style={styles.creationsContainer}>
+            <FlatList
+              numColumns={IMGS_PER_ROW}
+              data={dataSource}
+              renderItem={({ item }) => {
+                return (
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      margin: 1,
+                    }}
+                  >
+                    <TouchableHighlight onPress={() => expandImageView(item.id)}>
+                      <Image
+                        style={[
+                          styles.imageThumbnail,
+                          {
+                            width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
+                            height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                          },
+                        ]}
+                        source={{
+                          uri: item.src,
+                        }}
+                      />
+                    </TouchableHighlight>
+                  </View>
+                )
+              }}
+              keyExtractor={(item, index) => '' + item.id}
+              contentContainerStyle={styles.grid}
+              initialNumToRender={12}
+            ></FlatList>
+          </View>
         </View>
       </View>
-    </View>
-  )
+    )
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text>No user logged in</Text>
+      </View>
+    )
+  }
 }
 
 // palette: https://colorhunt.co/palette/222831393e46b55400eeeeee
