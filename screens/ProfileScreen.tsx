@@ -96,16 +96,12 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne
         </View>
         <View style={styles.content}>
           <View style={styles.profileHeader}>
-            {user && (
-              <Text style={styles.googleName} numberOfLines={1}>
-                {user.displayName}
-              </Text>
-            )}
-            {user && (
-              <View style={styles.profileImgContainer}>
-                <Image source={{ uri: user.photoURL! }} resizeMode="cover" style={styles.profileImg} />
-              </View>
-            )}
+            <Text style={styles.googleName} numberOfLines={1}>
+              {user.displayName}
+            </Text>
+            <View style={styles.profileImgContainer}>
+              <Image source={{ uri: user.photoURL! }} resizeMode="cover" style={styles.profileImg} />
+            </View>
             <Text style={styles.numStylegans} numberOfLines={1}>
               <Text style={{ fontWeight: 'bold' }}> {numCreations} </Text>
               <Text> Creations </Text>
