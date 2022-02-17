@@ -6,22 +6,24 @@ import * as Sharing from 'expo-sharing'
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
-export default function FinishedArtScreen({ route }) {
+export default function FinishedArtScreen({ route, navigation }) {
   const { image } = route.params
 
   const shareImage = async () => {
-    console.log('share')
     if (await Sharing.isAvailableAsync()) {
-      console.log('sharing available')
-      //   Sharing.shareAsync(image)
-      //test
+      Sharing.shareAsync(image)
     }
   }
+
+  const handleHome = () => navigation.navigate('Profile')
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
-      <Button onPress={shareImage} style={styles.shareButton} title="Share" />
+      <View style={styles.row}>
+        <Button onPress={shareImage} style={styles.shareButton} title="Share" />
+        <Button onPress={handleHome} style={styles.shareButton} title="Home" />
+      </View>
     </View>
   )
 }
@@ -32,10 +34,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   image: {
-    width: 100,
-    height: 100,
+    width: containerWidth,
+    height: containerWidth,
     marginBottom: 10,
   },
-  shareButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
+  shareButton: { alignSelf: 'center', width: containerWidth / 2 - 20, marginTop: 20, marginHorizontal: 10 },
 })

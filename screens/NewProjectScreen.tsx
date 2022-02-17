@@ -8,6 +8,7 @@ import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
+import * as Sharing from 'expo-sharing'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -57,7 +58,7 @@ export default function NewProjectScreen({ navigation }) {
     resetPhoto()
   }
 
-  const handleContinue = () => navigation.navigate('ChooseStyleScreen', { image: image })
+  const handleContinue = () => navigation.navigate('ChooseStyleScreen', { image: image.uri })
 
   if (takePhotoMode) {
     return (
@@ -102,6 +103,7 @@ export default function NewProjectScreen({ navigation }) {
         style={!image ? styles.disabledButton : styles.continueButton}
         title="Continue"
       />
+
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
     </ScrollView>
@@ -143,6 +145,6 @@ const styles = StyleSheet.create({
     height: placeholderImageHeight,
     marginTop: 12,
   },
-  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
-  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15, backgroundColor: 'grey' },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 30 },
+  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 30, backgroundColor: 'grey' },
 })
