@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   coverRegion: {
     flex: 1,
     width: '100%',
-    borderBottomWidth: 2,
+    // borderBottomWidth: 2,
     borderBottomColor: 'white',
     // borderColor: "green",
     // borderWidth: 1,
@@ -188,7 +188,8 @@ const styles = StyleSheet.create({
   creationsContainer: {
     flex: 1,
     // borderColor: "purple",
-    backgroundColor: '#222831',
+    // backgroundColor: '#222831',
+    backgroundColor: 'white',
     // borderWidth: 1,
     padding: 10,
   },
@@ -197,14 +198,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingTop: 8,
-
     // borderColor: "cyan",
     // borderWidth: 1,
   },
   grid: {
     // borderColor: "cyan",
-    backgroundColor: '#393E46',
-    borderWidth: 1,
+    // backgroundColor: '#393E46',
+    backgroundColor: 'white',
+    // borderWidth: 1,
     padding: 5,
   },
   imageThumbnail: {
@@ -219,20 +220,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingTop: 8,
-
     // borderColor: "cyan",
     // borderWidth: 1,
   },
   profileHeader: {
     flexDirection: 'row',
     // borderColor: "green",
-    backgroundColor: '#222831',
+    // backgroundColor: '#222831',
+    backgroundColor: 'white',
     // borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingBottom: 8,
+    paddingTop: 12,
+    paddingBottom: 2,
     borderBottomColor: '#393E46',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
   },
   profileImg: {
     width: 80,
@@ -244,7 +246,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   profileImgContainer: {
-    backgroundColor: '#222831',
+    // backgroundColor: '#222831',
+    backgroundColor: 'white',
     flex: 25,
     alignItems: 'center',
     // borderColor: "red",

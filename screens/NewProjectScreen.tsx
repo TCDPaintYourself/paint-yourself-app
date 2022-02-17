@@ -9,14 +9,14 @@ import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
 
-const { width } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 const placeholderImageWidth = width * 0.95
 const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
 
 export default function NewProjectScreen() {
-  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [image, setImage] = useState<CameraImage | null>(null)
+  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
 
   const openCamera = () => {
@@ -82,14 +82,13 @@ export default function NewProjectScreen() {
             />
           </View>
         </ImageBackground>
-
         <Text style={styles.themeText}>Select Theme</Text>
       </View>
 
       <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
-      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="continue" />
+      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="Continue" />
       {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
     </ScrollView>
   )
 }
@@ -128,5 +127,5 @@ const styles = StyleSheet.create({
     width: placeholderImageWidth,
     height: placeholderImageHeight,
   },
-  continueButton: { alignSelf: 'center', width: containerWidth, marginBottom: 15 },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
 })

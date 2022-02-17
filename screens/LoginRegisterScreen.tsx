@@ -65,13 +65,13 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
     <View style={styles.container}>
       <ImageBackground resizeMode="cover" source={BG_IMAGES[bgImageIndex]} style={styles.bgImage}>
         <Image source={require('../assets/images/logo_dark_sh.png')} resizeMode="contain" style={styles.logo} />
-        <Text style={styles.title}>Continue with Google:</Text>
+        {/* <Text style={styles.title}>Continue with Google:</Text> */}
         <FontAwesome.Button
           name="google"
           backgroundColor="#FFFFFF"
           color="#757575"
           onPress={onPressGoogleLogin}
-          iconStyle={{ marginRight: '15%' }}
+          iconStyle={{ marginHorizontal: '10%' }}
           size={25}
           style={styles.google}
         >
@@ -100,7 +100,8 @@ const styles = StyleSheet.create({
   },
   google: {
     textAlign: 'center',
-    borderWidth: 1,
+    padding: 8,
+    // borderWidth: 1,
     // borderColor: "red",
   },
   logo: {
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderColor: 'green',
     width: '85%',
+    marginBottom: 50,
   },
   title: {
     fontSize: 22,
