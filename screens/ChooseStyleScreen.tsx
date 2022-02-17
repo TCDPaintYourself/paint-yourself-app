@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StyleSheet, ImageBackground, Image, ScrollView, Dimensions } from 'react-native'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
 export default function ChooseStyleScreen({ route, navigation }) {
-  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
+  const [projectTheme, setProjectTheme] = useState<IProjectTheme>(ProjectThemes[0] || null)
 
   const { image } = route.params
 

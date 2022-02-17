@@ -12,8 +12,8 @@ import * as Sharing from 'expo-sharing'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
-const placeholderImageWidth = width * 0.95
-const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
+const placeholderImageWidth = width * 0.85
+const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
 export default function NewProjectScreen({ navigation }) {
   const [image, setImage] = useState<CameraImage | null>(null)
