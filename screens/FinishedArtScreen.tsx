@@ -14,6 +14,7 @@ export default function FinishedArtScreen({ route }) {
     if (await Sharing.isAvailableAsync()) {
       console.log('sharing available')
       //   Sharing.shareAsync(image)
+      //test
     }
   }
 
