@@ -30,9 +30,17 @@ export type RootTabParamList = {
   NewProject: undefined
   TabOne: undefined
   TabTwo: undefined
+  TabThree: undefined
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >
+
+export type CameraImage = {
+  height: number
+  width: number
+  uri: string
+  camera: boolean
+}

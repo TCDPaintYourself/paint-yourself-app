@@ -1,46 +1,98 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { Platform, StyleSheet } from 'react-native'
-
+import * as ImgPicker from 'expo-image-picker'
+import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
 import { Text, View } from 'components/Themed'
+import { CameraImage } from 'types'
 import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
+import Camera from 'components/Camera'
+
+const { width } = Dimensions.get('screen')
+const containerWidth = width * 0.8
+const placeholderImageWidth = width * 0.95
+const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
 
 export default function NewProjectScreen() {
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
+  const [image, setImage] = useState<CameraImage | null>(null)
+  const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
+
+  const openCamera = () => {
+    setTakePhotoMode(true)
+    setImage(null)
+  }
+
+  const closeCamera = () => {
+    setTakePhotoMode(false)
+  }
+
+  const openGallery = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImgPicker.launchImageLibraryAsync({
+      mediaTypes: ImgPicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 5], // 8x10 portrait
+      quality: 1,
+    })
+
+    if (!result.cancelled) {
+      setImage({ uri: result.uri, width: result.width, height: result.height, camera: false })
+    }
+  }
+
+  const resetPhoto = () => {
+    setImage(null)
+  }
+
+  const openCameraResetPhoto = () => {
+    openCamera()
+    resetPhoto()
+  }
+
+  if (takePhotoMode) {
+    return (
+      <View style={styles.container}>
+        <Camera image={image} setImage={setImage} closeCamera={closeCamera} />
+      </View>
+    )
+  }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.title}>Select photo to style</Text>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <View style={styles.buttonDiv}>
-          <View style={styles.buttonMargin}>
-            <Button onPress={upload} title="Upload" variant="primary" />
+        <Text style={styles.themeText}>Select Image</Text>
+        <ImageBackground
+          source={{ uri: image ? image.uri : 'https://via.placeholder.com/200x250' }}
+          style={styles.placeholderImage}
+          imageStyle={{ borderRadius: 16 }}
+        >
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={openGallery}
+              title={image && !image.camera ? 'Upload different' : 'Upload'}
+              variant="primary"
+            />
+
+            <Button
+              onPress={openCameraResetPhoto}
+              title={image && image.camera ? 'Retake Photo' : 'Take Photo'}
+              variant="primary"
+            />
           </View>
-          <View style={styles.buttonMargin}>
-            <Button onPress={openCamera} title="Take Photo" variant="primary" />
-          </View>
-        </View>
+        </ImageBackground>
+
         <Text style={styles.themeText}>Select Theme</Text>
       </View>
-      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
 
+      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
+      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="continue" />
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
+    </ScrollView>
   )
 }
-
-function upload() {
-  console.log('upload')
-}
-
-function openCamera() {
-  console.log('openCamera')
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -50,21 +102,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   themeText: {
-    margin: 20,
+    margin: 15,
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   separator: {
-    marginVertical: 30,
+    marginTop: 10,
     height: 1,
     width: '80%',
   },
-  buttonDiv: {
-    display: 'flex',
+  buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+    position: 'relative',
+    top: placeholderImageHeight - 50,
+    marginBottom: 25,
+    backgroundColor: 'transparent',
   },
   buttonMargin: {
     marginRight: 8,
     marginLeft: 8,
   },
+  placeholderImage: {
+    width: placeholderImageWidth,
+    height: placeholderImageHeight,
+  },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginBottom: 15 },
 })

@@ -3,10 +3,11 @@ import { FlatList, ImageBackground, Dimensions, StyleSheet } from 'react-native'
 
 import { Text, View, Icon } from 'components/Themed'
 import { IProjectTheme } from 'constants/ProjectThemes'
+import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
 
 const imageW = width * 0.8
-const imageH = imageW * 1.54
+const imageH = imageW * 1.2
 
 interface Props {
   data: IProjectTheme[]
@@ -39,12 +40,13 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
         renderItem={({ item }: { item: IProjectTheme }) => {
           return (
             <View style={{ width, alignItems: 'center' }}>
-              <ImageBackground
-                source={{ uri: item.image }}
-                style={styles.cardImage}
-                imageStyle={{ borderRadius: 16, opacity: 0.7 }}
-              >
-                <Text style={styles.subtitle}>{item.name}</Text>
+              <ImageBackground source={{ uri: item.image }} style={styles.cardImage} imageStyle={{ borderRadius: 16 }}>
+                <LinearGradient
+                  colors={['rgba(66, 66, 74, 0.65)', 'rgba(25, 25, 25, 0.65)']}
+                  style={styles.linearGradient}
+                >
+                  <Text style={styles.subtitle}>{item.name}</Text>
+                </LinearGradient>
               </ImageBackground>
             </View>
           )
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
     top: imageH - 48,
     left: 12,
     fontSize: 24,
+    color: '#fff',
   },
   circleSelector: {
     display: 'flex',
@@ -83,5 +86,10 @@ const styles = StyleSheet.create({
     width: imageW,
     height: imageH,
     resizeMode: 'cover',
+  },
+  linearGradient: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
   },
 })
