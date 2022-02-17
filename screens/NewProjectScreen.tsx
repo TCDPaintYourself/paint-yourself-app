@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import * as ImgPicker from 'expo-image-picker'
-import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
+import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions, Alert } from 'react-native'
 import { Text, View } from 'components/Themed'
 import { CameraImage } from 'types'
 import ThemePicker from 'components/ThemePicker'
@@ -9,12 +9,12 @@ import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
 
-const { width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 const placeholderImageWidth = width * 0.95
 const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
 
-export default function NewProjectScreen() {
+export default function NewProjectScreen({ navigation }) {
   const [image, setImage] = useState<CameraImage | null>(null)
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
@@ -37,6 +37,12 @@ export default function NewProjectScreen() {
       quality: 1,
     })
 
+    if (result.type == 'video') {
+      setImage(null)
+      Alert.alert('Please upload a photo!', 'We currently cannot style videos', [{ text: 'OK' }])
+      return
+    }
+
     if (!result.cancelled) {
       setImage({ uri: result.uri, width: result.width, height: result.height, camera: false })
     }
@@ -51,6 +57,8 @@ export default function NewProjectScreen() {
     resetPhoto()
   }
 
+  const handleContinue = () => navigation.navigate('ChooseStyleScreen', { image: image })
+
   if (takePhotoMode) {
     return (
       <View style={styles.container}>
@@ -62,7 +70,7 @@ export default function NewProjectScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.themeText}>Select Image</Text>
+        {/* <Text style={styles.themeText}>Select Image</Text> */}
         <ImageBackground
           source={{ uri: image ? image.uri : 'https://via.placeholder.com/200x250' }}
           style={styles.placeholderImage}
@@ -82,11 +90,18 @@ export default function NewProjectScreen() {
             />
           </View>
         </ImageBackground>
-        <Text style={styles.themeText}>Select Theme</Text>
+        {/* <Text style={styles.themeText}>Select Theme</Text> */}
       </View>
 
-      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
-      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="Continue" />
+      {/* <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} /> */}
+      <Button
+        // disabled={!image || !projectTheme}
+        disabled={!image}
+        onPress={handleContinue}
+        // style={!image || !projectTheme ? styles.disabledButton : styles.continueButton}
+        style={!image ? styles.disabledButton : styles.continueButton}
+        title="Continue"
+      />
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
     </ScrollView>
@@ -115,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'relative',
-    top: placeholderImageHeight - 50,
+    top: placeholderImageHeight - 70,
     marginBottom: 25,
     backgroundColor: 'transparent',
   },
@@ -126,6 +141,8 @@ const styles = StyleSheet.create({
   placeholderImage: {
     width: placeholderImageWidth,
     height: placeholderImageHeight,
+    marginTop: 12,
   },
   continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
+  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15, backgroundColor: 'grey' },
 })

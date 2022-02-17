@@ -53,11 +53,7 @@ export default function LoginRegisterScreen({ navigation }: RootTabScreenProps<'
    */
   onAuthStateChanged(auth, (user) => {
     setUser(user)
-
-    if (!user) {
-      return
-    }
-
+    if (!user) return
     navigation.navigate('Root')
   })
 

@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
 
-export default function ProfileScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profile'>) {
   const IMGS_PER_ROW = 3
   const GRID_IMG_WIDTH = Dimensions.get('window').width / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
