@@ -32,17 +32,11 @@ export default function NewProjectScreen({ navigation }) {
   const openGallery = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImgPicker.launchImageLibraryAsync({
-      mediaTypes: ImgPicker.MediaTypeOptions.All,
+      mediaTypes: ImgPicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 5], // 8x10 portrait
       quality: 1,
     })
-
-    if (result.type == 'video') {
-      setImage(null)
-      Alert.alert('Please upload a photo!', 'We currently cannot style videos', [{ text: 'OK' }])
-      return
-    }
 
     if (!result.cancelled) {
       setImage({ uri: result.uri, width: result.width, height: result.height, camera: false })
