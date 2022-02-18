@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
   placeholderImage: {
     width: placeholderImageWidth,
     height: placeholderImageHeight,
-    marginTop: 12,
+    marginVertical: 12,
   },
-  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 30 },
-  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 30, backgroundColor: 'grey' },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
+  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15, backgroundColor: 'grey' },
 })
