@@ -15,7 +15,11 @@ const containerWidth = width * 0.8
 const placeholderImageWidth = width * 0.85
 const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
-export default function NewProjectScreen({ navigation }) {
+interface Props {
+  navigation: any
+}
+
+const FinishedArtScreen: React.FC<Props> = ({ navigation }) => {
   const [image, setImage] = useState<CameraImage | null>(null)
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
@@ -52,7 +56,10 @@ export default function NewProjectScreen({ navigation }) {
     resetPhoto()
   }
 
-  const handleContinue = () => navigation.navigate('ChooseStyleScreen', { image: image.uri })
+  const handleContinue = () => {
+    if (image == null) return
+    navigation.navigate('ChooseStyleScreen', { image: image.uri })
+  }
 
   if (takePhotoMode) {
     return (
@@ -103,6 +110,9 @@ export default function NewProjectScreen({ navigation }) {
     </ScrollView>
   )
 }
+
+export default FinishedArtScreen
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

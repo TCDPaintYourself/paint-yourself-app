@@ -6,7 +6,12 @@ import * as Sharing from 'expo-sharing'
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
-export default function FinishedArtScreen({ route, navigation }) {
+interface Props {
+  route: any
+  navigation: any
+}
+
+const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const { image } = route.params
 
   const shareImage = async () => {
@@ -27,6 +32,8 @@ export default function FinishedArtScreen({ route, navigation }) {
     </View>
   )
 }
+
+export default FinishedArtScreen
 
 const styles = StyleSheet.create({
   container: {
