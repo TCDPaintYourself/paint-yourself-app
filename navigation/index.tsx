@@ -4,48 +4,55 @@
  *
  */
 
-import { FontAwesome } from '@expo/vector-icons'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as React from 'react'
 import { ColorSchemeName } from 'react-native'
-
+import { FontAwesome } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Colors from 'constants/Colors'
 import useColorScheme from 'hooks/useColorScheme'
-import NewProjectScreen from 'screens/NewProjectScreen'
-import NotFoundScreen from 'screens/NotFoundScreen'
-import ProfileScreen from 'screens/ProfileScreen'
-import SettingsScreen from 'screens/SettingsScreen'
-import LoginRegisterScreen from 'screens/LoginRegisterScreen'
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types'
-import LinkingConfiguration from 'navigation/LinkingConfiguration'
+// import LinkingConfiguration from 'navigation/LinkingConfiguration'
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
-  )
-}
+// SCREENS
+import LoginRegisterScreen from 'screens/LoginRegisterScreen'
+import ProfileScreen from 'screens/ProfileScreen'
+import NewProjectScreen from 'screens/NewProjectScreen'
+import ChooseStyleScreen from 'screens/ChooseStyleScreen'
+import FinishedArtScreen from 'screens/FinishedArtScreen'
+import SettingsScreen from 'screens/SettingsScreen'
 
-/**
- * A root stack navigator is often used for displaying modals on top of all other content.
- * https://reactnavigation.org/docs/modal
- */
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
-function RootNavigator() {
+export default function Navigator({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
-    <Stack.Navigator initialRouteName="LoginRegister">
-      <Stack.Screen name="LoginRegister" component={LoginRegisterScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+    // <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack.Navigator initialRouteName="LoginRegister">
+        <Stack.Screen name="LoginRegister" component={LoginRegisterScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="ChooseStyleScreen"
+          component={ChooseStyleScreen}
+          options={{
+            title: 'Select Style',
+          }}
+        />
+        {/* <Stack.Screen
+          name="FinishedArtScreen"
+          component={FinishedArtScreen}
+          options={{
+            title: '',
+          }}
+        /> */}
+        <Stack.Screen name="FinishedArtScreen" component={FinishedArtScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+        {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={NewProjectScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
+      </Stack.Group> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
@@ -60,29 +67,29 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Profile"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}
     >
       <BottomTab.Screen
-        name="TabOne"
+        name="Profile"
         component={ProfileScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+        options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIconFA name="user" color={color} />,
-        })}
+        }}
       />
       <BottomTab.Screen
         name="NewProject"
         component={NewProjectScreen}
-        options={({ navigation }: RootTabScreenProps<'NewProject'>) => ({
+        options={{
           title: 'New Project',
           tabBarIcon: ({ color }) => <TabBarIconMaterial name="camera-plus" color={color} />,
-        })}
+        }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Settings"
         component={SettingsScreen}
         options={{
           title: 'Settings',

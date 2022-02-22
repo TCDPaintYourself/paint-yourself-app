@@ -1,22 +1,30 @@
 import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import * as ImgPicker from 'expo-image-picker'
-import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
+import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions, Alert } from 'react-native'
 import { Text, View } from 'components/Themed'
 import { CameraImage } from 'types'
 import ThemePicker from 'components/ThemePicker'
 import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
+import * as Sharing from 'expo-sharing'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
-const placeholderImageWidth = width * 0.95
-const placeholderImageHeight = width * (16 / 9) //make the image a 8x10 portrait
+const placeholderImageWidth = width * 0.85
+const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
-export default function NewProjectScreen() {
-  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
+type RootStackParamList = {
+  FinishedArtScreen: { image: string }
+}
+
+type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
+
+const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
   const [image, setImage] = useState<CameraImage | null>(null)
+  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
 
   const openCamera = () => {
@@ -31,7 +39,7 @@ export default function NewProjectScreen() {
   const openGallery = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImgPicker.launchImageLibraryAsync({
-      mediaTypes: ImgPicker.MediaTypeOptions.All,
+      mediaTypes: ImgPicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 5], // 8x10 portrait
       quality: 1,
@@ -51,6 +59,11 @@ export default function NewProjectScreen() {
     resetPhoto()
   }
 
+  const handleContinue = () => {
+    if (image == null) return
+    navigation.navigate('ChooseStyleScreen', { image: image.uri })
+  }
+
   if (takePhotoMode) {
     return (
       <View style={styles.container}>
@@ -62,7 +75,7 @@ export default function NewProjectScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.themeText}>Select Image</Text>
+        {/* <Text style={styles.themeText}>Select Image</Text> */}
         <ImageBackground
           source={{ uri: image ? image.uri : 'https://via.placeholder.com/200x250' }}
           style={styles.placeholderImage}
@@ -82,17 +95,27 @@ export default function NewProjectScreen() {
             />
           </View>
         </ImageBackground>
-
-        <Text style={styles.themeText}>Select Theme</Text>
+        {/* <Text style={styles.themeText}>Select Theme</Text> */}
       </View>
 
-      <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} />
-      <Button disabled={!image || !projectTheme} style={styles.continueButton} title="continue" />
+      {/* <ThemePicker data={ProjectThemes} setProjectTheme={setProjectTheme} /> */}
+      <Button
+        // disabled={!image || !projectTheme}
+        disabled={!image}
+        onPress={handleContinue}
+        // style={!image || !projectTheme ? styles.disabledButton : styles.continueButton}
+        style={!image ? styles.disabledButton : styles.continueButton}
+        title="Continue"
+      />
+
       {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
     </ScrollView>
   )
 }
+
+export default FinishedArtScreen
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,7 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'relative',
-    top: placeholderImageHeight - 50,
+    top: placeholderImageHeight - 70,
     marginBottom: 25,
     backgroundColor: 'transparent',
   },
@@ -127,6 +150,8 @@ const styles = StyleSheet.create({
   placeholderImage: {
     width: placeholderImageWidth,
     height: placeholderImageHeight,
+    marginVertical: 12,
   },
-  continueButton: { alignSelf: 'center', width: containerWidth, marginBottom: 15 },
+  continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
+  disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15, backgroundColor: 'grey' },
 })
