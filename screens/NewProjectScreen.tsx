@@ -9,17 +9,20 @@ import Button from 'components/Button'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import Camera from 'components/Camera'
 import * as Sharing from 'expo-sharing'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 const placeholderImageWidth = width * 0.85
 const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
-interface Props {
-  navigation: any
+type RootStackParamList = {
+  FinishedArtScreen: { image: string }
 }
 
-const FinishedArtScreen: React.FC<Props> = ({ navigation }) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
+
+const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
   const [image, setImage] = useState<CameraImage | null>(null)
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)

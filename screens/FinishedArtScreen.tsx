@@ -2,14 +2,17 @@ import { StyleSheet, Image, Dimensions } from 'react-native'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
-interface Props {
-  route: any
-  navigation: any
+type RootStackParamList = {
+  FinishedArtScreen: { image: string }
+  Profile: undefined
 }
+
+type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
 const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const { image } = route.params

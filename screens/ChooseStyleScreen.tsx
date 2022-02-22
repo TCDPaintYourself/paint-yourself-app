@@ -4,11 +4,19 @@ import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import ThemePicker from 'components/ThemePicker'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
-export default function ChooseStyleScreen({ route, navigation }) {
+type RootStackParamList = {
+  ChooseStyleScreen: { image: string }
+  FinishedArtScreen: { image: string }
+}
+
+type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
+
+export default function ChooseStyleScreen({ route, navigation }: Props) {
   const [projectTheme, setProjectTheme] = useState<IProjectTheme>(ProjectThemes[0] || null)
 
   const { image } = route.params
