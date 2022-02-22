@@ -9,6 +9,7 @@ import {
   updateDoc,
   getDocs,
   onSnapshot,
+  query,
 } from 'firebase/firestore'
 import { FieldValue } from 'firebase-admin/firestore'
 import { firebaseConfig } from 'constants/Firebase'
@@ -51,6 +52,7 @@ export const getThemes = async (): Promise<ThemeVote[]> => {
   return themeVotes
 }
 
+// https://firebase.google.com/docs/firestore/query-data/listen#listen_to_multiple_documents_in_a_collection
 /**
  *
  * @param innerFunc A function that does something to the documents
@@ -58,12 +60,13 @@ export const getThemes = async (): Promise<ThemeVote[]> => {
  * Usage
  *
  * @onSnapshotDecor
- * const consoleLog = (docs: DocumentData) => {
- *  docs.forEach((doc) => console.log(doc.data()))
+ * const consoleLog = (querySnapshot: DocumentData) => {
+ *  querySnapshot.forEach((theme) => console.log(theme.data()))
  * }
  */
 export const onSnapShotDecor = async (innerFunc: (doc: DocumentData) => void) => {
-  onSnapshot(doc(firestore, 'theme_votes'), (docs) => {
-    innerFunc(docs)
+  const q = query(collection(firestore, 'theme_votes'))
+  onSnapshot(q, (querySnapshot) => {
+    innerFunc(querySnapshot)
   })
 }
