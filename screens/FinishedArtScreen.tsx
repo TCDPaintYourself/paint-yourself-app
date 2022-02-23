@@ -28,12 +28,11 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
     const { status } = await MediaLibrary.requestPermissionsAsync()
     if (status) {
       const asset = await MediaLibrary.createAssetAsync(image)
-      const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset)
+      asset.filename = '@PY-' + new Date().toLocaleTimeString()
+      const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
       console.log(albumCreated)
 
-      asset.filename = '@PY-' + new Date().toLocaleTimeString()
       console.log(asset.filename)
-      MediaLibrary.saveToLibraryAsync(image)
     } else {
       console.log('Permissions denied')
     }
