@@ -15,7 +15,7 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
-const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
+export function FinishedArtScreen({ route, navigation }: Props) {
   const { image } = route.params
 
   const shareImage = async () => {
