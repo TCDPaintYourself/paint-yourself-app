@@ -1,4 +1,12 @@
-import { StyleSheet, ImageBackground, Image, Dimensions, FlatList, TouchableHighlight } from 'react-native'
+import {
+  StyleSheet,
+  ImageBackground,
+  Image,
+  Dimensions,
+  FlatList,
+  TouchableHighlight,
+  ImageSourcePropType,
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Text, View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
@@ -15,7 +23,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
   const [user] = useUserContext()
 
-  const [coverPicSrc, setCoverPicSrc] = useState('')
+  const [coverPic, setCoverPic] = useState('')
   const [numCreations, setNumCreations] = useState(0)
 
   // Array holding user's created images
@@ -50,7 +58,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     setDataSource(items)
 
     // TODO: set from persistent storage
-    setCoverPicSrc(require('../assets/images/temp/cover_photo_temp.jpg'))
+    setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
 
     // TODO: set from persistent storage
     setNumCreations(60)
@@ -69,7 +77,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     return (
       <View style={styles.container}>
         <View style={styles.coverRegion}>
-          <ImageBackground resizeMode="cover" source={coverPicSrc as any} style={styles.coverImage}>
+          <ImageBackground
+            resizeMode="cover"
+            source={coverPic ? (coverPic as ImageSourcePropType) : { uri: null }}
+            style={styles.coverImage}
+          >
             <View style={styles.IconButtonContainer}>
               <MaterialCommunityIcons
                 name="logout-variant"
