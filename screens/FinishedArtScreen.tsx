@@ -3,6 +3,8 @@ import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import * as MediaLibrary from 'expo-media-library'
+import * as Permissions from 'expo-permissions'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -23,14 +25,25 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
     }
   }
 
+  const saveImage = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync()
+    if (status) {
+      MediaLibrary.saveToLibraryAsync(image)
+    } else {
+      console.log('Permissions denied')
+    }
+    console.log('done')
+  }
+
   const handleHome = () => navigation.navigate('Profile')
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.row}>
-        <Button onPress={shareImage} style={styles.shareButton} title="Share" />
-        <Button onPress={handleHome} style={styles.shareButton} title="Home" />
+        <Button onPress={shareImage} style={styles.actionButtons} title="Share" />
+        <Button onPress={saveImage} style={styles.actionButtons} title="Save" />
+        <Button onPress={handleHome} style={styles.actionButtons} title="Home" />
       </View>
     </View>
   )
@@ -54,5 +67,5 @@ const styles = StyleSheet.create({
     height: containerWidth,
     marginBottom: 10,
   },
-  shareButton: { alignSelf: 'center', width: containerWidth / 2 - 20, marginTop: 20, marginHorizontal: 10 },
+  actionButtons: { alignSelf: 'center', width: containerWidth / 2 - 20, marginTop: 20, marginHorizontal: 10 },
 })
