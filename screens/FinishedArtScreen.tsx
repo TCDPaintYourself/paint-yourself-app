@@ -4,7 +4,6 @@ import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as MediaLibrary from 'expo-media-library'
-import * as Permissions from 'expo-permissions'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -28,6 +27,12 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const saveImage = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync()
     if (status) {
+      const asset = await MediaLibrary.createAssetAsync(image)
+      const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset)
+      console.log(albumCreated)
+
+      asset.filename = '@PY-' + new Date().toLocaleTimeString()
+      console.log(asset.filename)
       MediaLibrary.saveToLibraryAsync(image)
     } else {
       console.log('Permissions denied')
