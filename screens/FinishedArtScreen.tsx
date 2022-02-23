@@ -1,10 +1,11 @@
 import { StyleSheet, Image, Dimensions } from 'react-native'
-import { Text, View } from 'components/Themed'
-import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-const { width, height } = Dimensions.get('screen')
+import { View } from 'components/Themed'
+import Button from 'components/Button'
+
+const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
 type RootStackParamList = {
