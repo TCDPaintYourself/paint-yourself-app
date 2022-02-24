@@ -13,8 +13,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Colors from 'constants/Colors'
 import useColorScheme from 'hooks/useColorScheme'
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from 'types'
-// import LinkingConfiguration from 'navigation/LinkingConfiguration'
+import { RootStackParamList, RootTabParamList } from 'types'
 
 // SCREENS
 import LoginRegisterScreen from 'screens/LoginRegisterScreen'
@@ -28,9 +27,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function Navigator({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
-    // <NavigationContainer linking={LinkingConfiguration} theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
     <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack.Navigator initialRouteName="LoginRegister">
+      <Stack.Navigator initialRouteName="LoginRegister" screenOptions={{ gestureEnabled: false }}>
         <Stack.Screen name="LoginRegister" component={LoginRegisterScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="ChooseStyleScreen"
@@ -39,13 +37,6 @@ export default function Navigator({ colorScheme }: { colorScheme: ColorSchemeNam
             title: 'Select Style',
           }}
         />
-        {/* <Stack.Screen
-          name="FinishedArtScreen"
-          component={FinishedArtScreen}
-          options={{
-            title: '',
-          }}
-        /> */}
         <Stack.Screen name="FinishedArtScreen" component={FinishedArtScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
         {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
