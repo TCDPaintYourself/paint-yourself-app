@@ -4,17 +4,20 @@ import {
   Image,
   Dimensions,
   FlatList,
+  Modal,
+  Pressable,
   TouchableHighlight,
   ImageSourcePropType,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Text, View } from 'components/Themed'
+import { Text, View } from 'components/Themed' // need view
 import { RootTabScreenProps } from 'types'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
+import * as MediaLibrary from 'expo-media-library'
 
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profile'>) {
   const IMGS_PER_ROW = 3
@@ -29,6 +32,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   // Array holding user's created images
   const [dataSource, setDataSource] = useState<Array<{ id: number; src: string }>>([])
 
+  const [permissionsModalActive, setPermissionsModalActive] = useState(false)
   /**
    * Logs the user out.
    */
@@ -46,6 +50,33 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   })
 
   useEffect(() => {
+    // load previously saved images from /Paint-Yourself
+    const getLocalImages = async () => {
+      const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
+
+      if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
+        /**
+         *   Code to open device setting then the user can manually grant the app
+         *  that permission
+         */
+        console.log('Denied')
+        setPermissionsModalActive(true)
+      } else {
+        if (mediaPerm.status === 'granted') {
+          // Your actually code require this permission
+          console.log('Granted')
+        }
+      }
+
+      // if (status) {
+      //   console.log('Have profile permissions')
+      // } else {
+      //   console.log('Need profile permissions')
+      // }
+      // const status = await MediaLibrary.requestPermissionsAsync(false)
+    }
+
+    getLocalImages()
     // init temp images
     //  TODO: init this array using saved images
     let items = Array.apply(null, Array(60)).map((v, i) => {
@@ -76,6 +107,36 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   if (user) {
     return (
       <View style={styles.container}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={permissionsModalActive}
+          onRequestClose={() => {
+            console.log('Modal has been closed.')
+            setPermissionsModalActive(false)
+          }}
+          style={styles.modal}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                <Text style={[styles.modalText, { fontWeight: 'bold' }]}>Paint Yourself</Text>
+                <Text style={styles.modalText}> needs access to your </Text>
+                <Text style={[styles.modalText, { fontWeight: 'bold' }]}>Media Library</Text>
+                <Text style={styles.modalText}> to load your previously saved creations! </Text>
+              </Text>
+
+              <Text style={styles.modalText}>
+                Please go to your
+                <Text style={[styles.modalText, { fontWeight: 'bold' }]}> device settings</Text>
+                <Text style={styles.modalText}> and grant this permission. </Text>
+              </Text>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setPermissionsModalActive(false)}>
+                <Text style={styles.textStyle}>Okay!</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
         <View style={styles.coverRegion}>
           <ImageBackground
             resizeMode="cover"
@@ -168,6 +229,21 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
 // palette: https://colorhunt.co/palette/222831393e46b55400eeeeee
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  centeredView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -235,6 +311,29 @@ const styles = StyleSheet.create({
     // borderColor: "cyan",
     // borderWidth: 1,
   },
+  modal: {
+    backgroundColor: 'red',
+  },
+  modalText: {
+    marginBottom: 15,
+    color: 'black',
+    textAlign: 'justify',
+  },
+  modalView: {
+    margin: 40,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   profileHeader: {
     flexDirection: 'row',
     // borderColor: "green",
@@ -264,6 +363,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // borderColor: "red",
     // borderWidth: 1,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   updateCoverPhotoButton: {
     justifyContent: 'center',
