@@ -25,37 +25,40 @@ export const useGetStyledImage = (image: CameraImage, theme: string): GetStyledI
    * Fetch styled image from the backend.
    */
   useEffect(() => {
-    setIsLoading(true)
-    ;(async () => {
+    const fetchImage = async () => {
+      setIsLoading(true)
+
+      const authToken = await user?.getIdToken()
+
+      const formData = new FormData()
+      // Any type as react-native as a custom FormData implementation.
+      formData.append('input_image', { uri: image.uri, name: filename, type: `image/${filetype}` } as any)
+
+      let response = null
       try {
-        const authToken = await user?.getIdToken()
-
-        const formData = new FormData()
-        // Any type as react-native as a custom FormData implementation.
-        formData.append('input_image', { uri: image.uri, name: filename, type: `image/${filetype}` } as any)
-
-        const response = await fetch(
-          `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${theme}`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              'Content-Type': 'multipart/form-data',
-            },
-            body: formData,
-          }
-        )
-        const blob = await response.blob()
-        const base64 = await blobToBase64(blob)
-
-        setImageBase64(base64)
+        response = await fetch(`http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${theme}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        })
       } catch (error: any) {
-        console.log({ error })
         setError(error)
+        setIsLoading(false)
+
+        return
       }
 
+      const blob = await response.blob()
+      const base64 = await blobToBase64(blob)
+
+      setImageBase64(base64)
       setIsLoading(false)
-    })()
+    }
+
+    fetchImage()
   }, [theme, image])
 
   return [isLoading, error, imageBase64]
