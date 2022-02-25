@@ -38,7 +38,7 @@ export const useGetStyledImage = (image: CameraImage, theme: string): GetStyledI
         formData.append('input_image', { uri: image.uri, name: filename, type: `image/${filetype}` } as any)
 
         const response = await fetch(
-          `http://paint-yourself.uksouth.cloudapp.azure.com:8000/styled-images?theme=${theme}`,
+          `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${theme}`,
           {
             method: 'POST',
             headers: {
