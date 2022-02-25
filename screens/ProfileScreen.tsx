@@ -55,17 +55,33 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
       const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
 
       if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
-        /**
-         *   Code to open device setting then the user can manually grant the app
-         *  that permission
-         */
         console.log('Denied')
         setPermissionsModalActive(true)
-      } else {
-        if (mediaPerm.status === 'granted') {
-          // Your actually code require this permission
-          console.log('Granted')
+      } else if (mediaPerm.status === 'granted') {
+        // Your actually code require this permission
+        console.log('Granted')
+
+        const albums = await MediaLibrary.getAlbumsAsync()
+        console.log(albums)
+
+        let paintYourselfAlbum = null
+        for (const album of albums) {
+          if (album.hasOwnProperty('title') && album['title'] == 'Paint-Yourself') {
+            paintYourselfAlbum = album
+            break
+          }
         }
+
+        if (paintYourselfAlbum) {
+          console.log(paintYourselfAlbum.assetCount)
+          setNumCreations(paintYourselfAlbum.assetCount)
+          const assets = await MediaLibrary.getAssetsAsync({ album: paintYourselfAlbum })
+          console.log(assets)
+        } else {
+          console.log('No Paint-Yourself album found')
+        }
+      } else {
+        console.log('Unexpected error with permissions')
       }
 
       // if (status) {
@@ -79,7 +95,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     getLocalImages()
     // init temp images
     //  TODO: init this array using saved images
-    let items = Array.apply(null, Array(60)).map((v, i) => {
+    let items = Array.apply(null, Array(numCreations)).map((v, i) => {
       return {
         id: i,
         src: `http://placehold.it/${GRID_IMG_WIDTH}x${GRID_IMG_HEIGHT}?text=` + (i + 1),
@@ -92,7 +108,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
 
     // TODO: set from persistent storage
-    setNumCreations(60)
+    // setNumCreations(0)
   }, [])
 
   const updateCoverPhoto = () => {
@@ -108,7 +124,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     return (
       <View style={styles.container}>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={permissionsModalActive}
           onRequestClose={() => {
@@ -125,13 +141,17 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                 <Text style={[styles.modalText, { fontWeight: 'bold' }]}>Media Library</Text>
                 <Text style={styles.modalText}> to load your previously saved creations! </Text>
               </Text>
-
               <Text style={styles.modalText}>
                 Please go to your
-                <Text style={[styles.modalText, { fontWeight: 'bold' }]}> device settings</Text>
-                <Text style={styles.modalText}> and grant this permission. </Text>
+                <Text style={[styles.modalText, { fontWeight: 'bold' }]}> Device Settings</Text>
+                <Text style={styles.modalText}> to grant this permission. </Text>
               </Text>
-              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setPermissionsModalActive(false)}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={async () => {
+                  setPermissionsModalActive(false)
+                }}
+              >
                 <Text style={styles.textStyle}>Okay!</Text>
               </Pressable>
             </View>
@@ -146,7 +166,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
             <View style={styles.IconButtonContainer}>
               <MaterialCommunityIcons
                 name="logout-variant"
-                size={22}
+                size={20}
                 color="black"
                 onPress={onPressLogout}
                 style={styles.logoutButton}
@@ -277,7 +297,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // borderColor: "purple",
     // backgroundColor: '#222831',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     // borderWidth: 1,
     padding: 10,
   },
@@ -308,6 +328,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     paddingTop: 8,
+    color: 'black',
     // borderColor: "cyan",
     // borderWidth: 1,
   },
@@ -338,7 +359,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // borderColor: "green",
     // backgroundColor: '#222831',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     // borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -358,7 +379,7 @@ const styles = StyleSheet.create({
   },
   profileImgContainer: {
     // backgroundColor: '#222831',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     flex: 25,
     alignItems: 'center',
     // borderColor: "red",
