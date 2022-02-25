@@ -18,9 +18,6 @@ export const useGetStyledImage = (image: CameraImage, theme: string): GetStyledI
   const [imageBase64, setImageBase64] = useState<string | null>(null)
   const [user] = useUserContext()
 
-  // TODO: Replace example theme.
-  theme = 'starry-night'
-
   const filename = image.uri.split('/').pop()
   const filetype = filename?.split('.').pop()
 
