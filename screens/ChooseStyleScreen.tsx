@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react'
-import { StyleSheet, ImageBackground, Image, ScrollView, Dimensions } from 'react-native'
-import { Text, View } from 'components/Themed'
+import { useState } from 'react'
+import { StyleSheet, Dimensions } from 'react-native'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+
+import { View } from 'components/Themed'
 import Button from 'components/Button'
 import ThemePicker from 'components/ThemePicker'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { CameraImage } from 'types'
 
-const { width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
 type RootStackParamList = {
-  ChooseStyleScreen: { image: string }
-  FinishedArtScreen: { image: string }
+  ChooseStyleScreen: { image: CameraImage }
+  FinishedArtScreen: { image: CameraImage; theme: IProjectTheme }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
@@ -21,7 +23,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
 
   const { image } = route.params
 
-  const handleContinue = () => navigation.navigate('FinishedArtScreen', { image: image })
+  const handleContinue = () => navigation.navigate('FinishedArtScreen', { image, theme: projectTheme })
 
   return (
     <View style={styles.container}>
