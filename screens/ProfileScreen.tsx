@@ -49,7 +49,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     navigation.navigate('LoginRegister')
   })
 
+  useEffect(() => {}, [numCreations])
+
   useEffect(() => {
+    let creations
+
     // load previously saved images from /Paint-Yourself
     const getLocalImages = async () => {
       const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
@@ -58,10 +62,10 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         console.log('Denied')
         setPermissionsModalActive(true)
       } else if (mediaPerm.status === 'granted') {
-        // Your actually code require this permission
         console.log('Granted')
 
         const albums = await MediaLibrary.getAlbumsAsync()
+        console.log(`ALBUMS: `)
         console.log(albums)
 
         let paintYourselfAlbum = null
@@ -75,21 +79,32 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         if (paintYourselfAlbum) {
           console.log(paintYourselfAlbum.assetCount)
           setNumCreations(paintYourselfAlbum.assetCount)
-          const assets = await MediaLibrary.getAssetsAsync({ album: paintYourselfAlbum })
-          console.log(assets)
+          const pagedAssets = await MediaLibrary.getAssetsAsync({
+            album: paintYourselfAlbum,
+            first: numCreations,
+            mediaType: 'photo',
+            sortBy: ['creationTime'],
+          })
+          const assets = pagedAssets.assets
+          // console.log(assets)
+
+          creations = assets.map((asset, i) => {
+            return {
+              id: i,
+              src: asset.uri,
+            }
+          })
+
+          console.log(`CREATIONS: `)
+          console.log(creations)
+
+          setDataSource(creations)
         } else {
           console.log('No Paint-Yourself album found')
         }
       } else {
         console.log('Unexpected error with permissions')
       }
-
-      // if (status) {
-      //   console.log('Have profile permissions')
-      // } else {
-      //   console.log('Need profile permissions')
-      // }
-      // const status = await MediaLibrary.requestPermissionsAsync(false)
     }
 
     getLocalImages()
