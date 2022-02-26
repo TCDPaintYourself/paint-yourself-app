@@ -23,6 +23,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const IMGS_PER_ROW = 3
   const GRID_IMG_WIDTH = Dimensions.get('window').width / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
+  let paintYourselfAlbumId = ''
 
   const [user] = useUserContext()
 
@@ -33,6 +34,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const [dataSource, setDataSource] = useState<Array<{ id: number; src: string }>>([])
 
   const [permissionsModalActive, setPermissionsModalActive] = useState(false)
+
   /**
    * Logs the user out.
    */
@@ -49,12 +51,49 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     navigation.navigate('LoginRegister')
   })
 
-  useEffect(() => {}, [numCreations])
+  // if numCreations changes, means user saved a new creation -> reload creations
+  useEffect(() => {
+    let creations
+
+    // don't proceed unless we have permissions
+    const updateCreationsList = async () => {
+      const mediaPerm = await MediaLibrary.requestPermissionsAsync(false)
+
+      if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
+        console.log('Denied')
+        setPermissionsModalActive(true)
+      } else if (mediaPerm.status === 'granted') {
+        if (paintYourselfAlbumId) {
+          // fetch the assets from the library
+          const pagedAssets = await MediaLibrary.getAssetsAsync({
+            album: paintYourselfAlbumId,
+            first: numCreations,
+            mediaType: 'photo',
+            sortBy: ['creationTime'],
+          })
+          const assets = pagedAssets.assets
+
+          creations = assets.map((asset, i) => {
+            return {
+              id: i,
+              src: asset.uri,
+            }
+          })
+
+          setDataSource(creations)
+        } else {
+          console.log('Error with album id :?')
+        }
+      }
+    }
+
+    updateCreationsList()
+  }, [numCreations])
 
   useEffect(() => {
     let creations
 
-    // load previously saved images from /Paint-Yourself
+    // initial load of images
     const getLocalImages = async () => {
       const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
 
@@ -77,16 +116,16 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         }
 
         if (paintYourselfAlbum) {
+          paintYourselfAlbumId = paintYourselfAlbum.id
           console.log(paintYourselfAlbum.assetCount)
           setNumCreations(paintYourselfAlbum.assetCount)
           const pagedAssets = await MediaLibrary.getAssetsAsync({
             album: paintYourselfAlbum,
-            first: numCreations,
+            first: paintYourselfAlbum.assetCount,
             mediaType: 'photo',
             sortBy: ['creationTime'],
           })
           const assets = pagedAssets.assets
-          // console.log(assets)
 
           creations = assets.map((asset, i) => {
             return {
@@ -94,9 +133,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
               src: asset.uri,
             }
           })
-
-          console.log(`CREATIONS: `)
-          console.log(creations)
 
           setDataSource(creations)
         } else {
@@ -108,16 +144,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     }
 
     getLocalImages()
-    // init temp images
-    //  TODO: init this array using saved images
-    let items = Array.apply(null, Array(numCreations)).map((v, i) => {
-      return {
-        id: i,
-        src: `http://placehold.it/${GRID_IMG_WIDTH}x${GRID_IMG_HEIGHT}?text=` + (i + 1),
-        // src: `https://picsum.photos/${GRID_IMG_WIDTH}/${GRID_IMG_HEIGHT}`,   // an actual image placeholder
-      }
-    })
-    setDataSource(items)
 
     // TODO: set from persistent storage
     setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
