@@ -6,6 +6,7 @@ import {
   FlatList,
   Modal,
   Pressable,
+  RefreshControl,
   TouchableHighlight,
   ImageSourcePropType,
 } from 'react-native'
@@ -23,12 +24,15 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const IMGS_PER_ROW = 3
   const GRID_IMG_WIDTH = Dimensions.get('window').width / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
-  let paintYourselfAlbumId = ''
+  let creations = []
 
   const [user] = useUserContext()
 
   const [coverPic, setCoverPic] = useState('')
+
+  const [albumID, setAlbumID] = useState('')
   const [numCreations, setNumCreations] = useState(0)
+  const [refreshingCreations, setRefreshingCreations] = useState(false)
 
   // Array holding user's created images
   const [dataSource, setDataSource] = useState<Array<{ id: number; src: string }>>([])
@@ -51,42 +55,42 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     navigation.navigate('LoginRegister')
   })
 
-  // if numCreations changes, means user saved a new creation -> reload creations
-  useEffect(() => {
-    let creations
-
+  const updateCreationsList = async () => {
     // don't proceed unless we have permissions
-    const updateCreationsList = async () => {
-      const mediaPerm = await MediaLibrary.requestPermissionsAsync(false)
+    const mediaPerm = await MediaLibrary.requestPermissionsAsync(false)
 
-      if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
-        console.log('Denied')
-        setPermissionsModalActive(true)
-      } else if (mediaPerm.status === 'granted') {
-        if (paintYourselfAlbumId) {
-          // fetch the assets from the library
-          const pagedAssets = await MediaLibrary.getAssetsAsync({
-            album: paintYourselfAlbumId,
-            first: numCreations,
-            mediaType: 'photo',
-            sortBy: ['creationTime'],
-          })
-          const assets = pagedAssets.assets
+    if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
+      console.log('Denied')
+      setPermissionsModalActive(true)
+    } else if (mediaPerm.status === 'granted') {
+      if (albumID) {
+        // fetch the assets from the library
+        const pagedAssets = await MediaLibrary.getAssetsAsync({
+          album: albumID,
+          first: numCreations,
+          mediaType: 'photo',
+          sortBy: ['creationTime'],
+        })
+        const assets = pagedAssets.assets
 
-          creations = assets.map((asset, i) => {
-            return {
-              id: i,
-              src: asset.uri,
-            }
-          })
+        creations = assets.map((asset, i) => {
+          return {
+            id: i,
+            src: asset.uri,
+          }
+        })
 
-          setDataSource(creations)
-        } else {
-          console.log('Error with album id :?')
-        }
+        setDataSource(creations)
+      } else {
+        console.log(`Error with album id : ${albumID}`)
       }
     }
 
+    setRefreshingCreations(false)
+  }
+
+  // if numCreations changes, means user saved a new creation -> reload creations
+  useEffect(() => {
     updateCreationsList()
   }, [numCreations])
 
@@ -104,8 +108,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         console.log('Granted')
 
         const albums = await MediaLibrary.getAlbumsAsync()
-        console.log(`ALBUMS: `)
-        console.log(albums)
 
         let paintYourselfAlbum = null
         for (const album of albums) {
@@ -116,9 +118,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         }
 
         if (paintYourselfAlbum) {
-          paintYourselfAlbumId = paintYourselfAlbum.id
-          console.log(paintYourselfAlbum.assetCount)
+          setAlbumID(paintYourselfAlbum.id)
+
+          console.log(`N ASSETS: ${paintYourselfAlbum.assetCount}`)
           setNumCreations(paintYourselfAlbum.assetCount)
+
           const pagedAssets = await MediaLibrary.getAssetsAsync({
             album: paintYourselfAlbum,
             first: paintYourselfAlbum.assetCount,
@@ -147,9 +151,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
     // TODO: set from persistent storage
     setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
-
-    // TODO: set from persistent storage
-    // setNumCreations(0)
   }, [])
 
   const updateCoverPhoto = () => {
@@ -169,7 +170,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           transparent={true}
           visible={permissionsModalActive}
           onRequestClose={() => {
-            console.log('Modal has been closed.')
             setPermissionsModalActive(false)
           }}
           style={styles.modal}
@@ -245,6 +245,17 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
             <FlatList
               numColumns={IMGS_PER_ROW}
               data={dataSource}
+              refreshControl={
+                <RefreshControl
+                  enabled={numCreations > 0}
+                  refreshing={refreshingCreations}
+                  onRefresh={() => {
+                    setRefreshingCreations(true)
+                    console.log('Refresh')
+                    updateCreationsList()
+                  }}
+                />
+              }
               renderItem={({ item }) => {
                 return (
                   <View
