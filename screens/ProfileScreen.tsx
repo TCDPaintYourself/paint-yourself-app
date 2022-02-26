@@ -75,6 +75,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           sortBy: ['creationTime'],
         })
         const assets = pagedAssets.assets
+        console.log(assets)
 
         creations = assets.map((asset, i) => {
           return {
@@ -235,7 +236,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           <View style={styles.creationsContainer}>
             {numCreations > 0 && (
               <FlatList
-                columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
+                columnWrapperStyle={{ flex: 1, justifyContent: 'flex-start' }}
                 numColumns={IMGS_PER_ROW}
                 data={dataSource}
                 refreshControl={
@@ -264,12 +265,8 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                           style={[
                             styles.imageThumbnail,
                             {
-                              // width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
-                              // height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
                               width: GRID_IMG_WIDTH,
                               height: GRID_IMG_HEIGHT,
-                              // borderColor: 'red',
-                              // borderWidth: 1,
                             },
                           ]}
                           source={{
@@ -322,7 +319,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                     flex: 1,
                   }}
                 >
-                  <Text style={{ color: 'black', flex: 1, textAlign: 'center' }}>No Creations Found!</Text>
+                  <Text style={{ color: 'black', flex: 1, textAlign: 'center' }}>No Saved Creations Found!</Text>
                   <Text style={{ color: 'black', flex: 1, textAlign: 'center' }}>
                     Tap <Text style={{ fontWeight: 'bold', color: 'black' }}>'New Project'</Text> below to get started
                     or <Text style={{ fontWeight: 'bold', color: 'black' }}>pull to refresh</Text>.
@@ -413,14 +410,18 @@ const styles = StyleSheet.create({
   },
   grid: {
     // borderColor: "cyan",
-    // backgroundColor: '#393E46',
-    backgroundColor: 'white',
+    backgroundColor: '#30363d',
+    // backgroundColor: 'white',
+    borderWidth: 5,
+    borderColor: '#30363d',
     // borderWidth: 1,
-    padding: '1%',
+    // padding: '1%',
   },
   imageThumbnail: {
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: 'grey',
+    borderWidth: 1,
     // height: 128,
     // width: 128,
   },

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Dimensions } from 'react-native'
+import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
@@ -24,6 +24,8 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
+  const [creationName, onChangeCreationName] = useState('')
+
   useEffect(() => {
     const save = async () => {
       const { status } = await MediaLibrary.requestPermissionsAsync()
@@ -31,6 +33,46 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
         const asset = await MediaLibrary.createAssetAsync(image)
         // asset.filename = '@PY-' + new Date().toLocaleTimeString()
         const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
+        console.log(`BEFORE SAVE: `)
+
+        console.log(asset)
+
+        // save to async-storage {uri: name}:
+
+        // uri and filename may change when file moves from /DCIM to /Paint-Yourself so need to pull asset back out of album
+        // TODO: this probably won't be needed when we get backend hooked up properly
+        const albums = await MediaLibrary.getAlbumsAsync()
+        let paintYourselfAlbum
+        for (const album of albums) {
+          if (album.hasOwnProperty('title') && album['title'] == 'Paint-Yourself') {
+            paintYourselfAlbum = album
+            break
+          }
+        }
+
+        if (paintYourselfAlbum) {
+          const response = await MediaLibrary.getAssetsAsync({
+            album: paintYourselfAlbum,
+            first: 1,
+            mediaType: 'photo',
+            sortBy: ['creationTime'],
+          })
+          const asset = response.assets[0] // most recently saved
+          console.log(`AFTER SAVE: `)
+
+          console.log(asset)
+
+          const key = asset.uri
+          console.log(`CREATION NAME: ${creationName}`)
+          const value =
+            creationName.toLowerCase() === 'untitled' || creationName.length === 0
+              ? 'Untitled-' + new Date().toLocaleTimeString()
+              : creationName
+          console.log(`VALUE: ${value}`)
+        } else {
+          console.log("Couldn't find album (?)")
+        }
+
         setSaved(true)
       } else {
         console.log('Permissions denied')
@@ -61,8 +103,19 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.row}>
         <Button onPress={shareImage} style={styles.actionButtons} disabled={saving} title="Share" />
-        <Button onPress={saveImage} style={styles.actionButtons} disabled={saved} title="Save" />
         <Button onPress={handleHome} style={styles.actionButtons} disabled={saving} title="Home" />
+      </View>
+      <View style={styles.saveContainer}>
+        <TextInput
+          style={styles.textInput}
+          autoCapitalize={'words'}
+          onChangeText={onChangeCreationName}
+          value={creationName}
+          placeholder="Untitled"
+          keyboardType="default"
+          editable={!saved}
+        />
+        <Button onPress={saveImage} disabled={saved} style={styles.saveButton} title="Save" />
       </View>
 
       <View style={styles.savedText}>{saved && <Text>Image saved!</Text>}</View>
@@ -78,26 +131,58 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    // borderWidth: 1,
+    // borderColor: 'yellow',
   },
   row: {
     width: '100%',
     flex: 0.5,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: '10%',
+    paddingBottom: '5%',
+    alignItems: 'center',
+    // borderWidth: 1,
+    // borderColor: 'yellow',
   },
   image: {
     marginTop: 60,
     borderWidth: 1,
     borderColor: 'white',
-    flex: 3,
+    flex: 4,
     width: containerWidth,
     height: containerWidth,
     marginBottom: 10,
   },
-  actionButtons: { alignSelf: 'center', width: containerWidth / 2 - 50, marginTop: 20 },
+  actionButtons: { alignSelf: 'center', width: '40%' },
   savedText: {
     flex: 0.5,
     marginTop: 10,
+  },
+  saveContainer: {
+    flex: 0.5,
+    flexDirection: 'row',
+    width: '100%',
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // borderWidth: 1,
+    // borderColor: 'yellow',
+  },
+  saveButton: {
+    flex: 1,
+    borderRadius: 3,
+  },
+  textInput: {
+    flex: 4,
+    backgroundColor: 'rgba(255,255,255,1.0)',
+    borderRadius: 2,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    // width: '60%',
+    // width: '200%',
+    // borderWidth: 1,
+    // borderColor: 'yellow',
   },
 })
