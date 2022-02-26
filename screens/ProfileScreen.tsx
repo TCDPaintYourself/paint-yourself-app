@@ -7,6 +7,7 @@ import {
   Modal,
   Pressable,
   RefreshControl,
+  ScrollView,
   TouchableHighlight,
   ImageSourcePropType,
 } from 'react-native'
@@ -63,6 +64,8 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
       console.log('Denied')
       setPermissionsModalActive(true)
     } else if (mediaPerm.status === 'granted') {
+      console.log('Granted')
+
       if (albumID) {
         // fetch the assets from the library
         const pagedAssets = await MediaLibrary.getAssetsAsync({
@@ -87,6 +90,38 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     }
 
     setRefreshingCreations(false)
+  }
+
+  const refreshNumCreations = async () => {
+    const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
+
+    if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
+      console.log('Denied')
+      setPermissionsModalActive(true)
+    } else if (mediaPerm.status === 'granted') {
+      console.log('Granted')
+
+      const albums = await MediaLibrary.getAlbumsAsync()
+
+      let paintYourselfAlbum = null
+      for (const album of albums) {
+        if (album.hasOwnProperty('title') && album['title'] == 'Paint-Yourself') {
+          paintYourselfAlbum = album
+          break
+        }
+      }
+
+      if (paintYourselfAlbum) {
+        setAlbumID(paintYourselfAlbum.id)
+
+        console.log(`N ASSETS: ${paintYourselfAlbum.assetCount}`)
+        setNumCreations(paintYourselfAlbum.assetCount)
+      } else {
+        console.log('No Paint-Yourself album found')
+      }
+    } else {
+      console.log('Unexpected error with permissions')
+    }
   }
 
   // if numCreations changes, means user saved a new creation -> reload creations
@@ -242,50 +277,97 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
             </Text>
           </View>
           <View style={styles.creationsContainer}>
-            <FlatList
-              numColumns={IMGS_PER_ROW}
-              data={dataSource}
-              refreshControl={
-                <RefreshControl
-                  enabled={numCreations > 0}
-                  refreshing={refreshingCreations}
-                  onRefresh={() => {
-                    setRefreshingCreations(true)
-                    console.log('Refresh')
-                    updateCreationsList()
-                  }}
-                />
-              }
-              renderItem={({ item }) => {
-                return (
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      margin: 1,
+            {numCreations > 0 && (
+              <FlatList
+                numColumns={IMGS_PER_ROW}
+                data={dataSource}
+                refreshControl={
+                  <RefreshControl
+                    enabled={numCreations > 0}
+                    refreshing={refreshingCreations}
+                    onRefresh={() => {
+                      setRefreshingCreations(true)
+                      console.log('Refresh')
+                      refreshNumCreations()
                     }}
-                  >
-                    <TouchableHighlight onPress={() => expandImageView(item.id)}>
-                      <Image
-                        style={[
-                          styles.imageThumbnail,
-                          {
-                            width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
-                            height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
-                          },
-                        ]}
-                        source={{
-                          uri: item.src,
-                        }}
-                      />
-                    </TouchableHighlight>
-                  </View>
-                )
-              }}
-              keyExtractor={(item, index) => '' + item.id}
-              contentContainerStyle={styles.grid}
-              initialNumToRender={12}
-            ></FlatList>
+                  />
+                }
+                renderItem={({ item }) => {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        margin: 1,
+                      }}
+                    >
+                      <TouchableHighlight onPress={() => expandImageView(item.id)}>
+                        <Image
+                          style={[
+                            styles.imageThumbnail,
+                            {
+                              width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
+                              height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                            },
+                          ]}
+                          source={{
+                            uri: item.src,
+                          }}
+                        />
+                      </TouchableHighlight>
+                    </View>
+                  )
+                }}
+                keyExtractor={(item, index) => '' + item.id}
+                contentContainerStyle={styles.grid}
+                initialNumToRender={12}
+              ></FlatList>
+            )}
+            {numCreations < 1 && (
+              // Can only pull to refresh on scrollable containers
+              <ScrollView
+                contentContainerStyle={styles.noCreationsContainer}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshingCreations}
+                    onRefresh={() => {
+                      console.log('scrollview refreshing')
+
+                      setRefreshingCreations(true)
+                      refreshNumCreations()
+                      new Promise((resolve) => setTimeout(resolve, 500)).then(() => setRefreshingCreations(false))
+                    }}
+                  />
+                }
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '70%',
+                  }}
+                >
+                  <FontAwesome5 name="sad-cry" size={64} color="rgba(0, 0, 0, 0.3)" />
+                </View>
+                <View
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+                    // borderWidth: 1,
+                    // borderColor: 'blue',
+                    flex: 1,
+                  }}
+                >
+                  <Text style={{ color: 'black', flex: 1, textAlign: 'center' }}>No Creations Found!</Text>
+                  <Text style={{ color: 'black', flex: 1, textAlign: 'center' }}>
+                    Tap <Text style={{ fontWeight: 'bold', color: 'black' }}>'New Project'</Text> below to get started
+                    or <Text style={{ fontWeight: 'bold', color: 'black' }}>pull to refresh</Text>.
+                  </Text>
+                </View>
+              </ScrollView>
+            )}
           </View>
         </View>
       </View>
@@ -308,6 +390,11 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#2196F3',
+  },
+  center: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
   },
   centeredView: {
     flex: 1,
@@ -347,10 +434,10 @@ const styles = StyleSheet.create({
   },
   creationsContainer: {
     flex: 1,
-    // borderColor: "purple",
     // backgroundColor: '#222831',
     // backgroundColor: 'white',
-    // borderWidth: 1,
+    // borderColor: 'purple',
+    borderWidth: 1,
     padding: 10,
   },
   googleName: {
@@ -375,15 +462,6 @@ const styles = StyleSheet.create({
     // width: 128,
   },
   logoutButton: {},
-  numStylegans: {
-    flex: 37.5,
-    fontSize: 14,
-    textAlign: 'center',
-    paddingTop: 8,
-    color: 'black',
-    // borderColor: "cyan",
-    // borderWidth: 1,
-  },
   modal: {
     backgroundColor: 'red',
   },
@@ -406,6 +484,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  noCreationsContainer: {
+    flex: 1,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'green',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    paddingVertical: '30%',
+  },
+  numStylegans: {
+    flex: 37.5,
+    fontSize: 14,
+    textAlign: 'center',
+    paddingTop: 8,
+    color: 'black',
+    // borderColor: "cyan",
+    // borderWidth: 1,
   },
   profileHeader: {
     flexDirection: 'row',
