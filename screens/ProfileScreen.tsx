@@ -115,12 +115,20 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         setAlbumID(paintYourselfAlbum.id)
 
         console.log(`N ASSETS: ${paintYourselfAlbum.assetCount}`)
-        setNumCreations(paintYourselfAlbum.assetCount)
+        if (paintYourselfAlbum.assetCount === numCreations) {
+          setRefreshingCreations(false)
+        } else {
+          setNumCreations(paintYourselfAlbum.assetCount)
+        }
       } else {
         console.log('No Paint-Yourself album found')
+        setNumCreations(0)
+        setRefreshingCreations(false)
       }
     } else {
       console.log('Unexpected error with permissions')
+      setRefreshingCreations(false)
+      setNumCreations(0)
     }
   }
 
@@ -130,59 +138,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   }, [numCreations])
 
   useEffect(() => {
-    let creations
-
-    // initial load of images
-    const getLocalImages = async () => {
-      const mediaPerm = await MediaLibrary.requestPermissionsAsync(false) // check first
-
-      if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
-        console.log('Denied')
-        setPermissionsModalActive(true)
-      } else if (mediaPerm.status === 'granted') {
-        console.log('Granted')
-
-        const albums = await MediaLibrary.getAlbumsAsync()
-
-        let paintYourselfAlbum = null
-        for (const album of albums) {
-          if (album.hasOwnProperty('title') && album['title'] == 'Paint-Yourself') {
-            paintYourselfAlbum = album
-            break
-          }
-        }
-
-        if (paintYourselfAlbum) {
-          setAlbumID(paintYourselfAlbum.id)
-
-          console.log(`N ASSETS: ${paintYourselfAlbum.assetCount}`)
-          setNumCreations(paintYourselfAlbum.assetCount)
-
-          const pagedAssets = await MediaLibrary.getAssetsAsync({
-            album: paintYourselfAlbum,
-            first: paintYourselfAlbum.assetCount,
-            mediaType: 'photo',
-            sortBy: ['creationTime'],
-          })
-          const assets = pagedAssets.assets
-
-          creations = assets.map((asset, i) => {
-            return {
-              id: i,
-              src: asset.uri,
-            }
-          })
-
-          setDataSource(creations)
-        } else {
-          console.log('No Paint-Yourself album found')
-        }
-      } else {
-        console.log('Unexpected error with permissions')
-      }
-    }
-
-    getLocalImages()
+    refreshNumCreations()
 
     // TODO: set from persistent storage
     setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
@@ -273,7 +229,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
             </View>
             <Text style={styles.numStylegans} numberOfLines={1}>
               <Text style={{ fontWeight: 'bold' }}> {numCreations} </Text>
-              <Text> Creations </Text>
+              <Text> {numCreations === 1 ? 'Creation' : 'Creations'} </Text>
             </Text>
           </View>
           <View style={styles.creationsContainer}>
@@ -289,6 +245,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                       setRefreshingCreations(true)
                       console.log('Refresh')
                       refreshNumCreations()
+                      // new Promise((resolve) => setTimeout(resolve, 1000)).then(() => setRefreshingCreations(false))
                     }}
                   />
                 }
@@ -335,7 +292,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
                       setRefreshingCreations(true)
                       refreshNumCreations()
-                      new Promise((resolve) => setTimeout(resolve, 500)).then(() => setRefreshingCreations(false))
+                      // new Promise((resolve) => setTimeout(resolve, 1000)).then(() => setRefreshingCreations(false))
                     }}
                   />
                 }

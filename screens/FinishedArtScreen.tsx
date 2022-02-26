@@ -4,7 +4,7 @@ import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as MediaLibrary from 'expo-media-library'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -18,7 +18,31 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
 const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const { image } = route.params
+
+  // when user clicks home too fast after saving, throws an unmounted component error
+  //  -> wait til finished saving before reenabling buttons
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    const save = async () => {
+      const { status } = await MediaLibrary.requestPermissionsAsync()
+      if (status) {
+        const asset = await MediaLibrary.createAssetAsync(image)
+        // asset.filename = '@PY-' + new Date().toLocaleTimeString()
+        const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
+        setSaved(true)
+      } else {
+        console.log('Permissions denied')
+      }
+      console.log('done')
+      setSaving(false)
+    }
+
+    if (saving) {
+      save()
+    }
+  }, [saving])
 
   const shareImage = async () => {
     if (await Sharing.isAvailableAsync()) {
@@ -27,16 +51,7 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   }
 
   const saveImage = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync()
-    if (status) {
-      const asset = await MediaLibrary.createAssetAsync(image)
-      // asset.filename = '@PY-' + new Date().toLocaleTimeString()
-      const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
-      setSaved(true)
-    } else {
-      console.log('Permissions denied')
-    }
-    console.log('done')
+    setSaving(true)
   }
 
   const handleHome = () => navigation.navigate('Profile')
@@ -45,9 +60,9 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.row}>
-        <Button onPress={shareImage} style={styles.actionButtons} title="Share" />
+        <Button onPress={shareImage} style={styles.actionButtons} disabled={saving} title="Share" />
         <Button onPress={saveImage} style={styles.actionButtons} disabled={saved} title="Save" />
-        <Button onPress={handleHome} style={styles.actionButtons} title="Home" />
+        <Button onPress={handleHome} style={styles.actionButtons} disabled={saving} title="Home" />
       </View>
 
       <View style={styles.savedText}>{saved && <Text>Image saved!</Text>}</View>
