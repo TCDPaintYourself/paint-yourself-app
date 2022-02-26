@@ -23,7 +23,7 @@ import * as MediaLibrary from 'expo-media-library'
 
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profile'>) {
   const IMGS_PER_ROW = 3
-  const GRID_IMG_WIDTH = Dimensions.get('window').width / IMGS_PER_ROW
+  const GRID_IMG_WIDTH = (Dimensions.get('window').width * 0.95) / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
   let creations = []
 
@@ -235,6 +235,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           <View style={styles.creationsContainer}>
             {numCreations > 0 && (
               <FlatList
+                columnWrapperStyle={{ flex: 1, justifyContent: 'space-around' }}
                 numColumns={IMGS_PER_ROW}
                 data={dataSource}
                 refreshControl={
@@ -253,7 +254,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                   return (
                     <View
                       style={{
-                        flex: 1,
+                        // flex: 1,
                         flexDirection: 'column',
                         margin: 1,
                       }}
@@ -263,8 +264,12 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                           style={[
                             styles.imageThumbnail,
                             {
-                              width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
-                              height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                              // width: GRID_IMG_WIDTH - GRID_IMG_WIDTH / 9,
+                              // height: GRID_IMG_HEIGHT - GRID_IMG_HEIGHT / 9,
+                              width: GRID_IMG_WIDTH,
+                              height: GRID_IMG_HEIGHT,
+                              // borderColor: 'red',
+                              // borderWidth: 1,
                             },
                           ]}
                           source={{
@@ -395,7 +400,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     // borderColor: 'purple',
     borderWidth: 1,
-    padding: 10,
+    // padding: 10,
+    marginTop: 10,
   },
   googleName: {
     flex: 37.5,
@@ -410,7 +416,7 @@ const styles = StyleSheet.create({
     // backgroundColor: '#393E46',
     backgroundColor: 'white',
     // borderWidth: 1,
-    padding: 5,
+    padding: '1%',
   },
   imageThumbnail: {
     justifyContent: 'center',
