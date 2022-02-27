@@ -1,3 +1,3 @@
 export default {
-    namesKey: "@creationNames"
+  namesKey: '@creationNames',
 }

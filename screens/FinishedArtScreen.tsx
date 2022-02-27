@@ -95,7 +95,7 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const storeCreationName = async (itemKey: string, itemValue: string) => {
     try {
       // TODO: REMOVE
-      await AsyncStorage.clear()
+      // await AsyncStorage.clear()
       //
 
       const storageKey = AS_KEYS.namesKey
@@ -104,9 +104,12 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
 
       if (item) {
         // object exists
-        item = JSON.parse(item)
+        let itemParsed = JSON.parse(item) // parse it
+        itemParsed![itemKey] = itemValue // add new item
+        const storageEntrySerialised = JSON.stringify(itemParsed) // serialise it
+        await AsyncStorage.setItem(storageKey, storageEntrySerialised) // store it
 
-        console.log(item)
+        console.log(itemParsed)
       } else {
         // create storage entry
         let value = {
@@ -124,16 +127,7 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
         let itemAfter = await AsyncStorage.getItem(storageKey)
         console.log('ITEM AFTER:')
         console.log(itemAfter)
-
-        // create value
-        // let creationsObject = {
-        //   [AS_KEYS.namesKey]: value,
-        // }
-
-        // console.log('CREATIONS OBJECT:')
-        // console.log(creationsObject)
       }
-      // await AsyncStorage.setItem('@storage_Key', value)
     } catch (e) {
       // error
       console.log('Storage error: ' + e)
