@@ -251,6 +251,13 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                     }}
                   />
                 }
+                ListHeaderComponent={() => {
+                  return (
+                    <View style={{ backgroundColor: '#30363d', paddingBottom: 6, paddingRight: 6 }}>
+                      <Text style={{ textAlign: 'right', color: 'rgba(255,255,255,0.7)' }}>Pull to refresh</Text>
+                    </View>
+                  )
+                }}
                 renderItem={({ item }) => {
                   return (
                     <View

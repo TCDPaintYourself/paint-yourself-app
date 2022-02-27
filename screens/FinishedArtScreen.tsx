@@ -1,4 +1,6 @@
 import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import AS_KEYS from 'constants/AsyncStorage'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
@@ -13,6 +15,8 @@ type RootStackParamList = {
   FinishedArtScreen: { image: string }
   Profile: undefined
 }
+
+type storageEntry = { [id: string]: string }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
@@ -69,6 +73,8 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
               ? 'Untitled-' + new Date().toLocaleTimeString()
               : creationName
           console.log(`VALUE: ${value}`)
+
+          await storeCreationName(key, value)
         } else {
           console.log("Couldn't find album (?)")
         }
@@ -85,6 +91,54 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
       save()
     }
   }, [saving])
+
+  const storeCreationName = async (itemKey: string, itemValue: string) => {
+    try {
+      // TODO: REMOVE
+      await AsyncStorage.clear()
+      //
+
+      const storageKey = AS_KEYS.namesKey
+
+      let item = await AsyncStorage.getItem(storageKey)
+
+      if (item) {
+        // object exists
+        item = JSON.parse(item)
+
+        console.log(item)
+      } else {
+        // create storage entry
+        let value = {
+          [itemKey]: itemValue,
+        } as storageEntry
+        console.log('VALUE: ')
+        console.log(value)
+
+        // serialise it
+        const storageEntrySerialised = JSON.stringify(value)
+
+        // store it
+        await AsyncStorage.setItem(storageKey, storageEntrySerialised)
+
+        let itemAfter = await AsyncStorage.getItem(storageKey)
+        console.log('ITEM AFTER:')
+        console.log(itemAfter)
+
+        // create value
+        // let creationsObject = {
+        //   [AS_KEYS.namesKey]: value,
+        // }
+
+        // console.log('CREATIONS OBJECT:')
+        // console.log(creationsObject)
+      }
+      // await AsyncStorage.setItem('@storage_Key', value)
+    } catch (e) {
+      // error
+      console.log('Storage error: ' + e)
+    }
+  }
 
   const shareImage = async () => {
     if (await Sharing.isAvailableAsync()) {
@@ -105,6 +159,7 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
         <Button onPress={shareImage} style={styles.actionButtons} disabled={saving} title="Share" />
         <Button onPress={handleHome} style={styles.actionButtons} disabled={saving} title="Home" />
       </View>
+      <Text style={{ color: 'white' }}>Save your creation to your gallery:</Text>
       <View style={styles.saveContainer}>
         <TextInput
           style={styles.textInput}
