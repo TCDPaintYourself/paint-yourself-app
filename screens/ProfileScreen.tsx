@@ -28,7 +28,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const GRID_IMG_WIDTH = (Dimensions.get('window').width * 0.95) / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
   let creations = []
-  let creationNames = {}
+  // let creationNames = {}
 
   const [user] = useUserContext()
 
@@ -189,9 +189,9 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   }
 
   // expand image selected from grid
-  const expandImageView = (filepath: string) => {
+  const expandImageView = (filepath: string, creationName: string) => {
     // console.log(`Expand grid image ${id}`)
-    navigation.navigate('ExpandedImageModal', { name: filepath } as never)
+    navigation.navigate('ExpandedImageModal', { name: creationName, filepath: filepath } as never)
   }
 
   if (user) {
@@ -307,7 +307,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                         margin: 1,
                       }}
                     >
-                      <TouchableHighlight onPress={() => expandImageView(item.name)}>
+                      <TouchableHighlight onPress={() => expandImageView(item.src, item.name)}>
                         <Image
                           style={[
                             styles.imageThumbnail,
