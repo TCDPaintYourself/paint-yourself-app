@@ -28,7 +28,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const GRID_IMG_WIDTH = (Dimensions.get('window').width * 0.95) / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
   let creations = []
-  // let creationNames = {}
 
   const [user] = useUserContext()
 
@@ -124,8 +123,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
             console.log(match)
           }
         }
-
-        // creationNames = valuesParsed
       }
     } catch (e) {
       console.log('Error fetching creation names:\n ' + e)
@@ -138,6 +135,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     if (!mediaPerm.canAskAgain || mediaPerm.status === 'denied') {
       console.log('Denied')
       setPermissionsModalActive(true)
+      setRefreshingCreations(false)
     } else if (mediaPerm.status === 'granted') {
       console.log('Granted')
 
@@ -190,7 +188,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
   // expand image selected from grid
   const expandImageView = (filepath: string, creationName: string) => {
-    // console.log(`Expand grid image ${id}`)
     navigation.navigate('ExpandedImageModal', { name: creationName, filepath: filepath } as never)
   }
 
@@ -287,7 +284,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                       setRefreshingCreations(true)
                       console.log('Refresh')
                       refreshNumCreations()
-                      // new Promise((resolve) => setTimeout(resolve, 1000)).then(() => setRefreshingCreations(false))
                     }}
                   />
                 }
@@ -341,21 +337,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
                       setRefreshingCreations(true)
                       refreshNumCreations()
-                      // new Promise((resolve) => setTimeout(resolve, 1000)).then(() => setRefreshingCreations(false))
                     }}
                   />
                 }
               >
-                <View
-                  style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.0)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '70%',
-                  }}
-                >
+                <View style={styles.noCreationsIconContainer}>
                   <FontAwesome5 name="sad-cry" size={64} color="rgba(0, 0, 0, 0.3)" />
                 </View>
                 <View
@@ -432,17 +418,10 @@ const styles = StyleSheet.create({
   coverRegion: {
     flex: 1,
     width: '100%',
-    // borderBottomWidth: 2,
     borderBottomColor: 'white',
-    // borderColor: "green",
-    // borderWidth: 1,
-    // justifyContent: "center",
   },
   creationsContainer: {
     flex: 1,
-    // backgroundColor: '#222831',
-    // backgroundColor: 'white',
-    // borderColor: 'purple',
     borderWidth: 1,
     // padding: 10,
     marginTop: 10,
@@ -505,6 +484,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     paddingVertical: '30%',
+  },
+  noCreationsIconContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '70%',
   },
   numStylegans: {
     flex: 37.5,

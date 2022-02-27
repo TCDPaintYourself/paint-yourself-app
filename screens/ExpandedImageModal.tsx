@@ -19,7 +19,6 @@ const ExpandedImageModal: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View>
-      {/* <Text>Filepath: {filepath ? filepath : '<none>'}</Text> */}
       {filepath && <Image source={{ uri: filepath }} style={{ width: '100%', height: '100%' }}></Image>}
       {!filepath && <Text>(No filepath supplied)</Text>}
     </View>

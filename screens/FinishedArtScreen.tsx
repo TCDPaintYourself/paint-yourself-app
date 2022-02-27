@@ -28,20 +28,20 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
+  const [failedPermissionCheck, setfailedPermissionCheck] = useState(false)
+
   const [creationName, onChangeCreationName] = useState('')
 
   useEffect(() => {
     const save = async () => {
-      const { status } = await MediaLibrary.requestPermissionsAsync()
-      if (status) {
+      try {
+        const { status } = await MediaLibrary.getPermissionsAsync()
         const asset = await MediaLibrary.createAssetAsync(image)
         // asset.filename = '@PY-' + new Date().toLocaleTimeString()
         const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
         console.log(`BEFORE SAVE: `)
 
         console.log(asset)
-
-        // save to async-storage {uri: name}:
 
         // uri and filename may change when file moves from /DCIM to /Paint-Yourself so need to pull asset back out of album
         // TODO: this probably won't be needed when we get backend hooked up properly
@@ -80,9 +80,11 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
         }
 
         setSaved(true)
-      } else {
-        console.log('Permissions denied')
+      } catch (e) {
+        console.log('Failed Media Library permissions check on save')
+        setfailedPermissionCheck(true)
       }
+
       console.log('done')
       setSaving(false)
     }
@@ -94,10 +96,6 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const storeCreationName = async (itemKey: string, itemValue: string) => {
     try {
-      // TODO: REMOVE
-      // await AsyncStorage.clear()
-      //
-
       const storageKey = AS_KEYS.namesKey
 
       let item = await AsyncStorage.getItem(storageKey)
@@ -123,10 +121,6 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
 
         // store it
         await AsyncStorage.setItem(storageKey, storageEntrySerialised)
-
-        let itemAfter = await AsyncStorage.getItem(storageKey)
-        console.log('ITEM AFTER:')
-        console.log(itemAfter)
       }
     } catch (e) {
       // error
@@ -164,10 +158,13 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
           keyboardType="default"
           editable={!saved}
         />
-        <Button onPress={saveImage} disabled={saved} style={styles.saveButton} title="Save" />
+        <Button onPress={saveImage} disabled={saved || failedPermissionCheck} style={styles.saveButton} title="Save" />
       </View>
 
-      <View style={styles.savedText}>{saved && <Text>Image saved!</Text>}</View>
+      <View style={styles.savedText}>
+        {saved && <Text>Image saved!</Text>}
+        {failedPermissionCheck && <Text>Saving failed - Please enable media permissions</Text>}
+      </View>
     </View>
   )
 }
