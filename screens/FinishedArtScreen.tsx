@@ -16,9 +16,9 @@ type RootStackParamList = {
   Profile: undefined
 }
 
-type storageEntry = { [id: string]: string }
-
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
+
+type storageEntry = { [id: string]: string }
 
 const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   const { image } = route.params

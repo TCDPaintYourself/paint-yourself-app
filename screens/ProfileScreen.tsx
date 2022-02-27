@@ -152,7 +152,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   // expand image selected from grid
   const expandImageView = (id: number) => {
     console.log(`Expand grid image ${id}`)
-    navigation.navigate('ExpandedImageModal')
+    navigation.navigate('ExpandedImageModal', { name: id.toString() } as never)
   }
 
   if (user) {
