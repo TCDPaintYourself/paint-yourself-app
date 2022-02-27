@@ -20,12 +20,15 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
 import * as MediaLibrary from 'expo-media-library'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import AS_KEYS from 'constants/AsyncStorage'
 
 export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profile'>) {
   const IMGS_PER_ROW = 3
   const GRID_IMG_WIDTH = (Dimensions.get('window').width * 0.95) / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
   let creations = []
+  let creationNames = {}
 
   const [user] = useUserContext()
 
@@ -36,7 +39,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   const [refreshingCreations, setRefreshingCreations] = useState(false)
 
   // Array holding user's created images
-  const [dataSource, setDataSource] = useState<Array<{ id: number; src: string }>>([])
+  const [dataSource, setDataSource] = useState<Array<{ id: number; src: string; name: string }>>([])
 
   const [permissionsModalActive, setPermissionsModalActive] = useState(false)
 
@@ -81,8 +84,12 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           return {
             id: i,
             src: asset.uri,
+            name: '[Untitled]',
           }
         })
+
+        // append names
+        await fetchCreationNames(creations)
 
         setDataSource(creations)
       } else {
@@ -91,6 +98,38 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     }
 
     setRefreshingCreations(false)
+  }
+
+  const fetchCreationNames = async (creations: { id: number; src: string; name: string }[]) => {
+    const namesKey = AS_KEYS.namesKey
+
+    try {
+      // {... uri: creationName ...}
+      const uriNamePairs = await AsyncStorage.getItem(namesKey)
+
+      console.log(uriNamePairs)
+
+      if (uriNamePairs) {
+        const uriNamePairsParsed = JSON.parse(uriNamePairs)
+
+        let match = null
+        for (const uriKey in uriNamePairsParsed) {
+          match = creations.find((o) => o.src === uriKey)
+
+          if (match) {
+            console.log('MATCH: ')
+            console.log(match)
+
+            match.name = uriNamePairsParsed[uriKey]
+            console.log(match)
+          }
+        }
+
+        // creationNames = valuesParsed
+      }
+    } catch (e) {
+      console.log('Error fetching creation names:\n ' + e)
+    }
   }
 
   const refreshNumCreations = async () => {
@@ -150,9 +189,9 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   }
 
   // expand image selected from grid
-  const expandImageView = (id: number) => {
-    console.log(`Expand grid image ${id}`)
-    navigation.navigate('ExpandedImageModal', { name: id.toString() } as never)
+  const expandImageView = (filepath: string) => {
+    // console.log(`Expand grid image ${id}`)
+    navigation.navigate('ExpandedImageModal', { name: filepath } as never)
   }
 
   if (user) {
@@ -268,7 +307,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
                         margin: 1,
                       }}
                     >
-                      <TouchableHighlight onPress={() => expandImageView(item.id)}>
+                      <TouchableHighlight onPress={() => expandImageView(item.name)}>
                         <Image
                           style={[
                             styles.imageThumbnail,

@@ -3,10 +3,6 @@ import { Text, View } from 'components/Themed' // need view
 import { RootTabScreenProps } from 'types'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-// interface Props {
-//   title: string
-//   navigation: RootTabScreenProps<'ExpandedImageModal'>
-// }
 type RootStackParamList = {
   ExpandedImageModal: { name: string }
 }
