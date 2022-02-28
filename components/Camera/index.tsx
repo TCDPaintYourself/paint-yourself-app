@@ -119,7 +119,7 @@ const styles = (headerHeight: number = 90) =>
     container: {
       margin: 1,
       width,
-      height: Math.min(windowHeight - headerHeight, height),
+      height: Math.min(windowHeight - headerHeight - 25, height),
     },
     camera: {
       flex: 1,
@@ -133,7 +133,7 @@ const styles = (headerHeight: number = 90) =>
       justifyContent: 'space-around',
       alignItems: 'flex-end',
       flexGrow: 1,
-      marginBottom: 25,
+      marginBottom: 35,
     },
     button: {
       margin: 10,
