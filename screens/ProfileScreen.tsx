@@ -43,7 +43,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     let items = Array.apply(null, Array(60)).map((v, i) => {
       return {
         id: i,
-        src: `http://placehold.it/${GRID_IMG_WIDTH}x${GRID_IMG_HEIGHT}?text=` + (i + 1),
+        src: `http://placehold.it/${GRID_IMG_WIDTH}x${GRID_IMG_HEIGHT}?text=${i + 1}`,
         // src: `https://picsum.photos/${GRID_IMG_WIDTH}/${GRID_IMG_HEIGHT}`,   // an actual image placeholder
       }
     })
