@@ -35,10 +35,19 @@ export default function Navigator({ colorScheme }: { colorScheme: ColorSchemeNam
           component={ChooseStyleScreen}
           options={{
             title: 'Select Style',
+            gestureEnabled: false,
           }}
         />
-        <Stack.Screen name="FinishedArtScreen" component={FinishedArtScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="FinishedArtScreen"
+          component={FinishedArtScreen}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Root"
+          component={BottomTabNavigator}
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
         {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={NewProjectScreen} />
       </Stack.Group> */}
