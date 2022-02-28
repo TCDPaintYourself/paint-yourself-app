@@ -6,7 +6,6 @@ import ThemePicker from 'components/ThemePicker'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import SnackBar from 'react-native-snackbar-component'
-import axios from 'axios'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -27,28 +26,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
 
   const handleContinue = () => {
     setLoading(true)
-    let formData = new FormData()
-    let filename = image.split('/').pop() || 'image.jpg'
-    let match = /\.(\w+)$/.exec(filename)
-    let type = match ? `image/${match[1]}` : `image`
-    formData.append('image', { uri: image, name: filename, type } as any)
-    formData.append('theme', projectTheme.name)
-    axios
-      .post('https://stylegan.free.beeceptor.com/styled-images', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      .then((result) => {
-        console.log(result.data)
-        setLoading(false)
-        setSnackbarOpen(false)
-        navigation.navigate('FinishedArtScreen', { image: image })
-      })
-      .catch((e) => {
-        console.log(e)
-        setSnackbarMessage('Error creating StyleGan')
-        setSnackbarOpen(true)
-        setLoading(false)
-      })
+    navigation.navigate('FinishedArtScreen', { image: image })
   }
 
   return (

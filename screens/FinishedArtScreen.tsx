@@ -47,13 +47,13 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
             name={upvoted ? 'thumbs-up' : 'thumbs-o-up'}
             onPress={handleUpvote}
             size={ICON_SIZE}
-            style={styles.iconButton}
+            style={styles.feedbackIconButton}
           />
           <Icon
             name={upvoted === false ? 'thumbs-down' : 'thumbs-o-down'}
             onPress={handleDownvote}
             size={ICON_SIZE}
-            style={styles.iconButton}
+            style={styles.feedbackIconButton}
           />
         </View>
       </ImageBackground>
@@ -89,8 +89,9 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     backgroundColor: 'transparent',
   },
-  iconButton: {
+  feedbackIconButton: {
     marginHorizontal: 16,
+    backgroundColor: 'transparent',
   },
   shareButton: { alignSelf: 'center', width: containerWidth / 2 - 20, marginTop: 20, marginHorizontal: 10 },
 })
