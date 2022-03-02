@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   feedbackIconButton: {
     backgroundColor: 'transparent',
-    marginHorizontal: 15,
+    marginHorizontal: 12,
     color: 'white',
   },
   actionButtons: { alignSelf: 'center', width: containerWidth / 2 - 50, marginTop: 20 },
