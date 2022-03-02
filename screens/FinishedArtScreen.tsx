@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { StyleSheet, ImageBackground, Dimensions } from 'react-native'
+import { StyleSheet, Image, Dimensions } from 'react-native'
 import { Text, View, Icon } from 'components/Themed'
 import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import * as MediaLibrary from 'expo-media-library'
+import Colors from 'constants/Colors'
+import { FontAwesome } from '@expo/vector-icons'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -17,15 +20,31 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
-const ICON_SIZE = 40
+const ICON_SIZE = 32
 
 export default function FinishedArtScreen({ route, navigation }: Props) {
   const [upvoted, setUpvote] = useState<boolean | null>()
   const { image } = route.params
+  const [saved, setSaved] = useState(false)
 
   const shareImage = async () => {
     if (await Sharing.isAvailableAsync()) {
       Sharing.shareAsync(image)
+    }
+  }
+
+  const saveImage = async () => {
+    if (!saved) {
+      const { status } = await MediaLibrary.requestPermissionsAsync()
+      if (status) {
+        const asset = await MediaLibrary.createAssetAsync(image)
+        // asset.filename = '@PY-' + new Date().toLocaleTimeString()
+        const albumCreated = await MediaLibrary.createAlbumAsync('Paint-Yourself', asset, false)
+        setSaved(true)
+      } else {
+        console.log('Permissions denied')
+      }
+      console.log('done')
     }
   }
 
@@ -41,26 +60,29 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={{ uri: image }} style={styles.image} imageStyle={{ borderRadius: 16 }}>
-        <View style={styles.buttonContainer}>
-          <Icon
-            name={upvoted ? 'thumbs-up' : 'thumbs-o-up'}
-            onPress={handleUpvote}
-            size={ICON_SIZE}
-            style={styles.feedbackIconButton}
-          />
-          <Icon
-            name={upvoted === false ? 'thumbs-down' : 'thumbs-o-down'}
-            onPress={handleDownvote}
-            size={ICON_SIZE}
-            style={styles.feedbackIconButton}
-          />
-        </View>
-      </ImageBackground>
-      <View style={styles.row}>
-        <Button onPress={shareImage} style={styles.shareButton} title="Share" />
-        <Button onPress={handleHome} style={styles.shareButton} title="Home" />
+      <Image source={{ uri: image }} style={styles.image} />
+      <View style={styles.buttonContainer}>
+        <FontAwesome name="save" onPress={saveImage} size={ICON_SIZE} style={styles.feedbackIconButton} />
+        <FontAwesome
+          name={upvoted ? 'thumbs-up' : 'thumbs-o-up'}
+          style={[styles.feedbackIconButton, { marginLeft: 'auto' }]}
+          onPress={handleUpvote}
+          size={ICON_SIZE}
+        />
+        <FontAwesome
+          name={upvoted === false ? 'thumbs-down' : 'thumbs-o-down'}
+          onPress={handleDownvote}
+          size={ICON_SIZE}
+          style={styles.feedbackIconButton}
+        />
       </View>
+
+      <View style={styles.row}>
+        <Button onPress={shareImage} style={styles.actionButtons} title="Share" />
+        <Button onPress={handleHome} style={styles.actionButtons} title="Home" />
+      </View>
+
+      <View style={styles.savedText}>{saved && <Text>Image saved!</Text>}</View>
     </View>
   )
 }
@@ -68,30 +90,41 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   row: {
+    width: '100%',
+    flex: 0.5,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   image: {
-    width: placeholderImageWidth,
-    height: placeholderImageHeight,
-    marginVertical: 12,
+    marginTop: 60,
+    flex: 3,
+    width: containerWidth,
+    height: containerWidth,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    position: 'relative',
-    top: placeholderImageHeight - 60,
-    marginBottom: 25,
-    backgroundColor: 'transparent',
+    alignItems: 'center',
+    backgroundColor: Colors.primary.background,
+    width: containerWidth,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    height: 54,
   },
   feedbackIconButton: {
-    marginHorizontal: 16,
     backgroundColor: 'transparent',
+    marginHorizontal: 15,
+    color: 'white',
   },
-  shareButton: { alignSelf: 'center', width: containerWidth / 2 - 20, marginTop: 20, marginHorizontal: 10 },
+  actionButtons: { alignSelf: 'center', width: containerWidth / 2 - 50, marginTop: 20 },
+  savedText: {
+    flex: 0.5,
+    marginTop: 10,
+  },
 })
