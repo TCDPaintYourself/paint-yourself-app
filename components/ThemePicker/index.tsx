@@ -29,7 +29,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
   )
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={data}
         keyExtractor={(_, index) => index.toString()}
