@@ -99,13 +99,15 @@ const styles = StyleSheet.create({
     flex: 0.5,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
   },
   image: {
     marginTop: 60,
     flex: 3,
     width: containerWidth,
     height: containerWidth,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     height: 54,
+    padding: 2,
   },
   feedbackIconButton: {
     backgroundColor: 'transparent',
