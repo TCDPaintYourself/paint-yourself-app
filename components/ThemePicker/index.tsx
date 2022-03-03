@@ -22,7 +22,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
       let pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / width + 0.5), 0), data.length)
       if (page !== pageIndex) {
         setPage(pageIndex)
-        setProjectTheme(data[page])
+        setProjectTheme(data[pageIndex])
       }
     },
     [page, setPage, setProjectTheme, data]
