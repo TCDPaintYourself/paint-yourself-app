@@ -10,8 +10,8 @@ import {
   getDocs,
   onSnapshot,
   query,
+  getDoc,
 } from 'firebase/firestore'
-import { FieldValue } from 'firebase-admin/firestore'
 import { firebaseConfig } from 'constants/Firebase'
 // Init the firebase app
 export const firebaseApp = initializeApp(firebaseConfig)
@@ -23,7 +23,7 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 }
 
 export type ThemeVote = {
-  Theme: string
+  theme: string
   votes: number
 }
 
@@ -31,25 +31,42 @@ export const themeVotesCol = createCollection<ThemeVote>('theme_votes')
 
 export const upvoteTheme = async (theme: string): Promise<void> => {
   const themeVoteRef = doc(themeVotesCol, theme)
+  const docSnap = await getDoc(themeVoteRef)
+  let data = docSnap.data()
+  let new_votes = (data?.votes || 0) + 1
   await updateDoc(themeVoteRef, {
-    votes: FieldValue.increment(1),
+    votes: new_votes,
   })
 }
 
 export const downvoteTheme = async (theme: string): Promise<void> => {
   const themeVoteRef = doc(themeVotesCol, theme)
+  const docSnap = await getDoc(themeVoteRef)
+  let data = docSnap.data()
+  let new_votes = (data?.votes || 0) - 1
   await updateDoc(themeVoteRef, {
-    votes: FieldValue.increment(-1),
+    votes: new_votes,
   })
 }
 
-export const getThemes = async (): Promise<ThemeVote[]> => {
-  const themeVotesDocs = await getDocs(themeVotesCol)
+export const getThemesVote = async (): Promise<ThemeVote[]> => {
+  const themesVotesSnap = await getDocs(themeVotesCol)
   let themeVotes: Array<ThemeVote> = []
-  themeVotesDocs.docs.forEach((theme) => {
+  themesVotesSnap.docs.forEach((theme: any) => {
     themeVotes.push(theme.data())
   })
   return themeVotes
+}
+
+export const getThemeVote = async (theme: number | string): Promise<number> => {
+  const themeVotesSnap = await getDocs(themeVotesCol)
+  let votes = 0
+  themeVotesSnap.docs.forEach((doc: any) => {
+    if (doc.data().theme === theme) {
+      votes = doc.data().votes
+    }
+  })
+  return votes
 }
 
 // https://firebase.google.com/docs/firestore/query-data/listen#listen_to_multiple_documents_in_a_collection
