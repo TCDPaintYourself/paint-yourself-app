@@ -10,6 +10,8 @@ import AS_KEYS from 'constants/AsyncStorage'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import Colors from 'constants/Colors'
+import { downvoteTheme, upvoteTheme } from 'utils/themeVotes'
+import { Themes } from 'constants/ProjectThemes'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -17,7 +19,7 @@ const placeholderImageWidth = width * 0.85
 const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
 type RootStackParamList = {
-  FinishedArtScreen: { image: string }
+  FinishedArtScreen: { image: string; theme: Themes }
   Profile: undefined
 }
 
@@ -28,7 +30,7 @@ const ICON_SIZE = 32
 type storageEntry = { [id: string]: string }
 
 export default function FinishedArtScreen({ route, navigation }: Props) {
-  const { image } = route.params
+  const { image, theme } = route.params
   const [upvoted, setUpvote] = useState<boolean | null>()
 
   // when user clicks home too fast after saving, throws an unmounted component error
@@ -151,10 +153,12 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
 
   const handleUpvote = () => {
     setUpvote((uv) => (uv ? null : true))
+    upvoteTheme(theme)
   }
 
   const handleDownvote = () => {
     setUpvote((uv) => (uv === false ? null : false))
+    downvoteTheme(theme)
   }
 
   return (

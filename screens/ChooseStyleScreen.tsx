@@ -19,7 +19,7 @@ const containerWidth = width * 0.8
 
 type RootStackParamList = {
   ChooseStyleScreen: { image: string }
-  FinishedArtScreen: { image: string }
+  FinishedArtScreen: { image: string; theme: Themes }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
@@ -78,7 +78,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
       encoding: FileSystem.EncodingType.Base64,
     })
 
-    navigation.navigate('FinishedArtScreen', { image: imageUri })
+    navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
   }
 
   return (
