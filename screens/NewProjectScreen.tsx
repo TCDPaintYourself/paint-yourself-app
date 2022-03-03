@@ -1,15 +1,12 @@
 import { useState } from 'react'
-import { StatusBar } from 'expo-status-bar'
 import * as ImgPicker from 'expo-image-picker'
-import { Platform, StyleSheet, ImageBackground, ScrollView, Dimensions, Alert } from 'react-native'
-import { Text, View } from 'components/Themed'
-import { CameraImage } from 'types'
-import ThemePicker from 'components/ThemePicker'
-import Button from 'components/Button'
-import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
-import Camera from 'components/Camera'
-import * as Sharing from 'expo-sharing'
+import { StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+
+import { View } from 'components/Themed'
+import { CameraImage } from 'types'
+import Button from 'components/Button'
+import Camera from 'components/Camera'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -25,7 +22,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
 const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
   const [image, setImage] = useState<CameraImage | null>(null)
-  const [projectTheme, setProjectTheme] = useState<IProjectTheme>()
   const [takePhotoMode, setTakePhotoMode] = useState<boolean>(false)
 
   const openCamera = () => {

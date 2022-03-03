@@ -1,19 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
+import * as FileSystem from 'expo-file-system'
+import SnackBar from 'react-native-snackbar-component'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import 'react-native-get-random-values'
+import { v4 as uuidv4 } from 'uuid'
+
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import ThemePicker from 'components/ThemePicker'
-import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import SnackBar from 'react-native-snackbar-component'
+import ProjectThemes, { IProjectTheme, Themes } from 'constants/ProjectThemes'
 import Colors from 'constants/Colors'
+import { useUserContext } from 'hooks/useUserContext'
+import { blobToBase64 } from 'utils/convert'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 
 type RootStackParamList = {
   ChooseStyleScreen: { image: string }
-  FinishedArtScreen: { image: string }
+  FinishedArtScreen: { image: string; theme: Themes }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
@@ -23,21 +29,56 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const { image } = route.params
+  const [user] = useUserContext()
+  const { image: inputImage } = route.params
 
-  //reset loading state to false when user returns to screen
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setLoading(false)
-    })
-    return unsubscribe
-  }, [navigation])
+  const handleContinue = async () => {
+    const filename = inputImage.split('/').pop()
+    const filetype = filename?.split('.').pop()
 
-  const handleContinue = () => {
     setLoading(true)
-    setTimeout(() => {
-      navigation.navigate('FinishedArtScreen', { image: image })
-    }, 3000)
+
+    const authToken = await user?.getIdToken()
+
+    const formData = new FormData()
+    // Any type as react-native as a custom FormData implementation.
+    formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
+
+    let response = null
+    try {
+      response = await fetch(
+        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        }
+      )
+    } catch (error: any) {
+      setSnackbarMessage(error.message)
+      setSnackbarOpen(true)
+      setLoading(false)
+
+      return
+    }
+
+    const imageBlob = await response.blob()
+    // Remove metadata.
+    const imageBase64 = (await blobToBase64(imageBlob)).split(',').pop()
+
+    if (!imageBase64) {
+      return
+    }
+
+    const imageUri = `${FileSystem.cacheDirectory}/${uuidv4()}.${filetype}`
+    await FileSystem.writeAsStringAsync(imageUri, imageBase64, {
+      encoding: FileSystem.EncodingType.Base64,
+    })
+
+    navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
   }
 
   return (

@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
+import * as MediaLibrary from 'expo-media-library'
+import * as Sharing from 'expo-sharing'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { FontAwesome } from '@expo/vector-icons'
+import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
+
 import AS_KEYS from 'constants/AsyncStorage'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
-import * as Sharing from 'expo-sharing'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as MediaLibrary from 'expo-media-library'
 import Colors from 'constants/Colors'
-import { FontAwesome } from '@expo/vector-icons'
+import { downvoteTheme, upvoteTheme } from 'utils/themeVotes'
+import { Themes } from 'constants/ProjectThemes'
 
-const { width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
 const placeholderImageWidth = width * 0.85
 const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
 type RootStackParamList = {
-  FinishedArtScreen: { image: string }
+  FinishedArtScreen: { image: string; theme: Themes }
   Profile: undefined
 }
 
@@ -27,7 +30,7 @@ const ICON_SIZE = 32
 type storageEntry = { [id: string]: string }
 
 export default function FinishedArtScreen({ route, navigation }: Props) {
-  const { image } = route.params
+  const { image, theme } = route.params
   const [upvoted, setUpvote] = useState<boolean | null>()
 
   // when user clicks home too fast after saving, throws an unmounted component error
@@ -89,6 +92,7 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
         setSaved(true)
       } catch (e) {
         console.log('Failed Media Library permissions check on save')
+        console.log({ e })
         setfailedPermissionCheck(true)
       }
 
@@ -149,10 +153,12 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
 
   const handleUpvote = () => {
     setUpvote((uv) => (uv ? null : true))
+    upvoteTheme(theme)
   }
 
   const handleDownvote = () => {
     setUpvote((uv) => (uv === false ? null : false))
+    downvoteTheme(theme)
   }
 
   return (

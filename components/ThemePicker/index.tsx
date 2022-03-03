@@ -22,7 +22,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
       let pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / width + 0.5), 0), data.length)
       if (page !== pageIndex) {
         setPage(pageIndex)
-        setProjectTheme(data[page])
+        setProjectTheme(data[pageIndex])
       }
     },
     [page, setPage, setProjectTheme, data]
@@ -40,7 +40,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
         renderItem={({ item }: { item: IProjectTheme }) => {
           return (
             <View style={{ width, alignItems: 'center' }}>
-              <ImageBackground source={{ uri: item.image }} style={styles.cardImage} imageStyle={{ borderRadius: 16 }}>
+              <ImageBackground source={item.image} style={styles.cardImage} imageStyle={{ borderRadius: 16 }}>
                 <LinearGradient
                   colors={['rgba(66, 66, 74, 0.65)', 'rgba(25, 25, 25, 0.65)']}
                   style={styles.linearGradient}

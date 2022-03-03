@@ -31,7 +31,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
 
   const [user] = useUserContext()
 
-  const [coverPic, setCoverPic] = useState('')
+  const [coverPic, setCoverPic] = useState<ImageSourcePropType>(0)
 
   const [albumID, setAlbumID] = useState('')
   const [numCreations, setNumCreations] = useState(0)
@@ -228,11 +228,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           </View>
         </Modal>
         <View style={styles.coverRegion}>
-          <ImageBackground
-            resizeMode="cover"
-            source={coverPic ? (coverPic as ImageSourcePropType) : { uri: null }}
-            style={styles.coverImage}
-          >
+          <ImageBackground resizeMode="cover" source={coverPic || { uri: undefined }} style={styles.coverImage}>
             <View style={styles.IconButtonContainer}>
               <MaterialCommunityIcons
                 name="logout-variant"
