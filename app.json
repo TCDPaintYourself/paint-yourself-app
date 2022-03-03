@@ -19,6 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.paintyourself",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to let user put a photo to be image processed by StyleGan."
       }
