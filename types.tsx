@@ -15,7 +15,8 @@ declare global {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
-  LoginRegister: undefined
+  ExpandedImageModal: undefined
+  LoginRegister: { title: string }
   Modal: undefined
   ChooseStyleScreen: undefined
   FinishedArtScreen: undefined
@@ -28,6 +29,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >
 
 export type RootTabParamList = {
+  ExpandedImageModal: undefined
   LoginRegister: undefined
   NewProject: undefined
   Profile: undefined

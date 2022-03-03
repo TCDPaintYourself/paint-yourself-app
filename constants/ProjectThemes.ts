@@ -4,6 +4,16 @@ export interface IProjectTheme {
   name: string
 }
 
+export enum Themes {
+  VANGOUGH,
+  CLAUDEMONET,
+  REMBRANDT,
+  WHISTLER,
+  PICASSO,
+  DAVINCI,
+  CARAVAGGIO,
+}
+
 const ProjectTheme: IProjectTheme[] = [
   {
     id: '1',

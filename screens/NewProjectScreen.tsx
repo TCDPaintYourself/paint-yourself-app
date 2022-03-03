@@ -14,8 +14,8 @@ const placeholderImageWidth = width * 0.85
 const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
 type RootStackParamList = {
-  ChooseStyleScreen: { image: CameraImage }
-  FinishedArtScreen: { image: CameraImage }
+  FinishedArtScreen: { image: string }
+  ChooseStyleScreen: { image: string }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
@@ -38,7 +38,7 @@ const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
     let result = await ImgPicker.launchImageLibraryAsync({
       mediaTypes: ImgPicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 5], // 8x10 portrait
+      aspect: [9, 16], // 8x10 portrait
       quality: 1,
     })
 
@@ -58,7 +58,7 @@ const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
 
   const handleContinue = () => {
     if (image == null) return
-    navigation.navigate('ChooseStyleScreen', { image })
+    navigation.navigate('ChooseStyleScreen', { image: image.uri })
   }
 
   if (takePhotoMode) {

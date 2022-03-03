@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
 
 const imageW = width * 0.8
-const imageH = imageW * 1.2
+const imageH = imageW * 1.4
 
 interface Props {
   data: IProjectTheme[]
@@ -29,7 +29,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
   )
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={data}
         keyExtractor={(_, index) => index.toString()}
