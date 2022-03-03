@@ -90,14 +90,14 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIconMaterial name="camera-plus" color={color} />,
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <TabBarIconFA name="cog" color={color} />,
         }}
-      />
+      /> */}
     </BottomTab.Navigator>
   )
 }
