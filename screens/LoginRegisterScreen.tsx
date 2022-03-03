@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { maybeCompleteAuthSession } from 'expo-web-browser'
 import { GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from 'firebase/auth'
 
-import { Text, View } from 'components/Themed'
+import { View } from 'components/Themed'
 import { RootTabScreenProps } from 'types'
 import { useUserContext } from 'hooks/useUserContext'
 import { useGoogleIdTokenAuthRequest } from 'hooks/useGoogleIdTokenAuthRequest'
