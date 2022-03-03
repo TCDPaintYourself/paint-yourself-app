@@ -6,7 +6,7 @@ import SnackBar from 'react-native-snackbar-component'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import ThemePicker from 'components/ThemePicker'
-import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
+import ProjectThemes, { IProjectTheme, Themes } from 'constants/ProjectThemes'
 import Colors from 'constants/Colors'
 import { useUserContext } from 'hooks/useUserContext'
 import { blobToBase64 } from 'utils/convert'
@@ -44,7 +44,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
     let response = null
     try {
       response = await fetch(
-        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.name}`,
+        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
         {
           method: 'POST',
           headers: {
