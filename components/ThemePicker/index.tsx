@@ -40,7 +40,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
         renderItem={({ item }: { item: IProjectTheme }) => {
           return (
             <View style={{ width, alignItems: 'center' }}>
-              <ImageBackground source={{ uri: item.image }} style={styles.cardImage} imageStyle={{ borderRadius: 16 }}>
+              <ImageBackground source={item.image} style={styles.cardImage} imageStyle={{ borderRadius: 16 }}>
                 <LinearGradient
                   colors={['rgba(66, 66, 74, 0.65)', 'rgba(25, 25, 25, 0.65)']}
                   style={styles.linearGradient}
