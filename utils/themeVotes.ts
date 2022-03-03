@@ -29,7 +29,7 @@ export type ThemeVote = {
 
 export const themeVotesCol = createCollection<ThemeVote>('theme_votes')
 
-export const upvoteTheme = async (theme: string): Promise<void> => {
+export const upvoteTheme = async (theme: string): Promise<number> => {
   const themeVoteRef = doc(themeVotesCol, theme)
   const docSnap = await getDoc(themeVoteRef)
   let data = docSnap.data()
@@ -37,9 +37,10 @@ export const upvoteTheme = async (theme: string): Promise<void> => {
   await updateDoc(themeVoteRef, {
     votes: new_votes,
   })
+  return new_votes
 }
 
-export const downvoteTheme = async (theme: string): Promise<void> => {
+export const downvoteTheme = async (theme: string): Promise<number> => {
   const themeVoteRef = doc(themeVotesCol, theme)
   const docSnap = await getDoc(themeVoteRef)
   let data = docSnap.data()
@@ -47,6 +48,7 @@ export const downvoteTheme = async (theme: string): Promise<void> => {
   await updateDoc(themeVoteRef, {
     votes: new_votes,
   })
+  return new_votes
 }
 
 export const getThemesVote = async (): Promise<ThemeVote[]> => {
