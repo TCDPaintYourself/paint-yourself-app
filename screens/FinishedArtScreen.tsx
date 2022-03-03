@@ -89,6 +89,7 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
         setSaved(true)
       } catch (e) {
         console.log('Failed Media Library permissions check on save')
+        console.log({ e })
         setfailedPermissionCheck(true)
       }
 

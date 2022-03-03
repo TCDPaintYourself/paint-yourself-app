@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import SnackBar from 'react-native-snackbar-component'
+
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import ThemePicker from 'components/ThemePicker'
 import ProjectThemes, { IProjectTheme } from 'constants/ProjectThemes'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import SnackBar from 'react-native-snackbar-component'
 import Colors from 'constants/Colors'
+import { useUserContext } from 'hooks/useUserContext'
+import { blobToBase64 } from 'utils/convert'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
@@ -23,21 +26,47 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const { image } = route.params
+  const [user] = useUserContext()
+  const { image: inputImage } = route.params
 
-  //reset loading state to false when user returns to screen
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setLoading(false)
-    })
-    return unsubscribe
-  }, [navigation])
+  const handleContinue = async () => {
+    const filename = inputImage.split('/').pop()
+    const filetype = filename?.split('.').pop()
 
-  const handleContinue = () => {
     setLoading(true)
-    setTimeout(() => {
-      navigation.navigate('FinishedArtScreen', { image })
-    }, 3000)
+
+    const authToken = await user?.getIdToken()
+
+    const formData = new FormData()
+    // Any type as react-native as a custom FormData implementation.
+    formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
+
+    let response = null
+    try {
+      response = await fetch(
+        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.name}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        }
+      )
+    } catch (error: any) {
+      setSnackbarMessage(error.message)
+      setLoading(false)
+
+      return
+    }
+
+    const imageBlob = await response.blob()
+    const imageBase64 = await blobToBase64(imageBlob)
+
+    setLoading(false)
+
+    navigation.navigate('FinishedArtScreen', { image: imageBase64 })
   }
 
   return (
