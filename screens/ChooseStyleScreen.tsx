@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import * as FileSystem from 'expo-file-system'
 import SnackBar from 'react-native-snackbar-component'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import 'react-native-get-random-values'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
@@ -63,11 +66,19 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
     }
 
     const imageBlob = await response.blob()
-    const imageBase64 = await blobToBase64(imageBlob)
+    // Remove metadata.
+    const imageBase64 = (await blobToBase64(imageBlob)).split(',').pop()
 
-    setLoading(false)
+    if (!imageBase64) {
+      return
+    }
 
-    navigation.navigate('FinishedArtScreen', { image: imageBase64 })
+    const imageUri = `${FileSystem.cacheDirectory}/${uuidv4()}.${filetype}`
+    await FileSystem.writeAsStringAsync(imageUri, imageBase64, {
+      encoding: FileSystem.EncodingType.Base64,
+    })
+
+    navigation.navigate('FinishedArtScreen', { image: imageUri })
   }
 
   return (

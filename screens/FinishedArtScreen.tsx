@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
+import * as MediaLibrary from 'expo-media-library'
+import * as Sharing from 'expo-sharing'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { FontAwesome } from '@expo/vector-icons'
+import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
+
 import AS_KEYS from 'constants/AsyncStorage'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
-import * as Sharing from 'expo-sharing'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as MediaLibrary from 'expo-media-library'
 import Colors from 'constants/Colors'
-import { FontAwesome } from '@expo/vector-icons'
 
 const { width } = Dimensions.get('screen')
 const containerWidth = width * 0.8
