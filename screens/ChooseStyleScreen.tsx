@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
 import * as FileSystem from 'expo-file-system'
 import SnackBar from 'react-native-snackbar-component'
@@ -31,6 +31,17 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   const [loading, setLoading] = useState(false)
   const [user] = useUserContext()
   const { image: inputImage } = route.params
+
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (!loading) return
+
+        // Prevent default behavior of leaving the screen
+        e.preventDefault()
+      }),
+    [loading]
+  )
 
   const handleContinue = async () => {
     const filename = inputImage.split('/').pop()
