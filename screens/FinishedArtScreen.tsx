@@ -42,6 +42,15 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
 
   const [creationName, onChangeCreationName] = useState('')
 
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        // Prevent default behavior of leaving the screen
+        e.preventDefault()
+      }),
+    []
+  )
+
   useEffect(() => {
     const save = async () => {
       try {

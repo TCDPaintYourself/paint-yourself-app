@@ -170,6 +170,15 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     }
   }
 
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        // Prevent default behavior of leaving the screen
+        e.preventDefault()
+      }),
+    []
+  )
+
   // if numCreations changes, means user saved a new creation -> reload creations
   useEffect(() => {
     updateCreationsList()
