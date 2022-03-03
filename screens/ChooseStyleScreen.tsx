@@ -56,6 +56,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
       )
     } catch (error: any) {
       setSnackbarMessage(error.message)
+      setSnackbarOpen(true)
       setLoading(false)
 
       return
