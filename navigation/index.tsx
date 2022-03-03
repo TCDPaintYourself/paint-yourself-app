@@ -23,6 +23,7 @@ import NewProjectScreen from 'screens/NewProjectScreen'
 import ChooseStyleScreen from 'screens/ChooseStyleScreen'
 import FinishedArtScreen from 'screens/FinishedArtScreen'
 import SettingsScreen from 'screens/SettingsScreen'
+import ExpandedImageModal from 'screens/ExpandedImageModal'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
@@ -48,9 +49,10 @@ export default function Navigator({ colorScheme }: { colorScheme: ColorSchemeNam
         /> */}
         <Stack.Screen name="FinishedArtScreen" component={FinishedArtScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-        {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={NewProjectScreen} />
-      </Stack.Group> */}
+        <Stack.Group screenOptions={{ presentation: 'modal' }}>
+          {/* <Stack.Screen name="Modal" component={NewProjectScreen} /> */}
+          <Stack.Screen name="ExpandedImageModal" component={ExpandedImageModal} options={{ headerShown: true }} />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   )
