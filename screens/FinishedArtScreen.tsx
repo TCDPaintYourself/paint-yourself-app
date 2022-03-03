@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, Dimensions, TextInput } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import AS_KEYS from 'constants/AsyncStorage'
@@ -6,10 +7,13 @@ import Button from 'components/Button'
 import * as Sharing from 'expo-sharing'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as MediaLibrary from 'expo-media-library'
-import { useState, useEffect } from 'react'
+import Colors from 'constants/Colors'
+import { FontAwesome } from '@expo/vector-icons'
 
 const { width, height } = Dimensions.get('screen')
 const containerWidth = width * 0.8
+const placeholderImageWidth = width * 0.85
+const placeholderImageHeight = placeholderImageWidth * (16 / 9) //make the image a 8x10 portrait
 
 type RootStackParamList = {
   FinishedArtScreen: { image: string }
@@ -18,10 +22,13 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FinishedArtScreen'>
 
+const ICON_SIZE = 32
+
 type storageEntry = { [id: string]: string }
 
-const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
+export default function FinishedArtScreen({ route, navigation }: Props) {
   const { image } = route.params
+  const [upvoted, setUpvote] = useState<boolean | null>()
 
   // when user clicks home too fast after saving, throws an unmounted component error
   //  -> wait til finished saving before reenabling buttons
@@ -140,12 +147,36 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleHome = () => navigation.navigate('Profile')
 
+  const handleUpvote = () => {
+    setUpvote((uv) => (uv ? null : true))
+  }
+
+  const handleDownvote = () => {
+    setUpvote((uv) => (uv === false ? null : false))
+  }
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
+      <View style={styles.buttonContainer}>
+        {/*<FontAwesome name="save" onPress={saveImage} size={ICON_SIZE} style={styles.feedbackIconButton} />*/}
+        <FontAwesome
+          name={upvoted ? 'thumbs-up' : 'thumbs-o-up'}
+          style={[styles.feedbackIconButton, { marginLeft: 'auto' }]}
+          onPress={handleUpvote}
+          size={ICON_SIZE}
+        />
+        <FontAwesome
+          name={upvoted === false ? 'thumbs-down' : 'thumbs-o-down'}
+          onPress={handleDownvote}
+          size={ICON_SIZE}
+          style={styles.feedbackIconButton}
+        />
+      </View>
+
       <View style={styles.row}>
-        <Button onPress={shareImage} style={styles.actionButtons} disabled={saving} title="Share" />
-        <Button onPress={handleHome} style={styles.actionButtons} disabled={saving} title="Home" />
+        <Button onPress={shareImage} style={styles.actionButtons} title="Share" />
+        <Button onPress={handleHome} style={styles.actionButtons} title="Home" />
       </View>
       <Text style={{ color: 'white' }}>Save your creation to your gallery:</Text>
       <View style={styles.saveContainer}>
@@ -169,8 +200,6 @@ const FinishedArtScreen: React.FC<Props> = ({ route, navigation }) => {
   )
 }
 
-export default FinishedArtScreen
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -185,12 +214,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: '10%',
-    paddingBottom: '5%',
-    alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: 'yellow',
+    justifyContent: 'space-evenly',
   },
   image: {
     marginTop: 60,
@@ -199,9 +223,26 @@ const styles = StyleSheet.create({
     flex: 4,
     width: containerWidth,
     height: containerWidth,
-    marginBottom: 10,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
-  actionButtons: { alignSelf: 'center', width: '40%' },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: Colors.primary.background,
+    width: containerWidth,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    height: 54,
+    padding: 2,
+  },
+  feedbackIconButton: {
+    backgroundColor: 'transparent',
+    marginHorizontal: 12,
+    color: 'white',
+  },
+  actionButtons: { alignSelf: 'center', width: '35%' },
   savedText: {
     flex: 0.5,
     marginTop: 10,

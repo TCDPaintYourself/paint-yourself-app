@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, AppState, AppStateStatus, Plat
 import { Camera } from 'expo-camera'
 import { CameraImage } from 'types'
 import { AntDesign, FontAwesome, Ionicons, Feather } from '@expo/vector-icons'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 interface Props {
   image: CameraImage | null
@@ -13,6 +14,7 @@ interface Props {
 const ICON_SIZE = 40
 
 const { width } = Dimensions.get('screen')
+const { height: windowHeight } = Dimensions.get('window')
 const height = width * (16 / 9)
 
 export default function CameraScreen({ image, setImage, closeCamera }: Props) {
@@ -22,6 +24,7 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   const [type, setType] = useState(Camera.Constants.Type.back)
   const [available, setAvailable] = useState<boolean>(true)
   const cameraRef = useRef<Camera>(null)
+  const headerHeight = useHeaderHeight()
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -68,20 +71,26 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles(headerHeight).container}>
       {image ? (
-        <ImageBackground source={{ uri: image.uri }} style={styles.takenPhoto}>
-          <View style={styles.buttonContainer}>
+        <ImageBackground source={{ uri: image.uri }} style={styles().takenPhoto}>
+          <View style={styles().buttonContainer}>
             <FontAwesome name="rotate-left" size={ICON_SIZE} color="white" onPress={() => setImage(null)} />
             <Feather name="check-circle" size={ICON_SIZE} color="white" onPress={closeCamera} />
           </View>
         </ImageBackground>
       ) : (
         appStateVisible && (
-          <Camera style={styles.camera} type={type} ratio="16:9" ref={cameraRef}>
-            <View style={styles.cameraContainer}>
-              <AntDesign name="close" size={ICON_SIZE} color="white" onPress={closeCamera} style={styles.closeButton} />
-              <View style={styles.buttonContainer}>
+          <Camera style={styles().camera} type={type} ratio="16:9" ref={cameraRef}>
+            <View style={styles().cameraContainer}>
+              <AntDesign
+                name="close"
+                size={ICON_SIZE}
+                color="white"
+                onPress={closeCamera}
+                style={styles().closeButton}
+              />
+              <View style={styles().buttonContainer}>
                 <AntDesign
                   onPress={async () => {
                     if (cameraRef.current) {
@@ -92,7 +101,7 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
                   name="camera"
                   size={ICON_SIZE}
                   color="white"
-                  style={styles.takePhotoButton}
+                  style={styles().takePhotoButton}
                 />
                 <Ionicons name="camera-reverse-sharp" size={ICON_SIZE} color="white" onPress={handleSwitchCameraType} />
               </View>
@@ -104,41 +113,43 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    margin: 5,
-    width,
-    height,
-  },
-  camera: {
-    flex: 1,
-  },
-  cameraContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    flexGrow: 1,
-    marginBottom: 25,
-  },
-  button: {
-    margin: 10,
-  },
-  text: {
-    fontSize: 18,
-    color: 'white',
-  },
-  takenPhoto: {
-    resizeMode: 'cover',
-    flex: 1,
-  },
-  closeButton: {
-    margin: 5,
-  },
-  takePhotoButton: {
-    margin: 3, // place icon in correct position due to spacing
-  },
-})
+//needs to get headerHeight from useHeaderHeight
+const styles = (headerHeight: number = 90) =>
+  StyleSheet.create({
+    container: {
+      margin: 1,
+      width,
+      height: Math.min(windowHeight - headerHeight - 25, height),
+    },
+    camera: {
+      flex: 1,
+    },
+    cameraContainer: {
+      flex: 1,
+      backgroundColor: 'transparent',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'flex-end',
+      flexGrow: 1,
+      marginBottom: 35,
+    },
+    button: {
+      margin: 10,
+    },
+    text: {
+      fontSize: 18,
+      color: 'white',
+    },
+    takenPhoto: {
+      resizeMode: 'cover',
+      flex: 1,
+    },
+    closeButton: {
+      margin: 5,
+    },
+    takePhotoButton: {
+      margin: 3, // place icon in correct position due to spacing
+    },
+  })
