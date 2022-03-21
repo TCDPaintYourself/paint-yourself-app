@@ -78,7 +78,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           sortBy: ['creationTime'],
         })
         const assets = pagedAssets.assets
-        console.log(assets)
+        // console.log(assets)
 
         creations = assets.map((asset, i) => {
           return {
@@ -107,7 +107,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
       // {... uri: creationName ...}
       const uriNamePairs = await AsyncStorage.getItem(namesKey)
 
-      console.log(uriNamePairs)
+      // console.log(uriNamePairs)
 
       if (uriNamePairs) {
         const uriNamePairsParsed = JSON.parse(uriNamePairs)
@@ -117,11 +117,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           match = creations.find((o) => o.src === uriKey)
 
           if (match) {
-            console.log('MATCH: ')
-            console.log(match)
+            // // console.log('MATCH: ')
+            // console.log(match)
 
             match.name = uriNamePairsParsed[uriKey]
-            console.log(match)
+            // console.log(match)
           }
         }
       }
@@ -188,8 +188,23 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   useEffect(() => {
     refreshNumCreations()
 
+    const getCoverPicUri = async () => {
+      try {
+        const coverPhotoUri = await AsyncStorage.getItem(AS_KEYS.coverPhotoKey)
+        if (coverPhotoUri !== null) {
+          // saved cover photo exists; load it
+          setCoverPic({ uri: coverPhotoUri })
+        }
+      } catch (e) {
+        console.log(e)
+
+        // set default profile pic
+        setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
+      }
+    }
+
+    getCoverPicUri()
     // TODO: set from persistent storage
-    setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
   }, [])
 
   const updateCoverPhoto = async () => {
@@ -202,6 +217,13 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     })
 
     if (!imageResponse.cancelled) {
+      // write the new uri to async storage:
+      try {
+        await AsyncStorage.setItem(AS_KEYS.coverPhotoKey, imageResponse.uri)
+      } catch (error) {
+        console.log('Unexpected error saving cover photo URI')
+      }
+
       setCoverPic({ uri: imageResponse.uri })
     }
   }
