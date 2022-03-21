@@ -20,6 +20,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
 import * as MediaLibrary from 'expo-media-library'
+import * as ImgPicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import AS_KEYS from 'constants/AsyncStorage'
 
@@ -191,8 +192,18 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
   }, [])
 
-  const updateCoverPhoto = () => {
-    console.log('Update Cover Photo')
+  const updateCoverPhoto = async () => {
+    let imageResponse = await ImgPicker.launchImageLibraryAsync({
+      mediaTypes: ImgPicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [9, 16], // 8x10 portrait
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    if (!imageResponse.cancelled) {
+      setCoverPic({ uri: imageResponse.uri })
+    }
   }
 
   // expand image selected from grid
