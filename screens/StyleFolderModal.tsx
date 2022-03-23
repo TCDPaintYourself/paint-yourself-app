@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, FlatList, Image, Dimensions, TouchableHighlight } from 'react-native'
+import {
+  StyleSheet,
+  FlatList,
+  Image,
+  Dimensions,
+  TouchableHighlight,
+  Modal,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import { Text, View } from 'components/Themed' // need view
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import ProjectThemes, { IProjectTheme, Themes } from 'constants/ProjectThemes'
@@ -29,6 +37,8 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   const [themeImages, setThemeImages] = useState<{ id: number; src: number }[]>([])
   const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
+  const [imageModalSrc, setImageModalSrc] = useState(0)
+  const [imageModalActive, setImageModalActive] = useState(false)
 
   useEffect(() => {
     // set title
@@ -121,9 +131,16 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   }
 
   // TODO: submit image for styling
-  const handleImagePress = (index) => {
+  const handleImagePress = (index: number) => {
     // console.log('handleImagePress')
     setSelectedStyleIndex(index)
+  }
+
+  const handleImageLongPress = (index: number, src: number) => {
+    console.log(`${index} long press`)
+
+    setImageModalSrc(src)
+    setImageModalActive(true)
   }
 
   const handleContinue = async () => {
@@ -178,7 +195,29 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{projectTheme.name}</Text>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={imageModalActive}
+        onRequestClose={() => {
+          // Alert.alert('Modal has been closed.')
+          setImageModalActive(!imageModalActive)
+        }}
+      >
+        <TouchableWithoutFeedback onPress={() => setImageModalActive(false)}>
+          <View style={styles.modalBackground}>
+            {/* <View style={styles.modalContent}> */}
+            {/* <Text style={{ color: 'white' }}>Hide Modal</Text> */}
+            <Image
+              source={imageModalSrc}
+              resizeMode="contain"
+              style={{ flex: 1, width: '100%', height: undefined }}
+            ></Image>
+            {/* </View> */}
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Text>Long press to view expanded style</Text>
       <View style={styles.scrollViewContainer}>
         {/* <Image source={themeImages[0]} /> */}
         <FlatList
@@ -188,7 +227,10 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
           data={themeImages}
           columnWrapperStyle={{ flex: 1, justifyContent: 'center', paddingTop: 10 }}
           renderItem={({ item, index }) => (
-            <TouchableHighlight onPress={() => handleImagePress(item.id)}>
+            <TouchableHighlight
+              onPress={() => handleImagePress(item.id)}
+              onLongPress={() => handleImageLongPress(item.id, item.src)}
+            >
               <>
                 <Image
                   source={item.src}
@@ -200,6 +242,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
                     borderColor: 'white',
                     margin: 2,
                     borderWidth: 1,
+                    borderRadius: 4,
                   }}
                 />
                 {item.id == selectedStyleIndex && (
@@ -238,6 +281,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'green',
   },
+  modalBackground: {
+    flex: 1,
+    // position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 1,
+    // borderColor: 'yellow',
+    padding: '5%',
+  },
+  modalContent: {},
   scrollViewContainer: {
     flex: 1,
     height: '100%',
