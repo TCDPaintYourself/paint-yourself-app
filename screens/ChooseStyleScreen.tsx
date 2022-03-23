@@ -20,7 +20,7 @@ const containerWidth = width * 0.8
 type RootStackParamList = {
   ChooseStyleScreen: { image: string }
   FinishedArtScreen: { image: string; theme: Themes }
-  StyleFolderModal: { projectTheme: IProjectTheme }
+  StyleFolderModal: { projectTheme: IProjectTheme; inputImage: string }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
@@ -45,7 +45,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   )
 
   const handleContinue = async () => {
-    navigation.navigate('StyleFolderModal', { projectTheme: projectTheme })
+    navigation.navigate('StyleFolderModal', { projectTheme: projectTheme, inputImage: inputImage })
     // const filename = inputImage.split('/').pop()
     // const filetype = filename?.split('.').pop()
 
