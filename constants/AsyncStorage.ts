@@ -1,4 +1,4 @@
 export default {
   namesKey: '@creationNames',
-  coverPhotoKey: '@coverPhotoUri'
+  coverPhotoKey: '@coverPhotoUri',
 }
