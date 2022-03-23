@@ -17,7 +17,7 @@ export enum Themes {
   POPART = 'pop-art',
   IMPRESSIONISM = 'impressionism',
   EXPRESSIONISM = 'expressionism',
-  ARTNOUVEAU = 'art-nouveau'
+  ARTNOUVEAU = 'art-nouveau',
 }
 
 const ProjectTheme: IProjectTheme[] = [
@@ -59,7 +59,7 @@ const ProjectTheme: IProjectTheme[] = [
   {
     id: Themes.POPART,
     image: require('assets/images/themes/pop-art/warhol_marilyn.jpg'),
-    name: 'Pop-Art',
+    name: 'Pop Art',
   },
   {
     id: Themes.IMPRESSIONISM,
@@ -74,7 +74,7 @@ const ProjectTheme: IProjectTheme[] = [
   {
     id: Themes.ARTNOUVEAU,
     image: require('assets/images/themes/art-nouveau/mucha_daydream.png'),
-    name: 'Art-Nouveau',
+    name: 'Art Nouveau',
   },
 ]
 
