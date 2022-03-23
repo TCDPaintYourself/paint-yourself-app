@@ -20,6 +20,7 @@ const containerWidth = width * 0.8
 type RootStackParamList = {
   ChooseStyleScreen: { image: string }
   FinishedArtScreen: { image: string; theme: Themes }
+  StyleFolderModal: { themeId: Themes }
 }
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseStyleScreen'>
@@ -44,52 +45,53 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   )
 
   const handleContinue = async () => {
-    const filename = inputImage.split('/').pop()
-    const filetype = filename?.split('.').pop()
+    navigation.navigate('StyleFolderModal', { themeId: projectTheme.id })
+    // const filename = inputImage.split('/').pop()
+    // const filetype = filename?.split('.').pop()
 
-    setLoading(true)
+    // setLoading(true)
 
-    const authToken = await user?.getIdToken()
+    // const authToken = await user?.getIdToken()
 
-    const formData = new FormData()
-    // Any type as react-native as a custom FormData implementation.
-    formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
+    // const formData = new FormData()
+    // // Any type as react-native as a custom FormData implementation.
+    // formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
 
-    let response = null
-    try {
-      response = await fetch(
-        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'multipart/form-data',
-          },
-          body: formData,
-        }
-      )
-    } catch (error: any) {
-      setSnackbarMessage(error.message)
-      setSnackbarOpen(true)
-      setLoading(false)
+    // let response = null
+    // try {
+    //   response = await fetch(
+    //     `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
+    //     {
+    //       method: 'POST',
+    //       headers: {
+    //         Authorization: `Bearer ${authToken}`,
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //       body: formData,
+    //     }
+    //   )
+    // } catch (error: any) {
+    //   setSnackbarMessage(error.message)
+    //   setSnackbarOpen(true)
+    //   setLoading(false)
 
-      return
-    }
+    //   return
+    // }
 
-    const imageBlob = await response.blob()
-    // Remove metadata.
-    const imageBase64 = (await blobToBase64(imageBlob)).split(',').pop()
+    // const imageBlob = await response.blob()
+    // // Remove metadata.
+    // const imageBase64 = (await blobToBase64(imageBlob)).split(',').pop()
 
-    if (!imageBase64) {
-      return
-    }
+    // if (!imageBase64) {
+    //   return
+    // }
 
-    const imageUri = `${FileSystem.cacheDirectory}/${uuidv4()}.${filetype}`
-    await FileSystem.writeAsStringAsync(imageUri, imageBase64, {
-      encoding: FileSystem.EncodingType.Base64,
-    })
+    // const imageUri = `${FileSystem.cacheDirectory}/${uuidv4()}.${filetype}`
+    // await FileSystem.writeAsStringAsync(imageUri, imageBase64, {
+    //   encoding: FileSystem.EncodingType.Base64,
+    // })
 
-    navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
+    // navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
   }
 
   return (

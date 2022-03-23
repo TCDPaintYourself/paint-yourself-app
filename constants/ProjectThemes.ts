@@ -12,6 +12,7 @@ export enum Themes {
   PICASSO = 'picasso',
   DAVINCI = 'da-vinci',
   CARAVAGGIO = 'caravaggio',
+  // art styles
 }
 
 const ProjectTheme: IProjectTheme[] = [
