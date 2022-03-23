@@ -9,6 +9,8 @@ import { useUserContext } from 'hooks/useUserContext'
 import { blobToBase64 } from 'utils/convert'
 import * as FileSystem from 'expo-file-system'
 import { v4 as uuidv4 } from 'uuid'
+import { FontAwesome5 } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
 type RootStackParamList = {
   StyleFolderModal: { projectTheme: IProjectTheme; inputImage: string }
@@ -18,83 +20,23 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, 'StyleFolderModal'>
 
 const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
-  //   const { name, filepath } = route.params
-  const { projectTheme, inputImage } = route.params
-  const [user] = useUserContext()
-
-  // const [themeImages, setThemeImages] = useState<number[]>([])
-  // const [themeImages, setThemeImages] = useState([
-  //   { id: 0, src: require('../assets/images/themes/van-gogh/self-portrait.jpg') },
-  //   { id: 1, src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg') },
-  //   { id: 2, src: require('../assets/images/themes/van-gogh/starry-night.jpg') },
-  //   { id: 3, src: require('../assets/images/themes/van-gogh/wheat-field.jpg') },
-  // ])
-
-  // const themeFilepaths = {
-  //   // [Themes.VANGOUGH]: [
-  //   //   ,
-  //   //   'assets/images/themes/van-gogh/cafe-terrace-at-night.jpg',
-  //   //   'assets/images/themes/van-gogh/self-portrait-with-a-felt-grey-hat.jpg',
-  //   //   'assets/images/themes/van-gogh/starry-night.jpg',
-  //   //   'assets/images/themes/van-gogh/wheat-field.jpg',
-  //   // ],
-  //   [Themes.VANGOUGH]: [
-  //     { id: 0, src: require('../assets/images/themes/van-gogh/self-portrait.jpg') },
-  //     { id: 1, src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg') },
-  //     { id: 2, src: require('../assets/images/themes/van-gogh/starry-night.jpg') },
-  //     { id: 3, src: require('../assets/images/themes/van-gogh/wheat-field.jpg') },
-  //   ],
-  // }
-
-  const [themeImages, setThemeImages] = useState<{ id: number; src: number }[]>([])
-
-  // const [themeImages, setThemeImages] = useState(themeFilepaths[projectTheme.id])
-
   const IMGS_PER_ROW = 2
   const GRID_IMG_WIDTH = (Dimensions.get('window').width * 0.95) / IMGS_PER_ROW
   const GRID_IMG_HEIGHT = GRID_IMG_WIDTH // square images
 
+  const { projectTheme, inputImage } = route.params
+  const [user] = useUserContext()
+
+  const [themeImages, setThemeImages] = useState<{ id: number; src: number }[]>([])
+  const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
+
   useEffect(() => {
     // set title
-    navigation.setOptions({ headerTitle: `'${projectTheme.name}' styles` })
-    // console.log(themeImages)
+    navigation.setOptions({ headerTitle: `Select a '${projectTheme.name}' style:` })
 
-    // set images
+    // set images for this theme
     updateThemeImages()
-
-    // require the images in theme folder
-    // TODO: change from hardcoded van gough
-    // requireImages(projectTheme.id)
   }, [])
-
-  // const requireImages = (projectTheme: Themes) => {
-  //   console.log('HELLO')
-
-  //   const images: number[] = []
-
-  //   if (projectTheme == Themes.VANGOUGH) {
-  //     images.push(require('../assets/images/themes/van-gogh/self-portrait.jpg'))
-  //     images.push(require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg'))
-  //     images.push(require('../assets/images/themes/van-gogh/starry-night.jpg'))
-  //     images.push(require('../assets/images/themes/van-gogh/wheat-field.jpg'))
-  //   } else if (projectTheme == Themes.CLAUDEMONET) {
-  //   } else if (projectTheme == Themes.REMBRANDT) {
-  //   } else if (projectTheme == Themes.WHISTLER) {
-  //   } else if (projectTheme == Themes.PICASSO) {
-  //   } else if (projectTheme == Themes.DAVINCI) {
-  //   } else if (projectTheme == Themes.CARAVAGGIO) {
-  //   } else if (projectTheme == Themes.POPART) {
-  //   } else if (projectTheme == Themes.IMPRESSIONISM) {
-  //   } else if (projectTheme == Themes.EXPRESSIONISM) {
-  //   } else if (projectTheme == Themes.ARTNOUVEAU) {
-  //   }
-
-  //   for (const img of images) {
-  //     console.log(img)
-  //   }
-
-  //   setThemeImages(images)
-  // }
 
   const updateThemeImages = () => {
     if (projectTheme.id == Themes.ARTNOUVEAU) {
@@ -179,8 +121,9 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   }
 
   // TODO: submit image for styling
-  const handleImagePress = () => {
-    console.log('handleImagePress')
+  const handleImagePress = (index) => {
+    // console.log('handleImagePress')
+    setSelectedStyleIndex(index)
   }
 
   const handleContinue = async () => {
@@ -245,19 +188,26 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
           data={themeImages}
           columnWrapperStyle={{ flex: 1, justifyContent: 'center', paddingTop: 10 }}
           renderItem={({ item, index }) => (
-            <TouchableHighlight onPress={() => handleImagePress()}>
-              <Image
-                source={item.src}
-                key={item.id}
-                style={{
-                  width: GRID_IMG_WIDTH,
-                  height: GRID_IMG_HEIGHT,
-                  resizeMode: 'cover',
-                  borderColor: 'white',
-                  margin: 2,
-                  borderWidth: 1,
-                }}
-              />
+            <TouchableHighlight onPress={() => handleImagePress(item.id)}>
+              <>
+                <Image
+                  source={item.src}
+                  key={item.id}
+                  style={{
+                    width: GRID_IMG_WIDTH,
+                    height: GRID_IMG_HEIGHT,
+                    resizeMode: 'cover',
+                    borderColor: 'white',
+                    margin: 2,
+                    borderWidth: 1,
+                  }}
+                />
+                {item.id == selectedStyleIndex && (
+                  <View style={styles.checkIcon}>
+                    <AntDesign name="checkcircle" size={24} color="white" />
+                  </View>
+                )}
+              </>
             </TouchableHighlight>
           )}
         />
@@ -270,6 +220,18 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 export default StyleFolderModal
 
 const styles = StyleSheet.create({
+  checkIcon: {
+    // borderWidth: 1,
+    // borderColor: 'green',
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-end',
+    position: 'absolute',
+    padding: 15,
+    right: 0,
+    bottom: 0,
+    marginLeft: 'auto',
+    backgroundColor: 'rgba(52, 52, 52, 0.0)',
+  },
   container: {
     flex: 1,
     height: '100%',
@@ -282,11 +244,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
   },
-  // flatListImage: {
-  //   // width: 300,
-  //   // height: 300,
-  //   resizeMode: 'cover',
-  //   borderColor: 'white',
-  //   borderWidth: 1,
-  // },
 })
