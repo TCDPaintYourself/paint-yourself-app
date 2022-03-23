@@ -46,7 +46,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   //   ],
   // }
 
-  const [themeImages, setThemeImages] = useState([])
+  const [themeImages, setThemeImages] = useState<{ id: number; src: number }[]>([])
 
   // const [themeImages, setThemeImages] = useState(themeFilepaths[projectTheme.id])
 
@@ -60,29 +60,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     // console.log(themeImages)
 
     // set images
-    if (projectTheme.id == Themes.VANGOUGH) {
-      setThemeImages([
-        { id: 0, src: require('../assets/images/themes/van-gogh/self-portrait.jpg') },
-        { id: 1, src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg') },
-        { id: 2, src: require('../assets/images/themes/van-gogh/starry-night.jpg') },
-        { id: 3, src: require('../assets/images/themes/van-gogh/wheat-field.jpg') },
-      ])
-    } else if (projectTheme.id == Themes.DAVINCI) {
-      setThemeImages([
-        { id: 0, src: require('../assets/images/themes/da-vinci/mona-lisa.jpg') },
-        { id: 1, src: require('../assets/images/themes/da-vinci/tobias-and-the-angel.jpg') },
-        { id: 2, src: require('../assets/images/themes/da-vinci/virgin-of-the-rocks.jpg') },
-        { id: 3, src: require('../assets/images/themes/da-vinci/vitruvian-man.jpg') },
-      ])
-    }
-    // } else if (projectTheme.id == Themes.EXPRESSIONISM) {
-    //   setThemeImages([
-    //     { id: 0, src: require('../assets/images/themes/expressionism/mona-lisa.jpg') },
-    //     { id: 1, src: require('../assets/images/themes/expressionism/tobias-and-the-angel.jpg') },
-    //     { id: 2, src: require('../assets/images/themes/expressionism/virgin-of-the-rocks.jpg') },
-    //     { id: 3, src: require('../assets/images/themes/expressionism/vitruvian-man.jpg') },
-    //   ])
-    // }
+    updateThemeImages()
 
     // require the images in theme folder
     // TODO: change from hardcoded van gough
@@ -117,6 +95,88 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   //   setThemeImages(images)
   // }
+
+  const updateThemeImages = () => {
+    if (projectTheme.id == Themes.ARTNOUVEAU) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/art-nouveau/klimt_hygieia.jpg') },
+        { id: 1, src: require('../assets/images/themes/art-nouveau/klimt_the-kiss.jpg') },
+        { id: 2, src: require('../assets/images/themes/art-nouveau/mucha_daydream.png') },
+        { id: 3, src: require('../assets/images/themes/art-nouveau/mucha_la-plume.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.CARAVAGGIO) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/caravaggio/penitent-magdelene.jpg') },
+        { id: 1, src: require('../assets/images/themes/caravaggio/self-portrait.jpg') },
+        { id: 2, src: require('../assets/images/themes/caravaggio/the-crowning-with-thorns.jpg') },
+        { id: 3, src: require('../assets/images/themes/caravaggio/the-entombment-of-christ.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.CLAUDEMONET) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/claude-monet/arm-of-the-seine.jpg') },
+        { id: 1, src: require('../assets/images/themes/claude-monet/garden-at-giverny.jpg') },
+        { id: 2, src: require('../assets/images/themes/claude-monet/water-lillies.jpg') },
+        { id: 3, src: require('../assets/images/themes/claude-monet/woman-with-a-parasol.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.DAVINCI) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/da-vinci/mona-lisa.jpg') },
+        { id: 1, src: require('../assets/images/themes/da-vinci/tobias-and-the-angel.jpg') },
+        { id: 2, src: require('../assets/images/themes/da-vinci/virgin-of-the-rocks.jpg') },
+        { id: 3, src: require('../assets/images/themes/da-vinci/vitruvian-man.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.EXPRESSIONISM) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/expressionism/betzler_reclining-couple.jpg') },
+        { id: 1, src: require('../assets/images/themes/expressionism/kirchner_sertigtal-in-autumn.jpg') },
+        { id: 2, src: require('../assets/images/themes/expressionism/munch_the-scream.jpg') },
+        { id: 3, src: require('../assets/images/themes/expressionism/pechstein_leba-harbour.jpg') },
+        { id: 4, src: require('../assets/images/themes/expressionism/roestenburg_eifel-summer.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.IMPRESSIONISM) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/impressionism/afremov_sleeping-city.jpeg') },
+        { id: 1, src: require('../assets/images/themes/impressionism/pissarro_miribeau-garden.jpg') },
+        { id: 2, src: require('../assets/images/themes/impressionism/renoir_girls-at-the-piano.jpg') },
+        { id: 3, src: require('../assets/images/themes/impressionism/sargent_in-a-levantine-port.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.PICASSO) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/picasso/girl-before-a-mirror.jpg') },
+        { id: 1, src: require('../assets/images/themes/picasso/girl-with-a-mandolin.jpg') },
+        { id: 2, src: require('../assets/images/themes/picasso/les-femmes-dalgiers.jpg') },
+        { id: 3, src: require('../assets/images/themes/picasso/the-weeping-woman.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.POPART) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/pop-art/hamilton_fashion-plate.jpg') },
+        { id: 1, src: require('../assets/images/themes/pop-art/rauschenberg_retroactive.jpg') },
+        { id: 2, src: require('../assets/images/themes/pop-art/wain_kaleidoscope-cat.jpg') },
+        { id: 3, src: require('../assets/images/themes/pop-art/warhol_marilyn.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.REMBRANDT) {
+      setThemeImages([
+        { id: 1, src: require('../assets/images/themes/rembrandt/self-portrait.jpg') },
+        { id: 2, src: require('../assets/images/themes/rembrandt/the-night-watch.jpg') },
+        { id: 3, src: require('../assets/images/themes/rembrandt/the-storm.jpg') },
+        { id: 4, src: require('../assets/images/themes/rembrandt/winter-landscape.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.VANGOUGH) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg') },
+        { id: 1, src: require('../assets/images/themes/van-gogh/self-portrait.jpg') },
+        { id: 2, src: require('../assets/images/themes/van-gogh/starry-night.jpg') },
+        { id: 3, src: require('../assets/images/themes/van-gogh/wheat-field.jpg') },
+      ])
+    } else if (projectTheme.id == Themes.WHISTLER) {
+      setThemeImages([
+        { id: 0, src: require('../assets/images/themes/whistler/girl-in-white.jpg') },
+        { id: 1, src: require('../assets/images/themes/whistler/sunset-red-and-gold.jpg') },
+        { id: 2, src: require('../assets/images/themes/whistler/the-balcony.jpg') },
+        { id: 3, src: require('../assets/images/themes/whistler/the-gentle-art-of-making-enemies.jpg') },
+      ])
+    }
+  }
 
   // TODO: submit image for styling
   const handleImagePress = () => {
