@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
+  ActivityIndicator,
   StyleSheet,
   FlatList,
   Image,
@@ -40,6 +41,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   const [selectStyleSrc, setSelectedStyleSrc] = useState(0)
   const [imageModalSrc, setImageModalSrc] = useState(0)
   const [imageModalActive, setImageModalActive] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(inputImage)
@@ -321,7 +323,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     }
   }
 
-  // TODO: submit image for styling
   const handleImagePress = (index: number, src: number) => {
     // console.log('handleImagePress')
     setSelectedStyleIndex(index)
@@ -353,7 +354,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     console.log(styleFilename)
     const styleFiletype = styleFilename?.split('.')
 
-    // setLoading(true)
+    setLoading(true)
 
     const authToken = await user?.getIdToken()
 
@@ -385,7 +386,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     } catch (error: any) {
       // setSnackbarMessage(error.message)
       // setSnackbarOpen(true)
-      // setLoading(false)
+      setLoading(false)
       console.log(error)
       console.log('Error sending image')
 
@@ -405,11 +406,14 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
       encoding: FileSystem.EncodingType.Base64,
     })
 
+    setLoading(false)
+
     navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
   }
 
   return (
     <View style={styles.container}>
+      {/* Expanded style modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -428,6 +432,21 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
             ></Image>
           </View>
         </TouchableWithoutFeedback>
+      </Modal>
+      {/* Loading modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={loading}
+        onRequestClose={() => {
+          // shouldn't be able to manually close
+        }}
+      >
+        <View style={styles.modalBackground}>
+          {/* <AntDesign name="loading1" size={24} color="white" /> */}
+          <ActivityIndicator size="large" color="#fffff" />
+          <Text>Loading your Creation</Text>
+        </View>
       </Modal>
       <Text style={{ textAlign: 'left', paddingTop: 10, paddingLeft: 10 }}>Long press to view expanded style</Text>
       <View style={styles.scrollViewContainer}>
