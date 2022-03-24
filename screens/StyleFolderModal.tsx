@@ -35,12 +35,14 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   const { projectTheme, inputImage } = route.params
   const [user] = useUserContext()
 
-  const [themeImages, setThemeImages] = useState<{ id: number; src: number }[]>([])
+  const [themeImages, setThemeImages] = useState<{ id: number; path: string; src: number }[]>([])
   const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
   const [imageModalSrc, setImageModalSrc] = useState(0)
   const [imageModalActive, setImageModalActive] = useState(false)
 
   useEffect(() => {
+    console.log(inputImage)
+
     // set title
     navigation.setOptions({ headerTitle: `Select a '${projectTheme.name}' style:` })
 
@@ -51,81 +53,261 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   const updateThemeImages = () => {
     if (projectTheme.id == Themes.ARTNOUVEAU) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/art-nouveau/klimt_hygieia.jpg') },
-        { id: 1, src: require('../assets/images/themes/art-nouveau/klimt_the-kiss.jpg') },
-        { id: 2, src: require('../assets/images/themes/art-nouveau/mucha_daydream.png') },
-        { id: 3, src: require('../assets/images/themes/art-nouveau/mucha_la-plume.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/art-nouveau/klimt_hygieia.jpg',
+          src: require('../assets/images/themes/art-nouveau/klimt_hygieia.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/art-nouveau/klimt_the-kiss.jpg',
+          src: require('../assets/images/themes/art-nouveau/klimt_the-kiss.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/art-nouveau/mucha_daydream.png',
+          src: require('../assets/images/themes/art-nouveau/mucha_daydream.png'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/art-nouveau/mucha_la-plume.jpg',
+          src: require('../assets/images/themes/art-nouveau/mucha_la-plume.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.CARAVAGGIO) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/caravaggio/penitent-magdelene.jpg') },
-        { id: 1, src: require('../assets/images/themes/caravaggio/self-portrait.jpg') },
-        { id: 2, src: require('../assets/images/themes/caravaggio/the-crowning-with-thorns.jpg') },
-        { id: 3, src: require('../assets/images/themes/caravaggio/the-entombment-of-christ.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/caravaggio/penitent-magdelene.jpg',
+          src: require('../assets/images/themes/caravaggio/penitent-magdelene.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/caravaggio/self-portrait.jpg',
+          src: require('../assets/images/themes/caravaggio/self-portrait.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/caravaggio/the-crowning-with-thorns.jpg',
+          src: require('../assets/images/themes/caravaggio/the-crowning-with-thorns.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/caravaggio/the-entombment-of-christ.jpg',
+          src: require('../assets/images/themes/caravaggio/the-entombment-of-christ.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.CLAUDEMONET) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/claude-monet/arm-of-the-seine.jpg') },
-        { id: 1, src: require('../assets/images/themes/claude-monet/garden-at-giverny.jpg') },
-        { id: 2, src: require('../assets/images/themes/claude-monet/water-lillies.jpg') },
-        { id: 3, src: require('../assets/images/themes/claude-monet/woman-with-a-parasol.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/claude-monet/arm-of-the-seine.jpg',
+          src: require('../assets/images/themes/claude-monet/arm-of-the-seine.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/claude-monet/garden-at-giverny.jpg',
+          src: require('../assets/images/themes/claude-monet/garden-at-giverny.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/claude-monet/water-lillies.jpg',
+          src: require('../assets/images/themes/claude-monet/water-lillies.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/claude-monet/woman-with-a-parasol.jpg',
+          src: require('../assets/images/themes/claude-monet/woman-with-a-parasol.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.DAVINCI) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/da-vinci/mona-lisa.jpg') },
-        { id: 1, src: require('../assets/images/themes/da-vinci/tobias-and-the-angel.jpg') },
-        { id: 2, src: require('../assets/images/themes/da-vinci/virgin-of-the-rocks.jpg') },
-        { id: 3, src: require('../assets/images/themes/da-vinci/vitruvian-man.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/da-vinci/mona-lisa.jpg',
+          src: require('../assets/images/themes/da-vinci/mona-lisa.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/da-vinci/tobias-and-the-angel.jpg',
+          src: require('../assets/images/themes/da-vinci/tobias-and-the-angel.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/da-vinci/virgin-of-the-rocks.jpg',
+          src: require('../assets/images/themes/da-vinci/virgin-of-the-rocks.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/da-vinci/vitruvian-man.jpg',
+          src: require('../assets/images/themes/da-vinci/vitruvian-man.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.EXPRESSIONISM) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/expressionism/betzler_reclining-couple.jpg') },
-        { id: 1, src: require('../assets/images/themes/expressionism/kirchner_sertigtal-in-autumn.jpg') },
-        { id: 2, src: require('../assets/images/themes/expressionism/munch_the-scream.jpg') },
-        { id: 3, src: require('../assets/images/themes/expressionism/pechstein_leba-harbour.jpg') },
-        { id: 4, src: require('../assets/images/themes/expressionism/roestenburg_eifel-summer.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/expressionism/betzler_reclining-couple.jpg',
+          src: require('../assets/images/themes/expressionism/betzler_reclining-couple.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/expressionism/kirchner_sertigtal-in-autumn.jpg',
+          src: require('../assets/images/themes/expressionism/kirchner_sertigtal-in-autumn.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/expressionism/munch_the-scream.jpg',
+          src: require('../assets/images/themes/expressionism/munch_the-scream.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/expressionism/pechstein_leba-harbour.jpg',
+          src: require('../assets/images/themes/expressionism/pechstein_leba-harbour.jpg'),
+        },
+        {
+          id: 4,
+          path: '../assets/images/themes/expressionism/roestenburg_eifel-summer.jpg',
+          src: require('../assets/images/themes/expressionism/roestenburg_eifel-summer.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.IMPRESSIONISM) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/impressionism/afremov_sleeping-city.jpeg') },
-        { id: 1, src: require('../assets/images/themes/impressionism/pissarro_miribeau-garden.jpg') },
-        { id: 2, src: require('../assets/images/themes/impressionism/renoir_girls-at-the-piano.jpg') },
-        { id: 3, src: require('../assets/images/themes/impressionism/sargent_in-a-levantine-port.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/impressionism/afremov_sleeping-city.jpeg',
+          src: require('../assets/images/themes/impressionism/afremov_sleeping-city.jpeg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/impressionism/pissarro_miribeau-garden.jpg',
+          src: require('../assets/images/themes/impressionism/pissarro_miribeau-garden.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/impressionism/renoir_girls-at-the-piano.jpg',
+          src: require('../assets/images/themes/impressionism/renoir_girls-at-the-piano.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/impressionism/sargent_in-a-levantine-port.jpg',
+          src: require('../assets/images/themes/impressionism/sargent_in-a-levantine-port.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.PICASSO) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/picasso/girl-before-a-mirror.jpg') },
-        { id: 1, src: require('../assets/images/themes/picasso/girl-with-a-mandolin.jpg') },
-        { id: 2, src: require('../assets/images/themes/picasso/les-femmes-dalgiers.jpg') },
-        { id: 3, src: require('../assets/images/themes/picasso/the-weeping-woman.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/picasso/girl-before-a-mirror.jpg',
+          src: require('../assets/images/themes/picasso/girl-before-a-mirror.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/picasso/girl-with-a-mandolin.jpg',
+          src: require('../assets/images/themes/picasso/girl-with-a-mandolin.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/picasso/les-femmes-dalgiers.jpg',
+          src: require('../assets/images/themes/picasso/les-femmes-dalgiers.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/picasso/the-weeping-woman.jpg',
+          src: require('../assets/images/themes/picasso/the-weeping-woman.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.POPART) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/pop-art/hamilton_fashion-plate.jpg') },
-        { id: 1, src: require('../assets/images/themes/pop-art/rauschenberg_retroactive.jpg') },
-        { id: 2, src: require('../assets/images/themes/pop-art/wain_kaleidoscope-cat.jpg') },
-        { id: 3, src: require('../assets/images/themes/pop-art/warhol_marilyn.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/pop-art/hamilton_fashion-plate.jpg',
+          src: require('../assets/images/themes/pop-art/hamilton_fashion-plate.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/pop-art/rauschenberg_retroactive.jpg',
+          src: require('../assets/images/themes/pop-art/rauschenberg_retroactive.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/pop-art/wain_kaleidoscope-cat.jpg',
+          src: require('../assets/images/themes/pop-art/wain_kaleidoscope-cat.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/pop-art/warhol_marilyn.jpg',
+          src: require('../assets/images/themes/pop-art/warhol_marilyn.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.REMBRANDT) {
       setThemeImages([
-        { id: 1, src: require('../assets/images/themes/rembrandt/self-portrait.jpg') },
-        { id: 2, src: require('../assets/images/themes/rembrandt/the-night-watch.jpg') },
-        { id: 3, src: require('../assets/images/themes/rembrandt/the-storm.jpg') },
-        { id: 4, src: require('../assets/images/themes/rembrandt/winter-landscape.jpg') },
+        {
+          id: 1,
+          path: '../assets/images/themes/rembrandt/self-portrait.jpg',
+          src: require('../assets/images/themes/rembrandt/self-portrait.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/rembrandt/the-night-watch.jpg',
+          src: require('../assets/images/themes/rembrandt/the-night-watch.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/rembrandt/the-storm.jpg',
+          src: require('../assets/images/themes/rembrandt/the-storm.jpg'),
+        },
+        {
+          id: 4,
+          path: '../assets/images/themes/rembrandt/winter-landscape.jpg',
+          src: require('../assets/images/themes/rembrandt/winter-landscape.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.VANGOUGH) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg') },
-        { id: 1, src: require('../assets/images/themes/van-gogh/self-portrait.jpg') },
-        { id: 2, src: require('../assets/images/themes/van-gogh/starry-night.jpg') },
-        { id: 3, src: require('../assets/images/themes/van-gogh/wheat-field.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg',
+          src: require('../assets/images/themes/van-gogh/cafe-terrace-at-night.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/van-gogh/self-portrait.jpg',
+          src: require('../assets/images/themes/van-gogh/self-portrait.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/van-gogh/starry-night.jpg',
+          src: require('../assets/images/themes/van-gogh/starry-night.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/van-gogh/wheat-field.jpg',
+          src: require('../assets/images/themes/van-gogh/wheat-field.jpg'),
+        },
       ])
     } else if (projectTheme.id == Themes.WHISTLER) {
       setThemeImages([
-        { id: 0, src: require('../assets/images/themes/whistler/girl-in-white.jpg') },
-        { id: 1, src: require('../assets/images/themes/whistler/sunset-red-and-gold.jpg') },
-        { id: 2, src: require('../assets/images/themes/whistler/the-balcony.jpg') },
-        { id: 3, src: require('../assets/images/themes/whistler/the-gentle-art-of-making-enemies.jpg') },
+        {
+          id: 0,
+          path: '../assets/images/themes/whistler/girl-in-white.jpg',
+          src: require('../assets/images/themes/whistler/girl-in-white.jpg'),
+        },
+        {
+          id: 1,
+          path: '../assets/images/themes/whistler/sunset-red-and-gold.jpg',
+          src: require('../assets/images/themes/whistler/sunset-red-and-gold.jpg'),
+        },
+        {
+          id: 2,
+          path: '../assets/images/themes/whistler/the-balcony.jpg',
+          src: require('../assets/images/themes/whistler/the-balcony.jpg'),
+        },
+        {
+          id: 3,
+          path: '../assets/images/themes/whistler/the-gentle-art-of-making-enemies.jpg',
+          src: require('../assets/images/themes/whistler/the-gentle-art-of-making-enemies.jpg'),
+        },
       ])
     }
   }
@@ -147,6 +329,8 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const filename = inputImage.split('/').pop()
     const filetype = filename?.split('.').pop()
 
+    console.log(`${JSON.stringify(themeImages[selectedStyleIndex])}`)
+
     // setLoading(true)
 
     const authToken = await user?.getIdToken()
@@ -154,6 +338,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const formData = new FormData()
     // Any type as react-native as a custom FormData implementation.
     formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
+    formData.append('reference_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
 
     let response = null
     try {
@@ -286,12 +471,12 @@ const styles = StyleSheet.create({
     // position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     // borderWidth: 1,
     // borderColor: 'yellow',
-    padding: '5%',
+    padding: '3%',
   },
   modalContent: {},
   scrollViewContainer: {
