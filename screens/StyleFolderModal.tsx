@@ -37,6 +37,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   const [themeImages, setThemeImages] = useState<{ id: number; path: string; src: number }[]>([])
   const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
+  const [selectStyleSrc, setSelectedStyleSrc] = useState(0)
   const [imageModalSrc, setImageModalSrc] = useState(0)
   const [imageModalActive, setImageModalActive] = useState(false)
 
@@ -49,6 +50,14 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     // set images for this theme
     updateThemeImages()
   }, [])
+
+  useEffect(() => {
+    console.log(JSON.stringify(themeImages))
+
+    if (themeImages.length > 0) {
+      setSelectedStyleSrc(themeImages[0].src) // the first image by default
+    }
+  }, [themeImages])
 
   const updateThemeImages = () => {
     if (projectTheme.id == Themes.ARTNOUVEAU) {
@@ -313,9 +322,10 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   }
 
   // TODO: submit image for styling
-  const handleImagePress = (index: number) => {
+  const handleImagePress = (index: number, src: number) => {
     // console.log('handleImagePress')
     setSelectedStyleIndex(index)
+    setSelectedStyleSrc(src)
   }
 
   const handleImageLongPress = (index: number, src: number) => {
@@ -330,6 +340,10 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const filetype = filename?.split('.').pop()
 
     console.log(`${JSON.stringify(themeImages[selectedStyleIndex])}`)
+    console.log(selectStyleSrc)
+
+    const styleImageUri = Image.resolveAssetSource(selectStyleSrc).uri
+    console.log(styleImageUri)
 
     // setLoading(true)
 
@@ -413,7 +427,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
           columnWrapperStyle={{ flex: 1, justifyContent: 'center', paddingTop: 10 }}
           renderItem={({ item, index }) => (
             <TouchableHighlight
-              onPress={() => handleImagePress(item.id)}
+              onPress={() => handleImagePress(item.id, item.src)}
               onLongPress={() => handleImageLongPress(item.id, item.src)}
             >
               <>
