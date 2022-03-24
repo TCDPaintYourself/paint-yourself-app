@@ -44,8 +44,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    console.log(inputImage)
-
     // set title
     navigation.setOptions({ headerTitle: `Select a '${projectTheme.name}' style:` })
 
@@ -54,8 +52,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
-    console.log(JSON.stringify(themeImages))
-
     if (themeImages.length > 0) {
       setSelectedStyleSrc(themeImages[0].src) // the first image by default
     }
@@ -324,35 +320,25 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   }
 
   const handleImagePress = (index: number, src: number) => {
-    // console.log('handleImagePress')
     setSelectedStyleIndex(index)
     setSelectedStyleSrc(src)
   }
 
   const handleImageLongPress = (index: number, src: number) => {
-    console.log(`${index} long press`)
-
     setImageModalSrc(src)
     setImageModalActive(true)
   }
 
   const handleContinue = async () => {
     const filename = inputImage.split('/').pop()
-    console.log(filename)
 
     const filetype = filename?.split('.').pop()
 
-    console.log(`${JSON.stringify(themeImages[selectedStyleIndex])}`)
-    console.log(selectStyleSrc)
-
     const styleImageUri = Image.resolveAssetSource(selectStyleSrc).uri
-    console.log(styleImageUri)
 
     let styleFilename: string | undefined = styleImageUri.split('?')[0]
-    console.log(styleFilename)
     styleFilename = styleFilename.split('/').pop()
-    console.log(styleFilename)
-    const styleFiletype = styleFilename?.split('.')
+    const styleFiletype = styleFilename?.split('.').pop()
 
     setLoading(true)
 
@@ -372,7 +358,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     let response = null
     try {
       response = await fetch(
-        // `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
         `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images`, // omit project theme
         {
           method: 'POST',
@@ -384,8 +369,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
         }
       )
     } catch (error: any) {
-      // setSnackbarMessage(error.message)
-      // setSnackbarOpen(true)
       setLoading(false)
       console.log(error)
       console.log('Error sending image')
@@ -496,10 +479,6 @@ export default StyleFolderModal
 
 const styles = StyleSheet.create({
   checkIcon: {
-    // borderWidth: 1,
-    // borderColor: 'green',
-    // justifyContent: 'flex-end',
-    // alignItems: 'flex-end',
     position: 'absolute',
     padding: 15,
     right: 0,
