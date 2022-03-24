@@ -337,6 +337,8 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   const handleContinue = async () => {
     const filename = inputImage.split('/').pop()
+    console.log(filename)
+
     const filetype = filename?.split('.').pop()
 
     console.log(`${JSON.stringify(themeImages[selectedStyleIndex])}`)
@@ -345,6 +347,12 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const styleImageUri = Image.resolveAssetSource(selectStyleSrc).uri
     console.log(styleImageUri)
 
+    let styleFilename: string | undefined = styleImageUri.split('?')[0]
+    console.log(styleFilename)
+    styleFilename = styleFilename.split('/').pop()
+    console.log(styleFilename)
+    const styleFiletype = styleFilename?.split('.')
+
     // setLoading(true)
 
     const authToken = await user?.getIdToken()
@@ -352,12 +360,19 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const formData = new FormData()
     // Any type as react-native as a custom FormData implementation.
     formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
-    formData.append('reference_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
+
+    // append reference image info
+    formData.append('reference_image', {
+      uri: styleImageUri,
+      name: styleFilename,
+      type: `image/${styleFiletype}`,
+    } as any)
 
     let response = null
     try {
       response = await fetch(
-        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
+        // `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${projectTheme.id}`,
+        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images`, // omit project theme
         {
           method: 'POST',
           headers: {
@@ -371,6 +386,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
       // setSnackbarMessage(error.message)
       // setSnackbarOpen(true)
       // setLoading(false)
+      console.log(error)
       console.log('Error sending image')
 
       return
@@ -405,20 +421,16 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
       >
         <TouchableWithoutFeedback onPress={() => setImageModalActive(false)}>
           <View style={styles.modalBackground}>
-            {/* <View style={styles.modalContent}> */}
-            {/* <Text style={{ color: 'white' }}>Hide Modal</Text> */}
             <Image
               source={imageModalSrc}
               resizeMode="contain"
               style={{ flex: 1, width: '100%', height: undefined }}
             ></Image>
-            {/* </View> */}
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <Text>Long press to view expanded style</Text>
+      <Text style={{ textAlign: 'left', paddingTop: 10, paddingLeft: 10 }}>Long press to view expanded style</Text>
       <View style={styles.scrollViewContainer}>
-        {/* <Image source={themeImages[0]} /> */}
         <FlatList
           horizontal={false}
           numColumns={2}
@@ -454,7 +466,9 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
           )}
         />
       </View>
-      <Button title="Continue" onPress={handleContinue}></Button>
+      <View style={{ alignItems: 'center' }}>
+        <Button title="Continue" onPress={handleContinue} style={{ marginBottom: 20, width: '90%' }} />
+      </View>
     </View>
   )
 }
@@ -477,8 +491,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: '100%',
-    borderWidth: 1,
-    borderColor: 'green',
+    // borderWidth: 1,
+    // borderColor: 'green',
   },
   modalBackground: {
     flex: 1,
@@ -496,7 +510,11 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     flex: 1,
     height: '100%',
-    borderWidth: 1,
-    borderColor: 'red',
+    paddingVertical: 10,
+    backgroundColor: 'rgb(51,51,51)',
+    borderRadius: 5,
+    marginVertical: 10,
+    // borderWidth: 1,
+    // borderColor: 'red',
   },
 })
