@@ -65,8 +65,19 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
             disabled={!projectTheme}
             onPress={handleContinue}
             style={!projectTheme ? styles.disabledButton : styles.continueButton}
-            title="Continue"
+            title="Choose Theme"
           />
+          <View style={styles.divider} />
+          <View style={styles.uploadStyleContainer}>
+            <Text style={styles.uploadStyleText}> OR </Text>
+            <Button
+              disabled={!projectTheme}
+              onPress={handleContinue}
+              // style={!projectTheme ? styles.disabledButton : styles.continueButton}
+              style={styles.uploadStyleButton}
+              title="Upload Your Own"
+            />
+          </View>
         </View>
       ) : (
         <View>
@@ -83,7 +94,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: height / 12,
+    marginVertical: height / 18,
+  },
+  divider: {
+    borderBottomColor: 'grey',
+    alignSelf: 'center',
+    width: containerWidth,
+    borderBottomWidth: 1,
+    paddingBottom: 5,
   },
   loadingText: {
     fontSize: 20,
@@ -93,4 +111,20 @@ const styles = StyleSheet.create({
   },
   continueButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15 },
   disabledButton: { alignSelf: 'center', width: containerWidth, marginVertical: 15, backgroundColor: 'grey' },
+  uploadStyleButton: {
+    flex: 1,
+  },
+  uploadStyleContainer: {
+    borderWidth: 1,
+    alignSelf: 'center',
+    paddingTop: 15,
+    // borderColor: 'red',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: containerWidth,
+  },
+  uploadStyleText: {
+    marginHorizontal: '10%',
+  },
 })
