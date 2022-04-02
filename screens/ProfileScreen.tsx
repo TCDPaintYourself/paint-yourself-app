@@ -20,6 +20,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useUserContext } from 'hooks/useUserContext'
 import { auth } from 'utils/firebase'
 import * as MediaLibrary from 'expo-media-library'
+import * as ImgPicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import AS_KEYS from 'constants/AsyncStorage'
 
@@ -77,7 +78,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           sortBy: ['creationTime'],
         })
         const assets = pagedAssets.assets
-        console.log(assets)
+        // console.log(assets)
 
         creations = assets.map((asset, i) => {
           return {
@@ -106,7 +107,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
       // {... uri: creationName ...}
       const uriNamePairs = await AsyncStorage.getItem(namesKey)
 
-      console.log(uriNamePairs)
+      // console.log(uriNamePairs)
 
       if (uriNamePairs) {
         const uriNamePairsParsed = JSON.parse(uriNamePairs)
@@ -116,11 +117,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           match = creations.find((o) => o.src === uriKey)
 
           if (match) {
-            console.log('MATCH: ')
-            console.log(match)
+            // // console.log('MATCH: ')
+            // console.log(match)
 
             match.name = uriNamePairsParsed[uriKey]
-            console.log(match)
+            // console.log(match)
           }
         }
       }
@@ -187,12 +188,44 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   useEffect(() => {
     refreshNumCreations()
 
+    const getCoverPicUri = async () => {
+      try {
+        const coverPhotoUri = await AsyncStorage.getItem(AS_KEYS.coverPhotoKey)
+        if (coverPhotoUri !== null) {
+          // saved cover photo exists; load it
+          setCoverPic({ uri: coverPhotoUri })
+        }
+      } catch (e) {
+        console.log(e)
+
+        // set default profile pic
+        setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
+      }
+    }
+
+    getCoverPicUri()
     // TODO: set from persistent storage
-    setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
   }, [])
 
-  const updateCoverPhoto = () => {
-    console.log('Update Cover Photo')
+  const updateCoverPhoto = async () => {
+    let imageResponse = await ImgPicker.launchImageLibraryAsync({
+      mediaTypes: ImgPicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [9, 16], // 8x10 portrait
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    if (!imageResponse.cancelled) {
+      // write the new uri to async storage:
+      try {
+        await AsyncStorage.setItem(AS_KEYS.coverPhotoKey, imageResponse.uri)
+      } catch (error) {
+        console.log('Unexpected error saving cover photo URI')
+      }
+
+      setCoverPic({ uri: imageResponse.uri })
+    }
   }
 
   // expand image selected from grid

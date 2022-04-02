@@ -7,6 +7,8 @@ import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/n
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
+import { Themes } from 'constants/ProjectThemes'
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
@@ -16,6 +18,7 @@ declare global {
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
   ExpandedImageModal: undefined
+  StyleFolderModal: undefined
   LoginRegister: { title: string }
   Modal: undefined
   ChooseStyleScreen: undefined
@@ -30,6 +33,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 
 export type RootTabParamList = {
   ExpandedImageModal: undefined
+  StyleFolderModal: undefined
   LoginRegister: undefined
   NewProject: undefined
   Profile: undefined
