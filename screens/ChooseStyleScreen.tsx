@@ -61,9 +61,6 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
     if (!imageResponse.cancelled) {
       // write the new uri to async storage:
       try {
-        // await AsyncStorage.setItem(AS_KEYS.coverPhotoKey, imageResponse.uri)
-        console.log(imageResponse.uri)
-
         // send to server
         const filename = inputImage.split('/').pop()
         const filetype = filename?.split('.').pop()
@@ -74,7 +71,7 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
         styleFilename = styleFilename.split('/').pop()
         const styleFiletype = styleFilename?.split('.').pop()
 
-        // setLoading(true)
+        setLoading(true)
 
         const authToken = await user?.getIdToken()
 
@@ -107,6 +104,9 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
           console.log(error)
           console.log('Error sending image')
 
+          setSnackbarOpen(true)
+          setSnackbarMessage('Error sending to server. Please try again later.')
+
           return
         }
 
@@ -123,10 +123,14 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
           encoding: FileSystem.EncodingType.Base64,
         })
 
-        // setLoading(false)
+        setLoading(false)
 
         navigation.navigate('FinishedArtScreen', { image: imageUri, theme: projectTheme.id })
       } catch (error) {
+        setLoading(false)
+        setSnackbarOpen(true)
+        setSnackbarMessage('Unexpected error uploading style. Please try again.')
+
         console.log('Unexpected error uploading style')
       }
     }
