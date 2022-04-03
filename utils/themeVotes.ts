@@ -24,7 +24,8 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 
 export type ThemeVote = {
   theme: string
-  votes: number
+  upvotes: number
+  downvotes: number
 }
 
 export const themeVotesCol = createCollection<ThemeVote>('theme_votes')
@@ -33,22 +34,22 @@ export const upvoteTheme = async (theme: string): Promise<number> => {
   const themeVoteRef = doc(themeVotesCol, theme)
   const docSnap = await getDoc(themeVoteRef)
   let data = docSnap.data()
-  let new_votes = (data?.votes || 0) + 1
+  let newUpvotes = (data?.upvotes || 0) + 1
   await updateDoc(themeVoteRef, {
-    votes: new_votes,
+    upvotes: newUpvotes,
   })
-  return new_votes
+  return newUpvotes
 }
 
 export const downvoteTheme = async (theme: string): Promise<number> => {
   const themeVoteRef = doc(themeVotesCol, theme)
   const docSnap = await getDoc(themeVoteRef)
   let data = docSnap.data()
-  let new_votes = (data?.votes || 0) - 1
+  let newDownvotes = (data?.downvotes || 0) + 1
   await updateDoc(themeVoteRef, {
-    votes: new_votes,
+    downvotes: newDownvotes,
   })
-  return new_votes
+  return newDownvotes
 }
 
 export const getThemesVote = async (): Promise<ThemeVote[]> => {
@@ -60,15 +61,20 @@ export const getThemesVote = async (): Promise<ThemeVote[]> => {
   return themeVotes
 }
 
-export const getThemeVote = async (theme: number | string): Promise<number> => {
+export const getThemeVote = async (theme: string): Promise<[ThemeVote, number]> => {
   const themeVotesSnap = await getDocs(themeVotesCol)
-  let votes = 0
+
+  let votes = { upvotes: 0, downvotes: 0, theme: '' }
+  let totalVotes = 0
+
   themeVotesSnap.docs.forEach((doc: any) => {
     if (doc.data().theme === theme) {
-      votes = doc.data().votes
+      votes = doc.data()
+      totalVotes = votes.upvotes - votes.downvotes
     }
   })
-  return votes
+
+  return [votes, totalVotes]
 }
 
 // https://firebase.google.com/docs/firestore/query-data/listen#listen_to_multiple_documents_in_a_collection
