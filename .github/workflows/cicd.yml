@@ -40,15 +40,19 @@ jobs:
       with:
         node-version: 16
         cache: 'npm'
-
-    - name: 🏗 Setup Expo
+      
+    - name: 🏗 Setup Expo and EAS
       uses: expo/expo-github-action@v7
       with:
         expo-version: latest
+        eas-version: latest
         token: ${{ secrets.EXPO_TOKEN }}
 
     - name: 📦 Install dependencies
       run: npm install
+      
+    - name: Setup Expo Update
+      run: npm install expo-updates
 
     - name: 🚀 Publish app
       run: expo publish --non-interactive
