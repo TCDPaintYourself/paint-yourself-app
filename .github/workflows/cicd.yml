@@ -11,7 +11,6 @@ on:
   workflow_dispatch:
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,3 +28,31 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run ci-test
+    
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js v16
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
+        cache: 'npm'
+      
+    - name: 🏗 Setup Expo and EAS
+      uses: expo/expo-github-action@v7
+      with:
+        expo-version: latest
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }}
+
+    - name: 📦 Install dependencies
+      run: npm install
+      
+    - name: Setup Expo Update
+      run: npm install expo-updates
+
+    - name: 🚀 Publish app
+      run: expo publish --non-interactive
