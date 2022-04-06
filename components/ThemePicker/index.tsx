@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { FlatList, ImageBackground, Dimensions, StyleSheet } from 'react-native'
 
 import { Text, View, Icon } from 'components/Themed'
 import { IProjectTheme } from 'constants/ProjectThemes'
 import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
+import { getThemesVote, ThemeVote } from 'utils/themeVotes'
 
 const imageW = width * 0.8
 const imageH = imageW * 1.4
@@ -17,6 +18,10 @@ interface Props {
 export default function ThemePicker({ data, setProjectTheme }: Props) {
   const [page, setPage] = useState<number>(0)
 
+  useEffect(() => {
+    updateVotes()
+  }, [data])
+
   const onScrollEnd = useCallback(
     (e: { nativeEvent: { contentOffset: { x: number } } }) => {
       let pageIndex = Math.min(Math.max(Math.floor(e.nativeEvent.contentOffset.x / width + 0.5), 0), data.length)
@@ -27,6 +32,18 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
     },
     [page, setPage, setProjectTheme, data]
   )
+
+  const updateVotes = async () => {
+    let votes = await getThemesVote()
+
+    data.forEach((dataObject) => {
+      votes.forEach((votesObject) => {
+        if (dataObject.id == votesObject.theme) {
+          dataObject.votes = votesObject.upvotes - votesObject.downvotes
+        }
+      })
+    })
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -46,6 +63,7 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
                   style={styles.linearGradient}
                 >
                   <Text style={styles.subtitle}>{item.name}</Text>
+                  <Text style={styles.power}>{'Popularity: ' + item.votes}</Text>
                 </LinearGradient>
               </ImageBackground>
             </View>
@@ -71,9 +89,17 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: 'bold',
     position: 'relative',
-    top: imageH - 48,
+    top: imageH - 80,
     left: 12,
     fontSize: 24,
+    color: '#fff',
+  },
+  power: {
+    marginTop: 5,
+    position: 'relative',
+    top: imageH - 80,
+    left: 12,
+    fontSize: 20,
     color: '#fff',
   },
   circleSelector: {

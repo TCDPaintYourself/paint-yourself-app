@@ -33,16 +33,14 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
   const [user] = useUserContext()
   const { image: inputImage } = route.params
 
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (!loading) return
+  useEffect(() => {
+    navigation.addListener('beforeRemove', (e) => {
+      if (!loading) return
 
-        // Prevent default behavior of leaving the screen
-        e.preventDefault()
-      }),
-    [loading]
-  )
+      // Prevent default behavior of leaving the screen
+      e.preventDefault()
+    })
+  }, [loading])
 
   const handleContinue = async () => {
     navigation.navigate('StyleFolderModal', { projectTheme: projectTheme, inputImage: inputImage })
@@ -155,16 +153,13 @@ export default function ChooseStyleScreen({ route, navigation }: Props) {
             style={!projectTheme ? styles.disabledButton : styles.continueButton}
             title="Choose Theme"
           />
-          <View style={styles.divider} />
-          <View style={styles.uploadStyleContainer}>
-            <Text style={styles.uploadStyleText}> OR </Text>
-            <Button
-              disabled={!projectTheme}
-              onPress={handleUpload}
-              style={styles.uploadStyleButton}
-              title="Upload Your Own"
-            />
-          </View>
+          <Text style={styles.uploadStyleText}> OR </Text>
+          <Button
+            disabled={!projectTheme}
+            onPress={handleUpload}
+            style={styles.continueButton}
+            title="Upload Your Own"
+          />
         </View>
       ) : (
         <View>
@@ -201,17 +196,7 @@ const styles = StyleSheet.create({
   uploadStyleButton: {
     flex: 1,
   },
-  uploadStyleContainer: {
-    borderWidth: 1,
-    alignSelf: 'center',
-    paddingTop: 15,
-    // borderColor: 'red',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: containerWidth,
-  },
   uploadStyleText: {
-    marginHorizontal: '10%',
+    marginHorizontal: '46%',
   },
 })
