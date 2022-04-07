@@ -10,7 +10,7 @@
 
 1. Login (with Google)
 2. Enter Landing Page
-   ![Landing Page](.github/assets/user experience/landing page.jpg)
+   ![Landing Page](./.github/assets/user experience/landing page.jpg)
 3. Create New Project
    ![New Project](.github/assets/user experience/new project.jpg)
 4. Upload or Take a Picture
