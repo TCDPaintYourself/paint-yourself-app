@@ -6,9 +6,18 @@ name: Node.js CI
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/assets'
+      - '.github'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/assets'
+      - '.github'
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
