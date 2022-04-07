@@ -509,7 +509,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     paddingVertical: 10,
-    backgroundColor: 'rgb(51,51,51)',
     borderRadius: 5,
     marginVertical: 10,
     // borderWidth: 1,

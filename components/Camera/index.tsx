@@ -117,7 +117,6 @@ export default function CameraScreen({ image, setImage, closeCamera }: Props) {
 const styles = (headerHeight: number = 90) =>
   StyleSheet.create({
     container: {
-      margin: 1,
       width,
       height: Math.min(windowHeight - headerHeight - 25, height),
     },

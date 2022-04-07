@@ -211,8 +211,7 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     let imageResponse = await ImgPicker.launchImageLibraryAsync({
       mediaTypes: ImgPicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      // aspect: [9, 16], // 8x10 portrait
-      aspect: [4, 3],
+      aspect: [16, 9],
       quality: 1,
     })
 
@@ -270,7 +269,11 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
           </View>
         </Modal>
         <View style={styles.coverRegion}>
-          <ImageBackground resizeMode="cover" source={coverPic || { uri: undefined }} style={styles.coverImage}>
+          <ImageBackground
+            resizeMode="cover"
+            source={coverPic || { uri: 'https://i.imgur.com/WA0B7eL.png' }}
+            style={styles.coverImage}
+          >
             <View style={styles.IconButtonContainer}>
               <MaterialCommunityIcons
                 name="logout-variant"
@@ -460,8 +463,6 @@ const styles = StyleSheet.create({
   },
   creationsContainer: {
     flex: 1,
-    borderWidth: 1,
-    // padding: 10,
     marginTop: 10,
   },
   googleName: {
@@ -478,6 +479,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     borderWidth: 5,
     borderColor: '#30363d',
+    flex: 1,
+    marginVertical: 2,
     // borderWidth: 1,
     // padding: '1%',
   },
