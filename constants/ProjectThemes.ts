@@ -95,7 +95,7 @@ const ProjectTheme: IProjectTheme[] = [
   },
   {
     id: Themes.ARTNOUVEAU,
-    image: require('assets/images/themes/art-nouveau/mucha_daydream.png'),
+    image: require('assets/images/themes/art-nouveau/mucha_daydream.jpg'),
     folder: 'assets/images/themes/art-nouveau/',
     name: 'Art Nouveau',
     votes: 0,
