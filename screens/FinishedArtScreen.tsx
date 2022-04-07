@@ -10,7 +10,7 @@ import AS_KEYS from 'constants/AsyncStorage'
 import { Text, View } from 'components/Themed'
 import Button from 'components/Button'
 import Colors from 'constants/Colors'
-import { downvoteTheme, upvoteTheme } from 'utils/themeVotes'
+import { downvoteTheme, getThemesVote, getThemeVote, upvoteTheme } from 'utils/themeVotes'
 import { Themes } from 'constants/ProjectThemes'
 
 const { width } = Dimensions.get('screen')
@@ -170,46 +170,36 @@ export default function FinishedArtScreen({ route, navigation }: Props) {
     downvoteTheme(theme)
   }
 
+  const upvote = async () => {
+    let v = await upvoteTheme('test')
+    console.log('upvoted!')
+    console.log(v)
+  }
+
+  const downvote = async () => {
+    let v = await downvoteTheme('test')
+    console.log('downvoted!')
+    console.log(v)
+  }
+
+  const getVotes = async () => {
+    let votes = await getThemesVote()
+    console.log(votes)
+  }
+
+  const getVote = async () => {
+    let votes = await getThemeVote('test')
+    console.log(votes)
+  }
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.buttonContainer}>
-        {/*<FontAwesome name="save" onPress={saveImage} size={ICON_SIZE} style={styles.feedbackIconButton} />*/}
-        <FontAwesome
-          name={upvoted ? 'thumbs-up' : 'thumbs-o-up'}
-          style={[styles.feedbackIconButton, { marginLeft: 'auto' }]}
-          onPress={handleUpvote}
-          size={ICON_SIZE}
-        />
-        <FontAwesome
-          name={upvoted === false ? 'thumbs-down' : 'thumbs-o-down'}
-          onPress={handleDownvote}
-          size={ICON_SIZE}
-          style={styles.feedbackIconButton}
-        />
-      </View>
-
       <View style={styles.row}>
-        <Button onPress={shareImage} style={styles.actionButtons} title="Share" />
-        <Button onPress={handleHome} style={styles.actionButtons} title="Home" />
-      </View>
-      <Text style={{ color: 'white' }}>Save your creation to your gallery:</Text>
-      <View style={styles.saveContainer}>
-        <TextInput
-          style={styles.textInput}
-          autoCapitalize={'words'}
-          onChangeText={onChangeCreationName}
-          value={creationName}
-          placeholder="Untitled"
-          keyboardType="default"
-          editable={!saved}
-        />
-        <Button onPress={saveImage} disabled={saved || failedPermissionCheck} style={styles.saveButton} title="Save" />
-      </View>
-
-      <View style={styles.savedText}>
-        {saved && <Text>Image saved!</Text>}
-        {failedPermissionCheck && <Text>Saving failed - Please enable media permissions</Text>}
+        <Button onPress={upvote} style={styles.actionButtons} title="up" />
+        <Button onPress={downvote} style={styles.actionButtons} title="down" />
+        <Button onPress={getVotes} style={styles.actionButtons} title="all votes" />
+        <Button onPress={getVote} style={styles.actionButtons} title="votes" />
       </View>
     </View>
   )

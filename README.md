@@ -10,23 +10,23 @@
 
 1. Login (with Google)
 2. Enter Landing Page
-![Landing Page](.github/assets/user experiece/landing page.jpg)
+   ![Landing Page](.github/assets/user experience/landing page.jpg)
 3. Create New Project
-![New Project](.github/assets/user experiece/new project.jpg)
+   ![New Project](.github/assets/user experience/new project.jpg)
 4. Upload or Take a Picture
-![Take Picture](.github/assets/user experiece/take picture.jpg)
+   ![Take Picture](.github/assets/user experience/take picture.jpg)
 5. Confirm Selection
-![Confirmation](.github/assets/user experiece/confirm picture.jpg)
+   ![Confirmation](.github/assets/user experience/confirm picture.jpg)
 6. Select Style
-![Select Style](.github/assets/user experiece/select style.jpg)
+   ![Select Style](.github/assets/user experience/select style.jpg)
 7. Select Sub-style
-![Select Sub-style](.github/assets/user experiece/select substyle.jpg)
+   ![Select Sub-style](.github/assets/user experience/select substyle.jpg)
 8. Wait for a few seconds...
 9. Evaluate the result!
-![Result](.github/assets/user experiece/result.jpg)
+   ![Result](.github/assets/user experience/result.jpg)
 10. Share or Save
-11. Updated Landing page! 
-![Update Landing Page](.github/assets/user experiece/landing page with saved project.jpg)
+11. Updated Landing page!
+    ![Update Landing Page](.github/assets/user experience/landing page with saved project.jpg)
 
 # Development
 
@@ -47,4 +47,3 @@
 - Install Node
 - `npm install --global expo-cli`
 - `npm run web` - to run the expo app on web
-
