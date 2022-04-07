@@ -6,27 +6,27 @@
 2. Scan the [QR code](https://expo.dev/@tcd-paint-yourself/paint-yourself-app)
 3. Do whatever you want with the app.
 
-## User Experience
+## user_experience
 
 1. Login (with Google)
 2. Enter Landing Page
-   ![Landing Page](assets/user experience/landing page.jpg)
+   ![Landing Page](assets/user_experience/landing page.jpg)
 3. Create New Project
-   ![New Project](assets/user experience/new project.jpg)
+   ![New Project](assets/user_experience/new project.jpg)
 4. Upload or Take a Picture
-   ![Take Picture](assets/user experience/take picture.jpg)
+   ![Take Picture](assets/user_experience/take picture.jpg)
 5. Confirm Selection
-   ![Confirmation](assets/user experience/confirm picture.jpg)
+   ![Confirmation](assets/user_experience/confirm picture.jpg)
 6. Select Style
-   ![Select Style](assets/user experience/select style.jpg)
+   ![Select Style](assets/user_experience/select style.jpg)
 7. Select Sub-style
-   ![Select Sub-style](assets/user experience/select substyle.jpg)
+   ![Select Sub-style](assets/user_experience/select substyle.jpg)
 8. Wait for a few seconds...
 9. Evaluate the result!
-   ![Result](assets/user experience/result.jpg)
+   ![Result](assets/user_experience/result.jpg)
 10. Share or Save
 11. Updated Landing page!
-    ![Update Landing Page](assets/user experience/landing page with saved project.jpg)
+    ![Update Landing Page](assets/user_experience/landing page with saved project.jpg)
 
 # Development
 
