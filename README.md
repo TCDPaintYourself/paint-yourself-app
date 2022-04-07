@@ -4,9 +4,9 @@
 
 1. Download [Expo Go](https://expo.dev/client)
 2. Scan the [QR code](https://expo.dev/@tcd-paint-yourself/paint-yourself-app)
-3. Do whatever you want with the app.
+3. Use the app to apply art styles to your photos.
 
-## user_experience
+## User Experience
 
 1. Login (with Google)
 2. Enter Landing Page  
