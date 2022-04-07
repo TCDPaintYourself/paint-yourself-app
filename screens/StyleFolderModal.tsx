@@ -72,8 +72,8 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
         },
         {
           id: 2,
-          path: '../assets/images/themes/art-nouveau/mucha_daydream.png',
-          src: require('../assets/images/themes/art-nouveau/mucha_daydream.png'),
+          path: '../assets/images/themes/art-nouveau/mucha_daydream.jpg',
+          src: require('../assets/images/themes/art-nouveau/mucha_daydream.jpg'),
         },
         {
           id: 3,
