@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import * as ImgPicker from 'expo-image-picker'
-import { StyleSheet, ImageBackground, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, ImageBackground, Dimensions } from 'react-native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { View } from 'components/Themed'
@@ -70,7 +70,7 @@ const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={{ alignItems: 'center' }}>
         {/* <Text style={styles.themeText}>Select Image</Text> */}
         <ImageBackground
@@ -107,7 +107,7 @@ const FinishedArtScreen: React.FC<Props> = ({ navigation }: Props) => {
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
-    </ScrollView>
+    </View>
   )
 }
 
