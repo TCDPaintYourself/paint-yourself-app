@@ -174,10 +174,15 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
+        // If logging out, continue as normal
+        if (!user) {
+          return
+        }
+
         // Prevent default behavior of leaving the screen
         e.preventDefault()
       }),
-    []
+    [user]
   )
 
   // if numCreations changes, means user saved a new creation -> reload creations
@@ -189,6 +194,9 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     refreshNumCreations()
 
     const getCoverPicUri = async () => {
+      // set default cover pic
+      setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
+
       try {
         const coverPhotoUri = await AsyncStorage.getItem(AS_KEYS.coverPhotoKey)
         if (coverPhotoUri !== null) {
@@ -197,9 +205,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         }
       } catch (e) {
         console.log(e)
-
-        // set default profile pic
-        setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
       }
     }
 

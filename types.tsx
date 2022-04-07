@@ -19,7 +19,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
   ExpandedImageModal: undefined
   StyleFolderModal: undefined
-  LoginRegister: { title: string }
+  LoginRegister: undefined
   Modal: undefined
   ChooseStyleScreen: undefined
   FinishedArtScreen: undefined
