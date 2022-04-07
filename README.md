@@ -10,23 +10,23 @@
 
 1. Login (with Google)
 2. Enter Landing Page
-   ![Landing Page](assets/user_experience/landing page.jpg)
+   ![Landing Page](.github/assets/user_experience/landing_page.jpg)
 3. Create New Project
-   ![New Project](assets/user_experience/new project.jpg)
+   ![New Project](.github/assets/user_experience/new_project.jpg)
 4. Upload or Take a Picture
-   ![Take Picture](assets/user_experience/take picture.jpg)
+   ![Take Picture](.github/assets/user_experience/take_picture.jpg)
 5. Confirm Selection
-   ![Confirmation](assets/user_experience/confirm picture.jpg)
+   ![Confirmation](.github/assets/user_experience/confirm_picture.jpg)
 6. Select Style
-   ![Select Style](assets/user_experience/select style.jpg)
+   ![Select Style](.github/assets/user_experience/select_style.jpg)
 7. Select Sub-style
-   ![Select Sub-style](assets/user_experience/select substyle.jpg)
+   ![Select Sub-style](.github/assets/user_experience/select_substyle.jpg)
 8. Wait for a few seconds...
 9. Evaluate the result!
-   ![Result](assets/user_experience/result.jpg)
+   ![Result](.github/assets/user_experience/result.jpg)
 10. Share or Save
 11. Updated Landing page!
-    ![Update Landing Page](assets/user_experience/landing page with saved project.jpg)
+    ![Update Landing Page](.github/assets/user_experience/landing_page_with_saved_project.jpg)
 
 # Development
 
