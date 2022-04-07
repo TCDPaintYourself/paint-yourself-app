@@ -194,9 +194,6 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
     refreshNumCreations()
 
     const getCoverPicUri = async () => {
-      // set default cover pic
-      setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
-
       try {
         const coverPhotoUri = await AsyncStorage.getItem(AS_KEYS.coverPhotoKey)
         if (coverPhotoUri !== null) {
@@ -205,6 +202,9 @@ export default function ProfileScreen({ navigation }: RootTabScreenProps<'Profil
         }
       } catch (e) {
         console.log(e)
+
+        // set default cover pic
+        setCoverPic(require('../assets/images/temp/cover_photo_temp.jpg'))
       }
     }
 
