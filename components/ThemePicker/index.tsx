@@ -5,7 +5,8 @@ import { Text, View, Icon } from 'components/Themed'
 import { IProjectTheme } from 'constants/ProjectThemes'
 import { LinearGradient } from 'expo-linear-gradient'
 const { width } = Dimensions.get('screen')
-import { getThemesVote, ThemeVote } from 'utils/themeVotes'
+import { getThemesVote } from 'utils/themeVotes'
+import { useForceUpdate } from 'hooks/useForceUpdate'
 
 const imageW = width * 0.8
 const imageH = imageW * 1.4
@@ -17,6 +18,7 @@ interface Props {
 
 export default function ThemePicker({ data, setProjectTheme }: Props) {
   const [page, setPage] = useState<number>(0)
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     updateVotes()
@@ -43,6 +45,10 @@ export default function ThemePicker({ data, setProjectTheme }: Props) {
         }
       })
     })
+
+    // Since we are mutating the data object instead of using state hooks, we
+    // need to tell React to re-render.
+    forceUpdate()
   }
 
   return (

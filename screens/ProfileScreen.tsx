@@ -468,6 +468,7 @@ const styles = StyleSheet.create({
   },
   creationsContainer: {
     flex: 1,
+    backgroundColor: '#30363d',
     marginTop: 10,
   },
   googleName: {
@@ -480,11 +481,9 @@ const styles = StyleSheet.create({
   },
   grid: {
     // borderColor: "cyan",
-    backgroundColor: '#30363d',
     // backgroundColor: 'white',
     borderWidth: 5,
     borderColor: '#30363d',
-    flex: 1,
     marginVertical: 2,
     // borderWidth: 1,
     // padding: '1%',
