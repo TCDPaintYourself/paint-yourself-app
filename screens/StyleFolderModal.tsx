@@ -38,7 +38,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   const [themeImages, setThemeImages] = useState<{ id: number; path: string; src: number; theme: Themes }[]>([])
   const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
-  const [selectStyleSrc, setSelectedStyleSrc] = useState(0)
   const [selectedStyleTheme, setSelectedStyleTheme] = useState(Themes.CARAVAGGIO_SELF_PORTRAIT)
   const [imageModalSrc, setImageModalSrc] = useState(0)
   const [imageModalActive, setImageModalActive] = useState(false)
@@ -51,12 +50,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     // set images for this theme
     updateThemeImages()
   }, [])
-
-  useEffect(() => {
-    if (themeImages.length > 0) {
-      setSelectedStyleSrc(themeImages[0].src) // the first image by default
-    }
-  }, [themeImages])
 
   const updateThemeImages = () => {
     if (projectTheme.id == Themes.ARTNOUVEAU) {
@@ -367,7 +360,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
   const handleImagePress = (index: number, src: number, theme: Themes) => {
     setSelectedStyleIndex(index)
-    setSelectedStyleSrc(src)
     setSelectedStyleTheme(theme)
   }
 
@@ -381,12 +373,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
 
     const filetype = filename?.split('.').pop()
 
-    const styleImageUri = Image.resolveAssetSource(selectStyleSrc).uri
-
-    let styleFilename: string | undefined = styleImageUri.split('?')[0]
-    styleFilename = styleFilename.split('/').pop()
-    const styleFiletype = styleFilename?.split('.').pop()
-
     setLoading(true)
 
     const authToken = await user?.getIdToken()
@@ -394,13 +380,6 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     const formData = new FormData()
     // Any type as react-native as a custom FormData implementation.
     formData.append('input_image', { uri: inputImage, name: filename, type: `image/${filetype}` } as any)
-
-    // append reference image info
-    formData.append('reference_image', {
-      uri: styleImageUri,
-      name: styleFilename,
-      type: `image/${styleFiletype}`,
-    } as any)
 
     let response = null
     try {
