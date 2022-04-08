@@ -65,6 +65,11 @@ WATER_LILLIES="water-lillies",
 WHEAT_FIELD="wheat-field",
 WINTER_LANDSCAPE="winter-landscape",
 WOMAN_WITH_A_PARASOL="woman-with-a-parasol",
+GIRL_BEFORE_A_MIRROR="girl-before-a-mirror",
+GIRL_WITH_A_MANDOLIN="girl-with-a-mandolin",
+LES_FEMMES_DALGIERS="les-femmes-dalgiers",
+THE_WEEPING_WOMAN="the-weeping-woman"
+
 }
 
 const ProjectTheme: IProjectTheme[] = [

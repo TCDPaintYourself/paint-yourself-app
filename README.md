@@ -26,7 +26,7 @@
    ![Result](.github/assets/user_experience/result.jpg)
 10. Share or Save
 11. Updated Landing page  
-   ![Updated Landing Page](.github/assets/user_experience/landing_page_with_saved_project.jpg)
+    ![Updated Landing Page](.github/assets/user_experience/landing_page_with_saved_project.jpg)
 
 # Development
 

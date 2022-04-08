@@ -39,6 +39,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
   const [themeImages, setThemeImages] = useState<{ id: number; path: string; src: number; theme: Themes }[]>([])
   const [selectedStyleIndex, setSelectedStyleIndex] = useState(0)
   const [selectStyleSrc, setSelectedStyleSrc] = useState(0)
+  const [selectedStyleTheme, setSelectedStyleTheme] = useState(Themes.CARAVAGGIO_SELF_PORTRAIT)
   const [imageModalSrc, setImageModalSrc] = useState(0)
   const [imageModalActive, setImageModalActive] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -364,9 +365,10 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     }
   }
 
-  const handleImagePress = (index: number, src: number) => {
+  const handleImagePress = (index: number, src: number, theme: Themes) => {
     setSelectedStyleIndex(index)
     setSelectedStyleSrc(src)
+    setSelectedStyleTheme(theme)
   }
 
   const handleImageLongPress = (index: number, src: number) => {
@@ -403,7 +405,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
     let response = null
     try {
       response = await fetch(
-        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images`, // omit project theme
+        `http://paint-yourself.uksouth.cloudapp.azure.com:8080/styled-images?theme=${selectedStyleTheme}`, // omit project theme
         {
           method: 'POST',
           headers: {
@@ -486,7 +488,7 @@ const StyleFolderModal: React.FC<Props> = ({ route, navigation }) => {
           columnWrapperStyle={{ flex: 1, justifyContent: 'center', paddingTop: 10 }}
           renderItem={({ item, index }) => (
             <TouchableHighlight
-              onPress={() => handleImagePress(item.id, item.src)}
+              onPress={() => handleImagePress(item.id, item.src, item.theme)}
               onLongPress={() => handleImageLongPress(item.id, item.src)}
             >
               <>
